@@ -1,0 +1,3081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CXC 360 | Módulo Aplicación Inteligente de Pagos</title>
+  <style>
+    :root {
+      --azul-900: #0b1f3a;
+      --azul-800: #0f2f57;
+      --azul-700: #123f73;
+      --azul-600: #155aa8;
+      --azul-500: #1c75d8;
+      --azul-100: #eaf3ff;
+      --azul-050: #f5f9ff;
+      --gris-900: #1d2733;
+      --gris-700: #4d5d70;
+      --gris-500: #7b8794;
+      --gris-300: #d6dee8;
+      --gris-200: #edf1f6;
+      --gris-100: #f7f9fc;
+      --verde: #18a058;
+      --verde-bg: #e8f8ef;
+      --amarillo: #d99800;
+      --amarillo-bg: #fff7df;
+      --rojo: #d92d20;
+      --rojo-bg: #fff1f0;
+      --morado: #6956e5;
+      --sombra: 0 18px 40px rgba(15, 47, 87, 0.12);
+      --radio: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #f4f8ff 0%, #ffffff 45%, #f7f9fc 100%);
+      color: var(--gris-900);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      background: linear-gradient(180deg, var(--azul-900), var(--azul-800));
+      color: #fff;
+      padding: 26px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 24px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+    }
+
+    .brand small {
+      color: #bcd6f4;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .nav-title {
+      color: #bcd6f4;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin: 24px 10px 10px;
+      font-weight: 700;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #e6f1ff;
+      padding: 12px 14px;
+      border-radius: 12px;
+      text-align: left;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      transition: 0.2s ease;
+      margin-bottom: 6px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: rgba(255,255,255,0.13);
+      transform: translateX(2px);
+    }
+
+    .nav button.active {
+      box-shadow: inset 4px 0 0 #78b7ff;
+    }
+
+    main {
+      padding: 26px 34px 46px;
+      overflow: hidden;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--azul-900), var(--azul-600));
+      color: white;
+      border-radius: 26px;
+      padding: 30px;
+      box-shadow: var(--sombra);
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) 440px;
+      gap: 26px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      right: -100px;
+      top: -140px;
+      background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 68%);
+    }
+
+    .hero h2 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      letter-spacing: -0.8px;
+    }
+
+    .hero p {
+      color: #d8e9ff;
+      line-height: 1.55;
+      margin: 0;
+      max-width: 900px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+      z-index: 2;
+    }
+
+    .hero-card strong {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .hero-card .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #e8f2ff;
+      font-size: 13px;
+    }
+
+    .timeline-icon {
+      height: 34px;
+      width: 34px;
+      border-radius: 11px;
+      background: rgba(255,255,255,0.16);
+      display: grid;
+      place-items: center;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .btn-primary {
+      background: var(--azul-500);
+      color: white;
+    }
+
+    .btn-dark {
+      background: var(--azul-900);
+      color: white;
+    }
+
+    .btn-light {
+      background: white;
+      color: var(--azul-800);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--azul-700);
+      border: 1px solid var(--gris-300);
+    }
+
+    .btn-danger {
+      background: var(--rojo-bg);
+      color: var(--rojo);
+      border: 1px solid #ffd3cf;
+    }
+
+    .btn-success {
+      background: var(--verde-bg);
+      color: var(--verde);
+      border: 1px solid #bfe9d0;
+    }
+
+    .section {
+      display: none;
+      margin-top: 26px;
+      animation: fadeUp .25s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .section-head h3 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      color: var(--azul-900);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--gris-700);
+      line-height: 1.45;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      background: white;
+      border: 1px solid var(--gris-200);
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .card h4 {
+      margin: 0 0 14px;
+      color: var(--azul-900);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .muted {
+      color: var(--gris-700);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .kpi {
+      background: white;
+      border: 1px solid var(--gris-200);
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi:after {
+      content: "";
+      position: absolute;
+      right: -32px;
+      bottom: -42px;
+      width: 110px;
+      height: 110px;
+      background: var(--azul-100);
+      border-radius: 50%;
+    }
+
+    .kpi .label {
+      color: var(--gris-700);
+      font-size: 13px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kpi .value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--azul-900);
+      margin: 8px 0 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kpi .delta {
+      font-size: 12px;
+      color: var(--gris-700);
+      position: relative;
+      z-index: 1;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status.cargado { background: var(--azul-100); color: var(--azul-700); }
+    .status.identificado { background: #e9f7ff; color: #0069a8; }
+    .status.listo { background: var(--verde-bg); color: var(--verde); }
+    .status.aplicado { background: #edfdf3; color: #0c7a3e; }
+    .status.revision { background: var(--amarillo-bg); color: var(--amarillo); }
+    .status.noidentificado { background: var(--rojo-bg); color: var(--rojo); }
+    .status.error { background: #fff1f0; color: var(--rojo); }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--gris-300);
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-family: inherit;
+      color: var(--gris-900);
+      background: #fff;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--azul-500);
+      box-shadow: 0 0 0 4px rgba(28,117,216,0.12);
+    }
+
+    textarea { min-height: 94px; resize: vertical; }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gris-700);
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .field .help {
+      display: block;
+      margin-top: 6px;
+      color: var(--gris-500);
+      font-size: 12px;
+    }
+
+    .error-msg {
+      display: none;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--rojo);
+      font-weight: 700;
+    }
+
+    .field.error input,
+    .field.error select,
+    .field.error textarea {
+      border-color: var(--rojo);
+      box-shadow: 0 0 0 4px rgba(217,45,32,0.08);
+    }
+
+    .field.error .error-msg { display: block; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 900px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--gris-200);
+      border-radius: 16px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--gris-200);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--azul-050);
+      color: var(--azul-900);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:hover td { background: #fbfdff; }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--gris-300);
+      background: #fff;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-weight: 700;
+      color: var(--azul-700);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .mini-btn:hover { background: var(--azul-050); }
+
+    .upload-zone {
+      border: 2px dashed #9bc7f8;
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
+      border-radius: 18px;
+      padding: 24px;
+      text-align: center;
+      color: var(--gris-700);
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--azul-500);
+      background: var(--azul-050);
+    }
+
+    .upload-zone strong {
+      display: block;
+      color: var(--azul-900);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .upload-zone input { display: none; }
+
+    .progress {
+      height: 10px;
+      background: var(--gris-200);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--azul-600), var(--azul-500));
+      transition: width .5s ease;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: var(--azul-050);
+      color: var(--azul-800);
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid #d4e8ff;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 150px 1fr 55px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .bar-bg {
+      height: 12px;
+      border-radius: 999px;
+      background: var(--gris-200);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--azul-700), var(--azul-500));
+      width: 0;
+      transition: 0.6s ease;
+    }
+
+    .donut {
+      --p: 50;
+      --color: var(--azul-500);
+      width: 142px;
+      height: 142px;
+      border-radius: 50%;
+      background: conic-gradient(var(--color) calc(var(--p) * 1%), var(--gris-200) 0);
+      display: grid;
+      place-items: center;
+      margin: 6px auto 14px;
+    }
+
+    .donut:before {
+      content: attr(data-label);
+      width: 94px;
+      height: 94px;
+      border-radius: 50%;
+      background: white;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--azul-900);
+    }
+
+    .decision-card {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--gris-200);
+      border-radius: 16px;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+
+    .decision-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--azul-100);
+      color: var(--azul-700);
+      font-size: 22px;
+    }
+
+    .decision-card strong {
+      display: block;
+      color: var(--azul-900);
+      margin-bottom: 4px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11,31,58,0.55);
+      display: none;
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: min(980px, 96vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.25);
+      padding: 24px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .modal-head h3 { margin: 0; color: var(--azul-900); }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: var(--azul-900);
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 14px;
+      box-shadow: var(--sombra);
+      display: none;
+      z-index: 1000;
+      max-width: 420px;
+      line-height: 1.4;
+    }
+
+    .toast.show { display: block; animation: fadeUp .2s ease; }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: var(--gris-700);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .check {
+      height: 28px;
+      width: 28px;
+      border-radius: 9px;
+      background: var(--verde-bg);
+      color: var(--verde);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+
+
+    .evidence-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--azul-700);
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid #d4e8ff;
+      background: var(--azul-050);
+      padding: 6px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .evidence-link:hover { background: var(--azul-100); }
+
+    .tag {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--gris-100);
+      color: var(--gris-700);
+      border: 1px solid var(--gris-200);
+      white-space: nowrap;
+    }
+
+    .tag.blue { background: var(--azul-050); color: var(--azul-700); border-color: #d4e8ff; }
+    .tag.green { background: var(--verde-bg); color: var(--verde); border-color: #bfe9d0; }
+    .tag.yellow { background: var(--amarillo-bg); color: var(--amarillo); border-color: #ffe6a6; }
+    .tag.red { background: var(--rojo-bg); color: var(--rojo); border-color: #ffd3cf; }
+
+    .quick-panel {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .quick-metric {
+      background: linear-gradient(180deg, #fff, var(--azul-050));
+      border: 1px solid #d4e8ff;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .quick-metric strong {
+      display: block;
+      font-size: 24px;
+      color: var(--azul-900);
+      margin-bottom: 3px;
+    }
+
+    .quick-metric span {
+      color: var(--gris-700);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+
+    .audit-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .audit-item {
+      border: 1px solid var(--gris-200);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .audit-item strong { color: var(--azul-900); }
+
+    .audit-item span {
+      display: block;
+      color: var(--gris-700);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .empty {
+      padding: 26px;
+      text-align: center;
+      color: var(--gris-700);
+      background: var(--gris-100);
+      border-radius: 16px;
+      border: 1px dashed var(--gris-300);
+    }
+
+    .mobile-top {
+      display: none;
+      margin-bottom: 18px;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+
+
+    .report-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .report-kpi {
+      background: linear-gradient(180deg, #ffffff, #f5f9ff);
+      border: 1px solid #dbe8f7;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 12px 26px rgba(15, 47, 87, 0.08);
+    }
+
+    .report-kpi span {
+      display: block;
+      color: var(--gris-700);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+      margin-bottom: 8px;
+    }
+
+    .report-kpi strong {
+      display: block;
+      color: var(--azul-900);
+      font-size: 26px;
+      line-height: 1.05;
+      margin-bottom: 6px;
+    }
+
+    .report-kpi small {
+      color: var(--gris-500);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .chart-wide { grid-column: 1 / -1; }
+
+    .status-split {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .stacked-bar {
+      height: 18px;
+      background: var(--gris-200);
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      margin: 12px 0 10px;
+    }
+
+    .stacked-bar span {
+      display: block;
+      height: 100%;
+      min-width: 3%;
+    }
+
+    .stacked-applied { background: var(--verde); }
+    .stacked-ready { background: var(--azul-500); }
+    .stacked-review { background: var(--amarillo); }
+    .stacked-risk { background: var(--rojo); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      font-size: 12px;
+      color: var(--gris-700);
+      margin-top: 8px;
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .decision-table {
+      display: grid;
+      gap: 10px;
+    }
+
+    .decision-row {
+      display: grid;
+      grid-template-columns: 42px 1fr 160px;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--gris-200);
+      border-radius: 15px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .decision-row .level {
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+      background: var(--azul-050);
+      color: var(--azul-700);
+      border: 1px solid #d4e8ff;
+    }
+
+    .decision-row .level.high { background: var(--rojo-bg); color: var(--rojo); border-color: #ffd3cf; }
+    .decision-row .level.medium { background: var(--amarillo-bg); color: var(--amarillo); border-color: #ffe6a6; }
+    .decision-row .level.ok { background: var(--verde-bg); color: var(--verde); border-color: #bfe9d0; }
+
+    .transaction-admin-head {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .transaction-tile {
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid #dbe8f7;
+      background: white;
+      box-shadow: 0 10px 24px rgba(15, 47, 87, 0.07);
+    }
+
+    .transaction-tile span {
+      display: block;
+      font-size: 12px;
+      color: var(--gris-500);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+      margin-bottom: 6px;
+    }
+
+    .transaction-tile strong {
+      display: block;
+      font-size: 25px;
+      color: var(--azul-900);
+      line-height: 1.05;
+    }
+
+    .transaction-tile small { color: var(--gris-700); font-size: 12px; }
+
+    .amount-good { color: var(--verde); font-weight: 900; }
+    .amount-pending { color: var(--amarillo); font-weight: 900; }
+    .amount-risk { color: var(--rojo); font-weight: 900; }
+
+    .table-note {
+      color: var(--gris-700);
+      font-size: 12px;
+      margin-top: 10px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1180px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+    }
+
+
+    .control-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) 500px;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .control-head > div:first-child {
+      background: linear-gradient(135deg, #ffffff, #f2f7ff);
+      border: 1px solid #dbe8f7;
+      border-radius: 24px;
+      box-shadow: var(--sombra);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .control-head > div:first-child:after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -60px;
+      top: -70px;
+      background: radial-gradient(circle, rgba(28,117,216,.14), transparent 65%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--azul-600);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .control-head h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      color: var(--azul-900);
+      letter-spacing: -0.7px;
+    }
+
+    .control-head p {
+      margin: 0;
+      color: var(--gris-700);
+      line-height: 1.55;
+      max-width: 760px;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .control-tile {
+      background: linear-gradient(180deg, var(--azul-900), var(--azul-700));
+      color: white;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--sombra);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 142px;
+    }
+
+    .control-tile span {
+      color: #cfe3ff;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .control-tile strong {
+      font-size: 34px;
+      line-height: 1;
+      margin-top: 16px;
+    }
+
+    .control-tile small {
+      color: #d8e9ff;
+      line-height: 1.35;
+      margin-top: 10px;
+    }
+
+    .client-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .client-card {
+      background: white;
+      border: 1px solid var(--gris-200);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(15, 47, 87, 0.07);
+    }
+
+    .client-card span {
+      display: block;
+      font-size: 12px;
+      color: var(--gris-500);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+      margin-bottom: 6px;
+    }
+
+    .client-card strong {
+      display: block;
+      font-size: 24px;
+      color: var(--azul-900);
+    }
+
+    .client-detail {
+      margin-top: 18px;
+      border: 1px solid #dbe8f7;
+      background: linear-gradient(180deg, #fff, #f7fbff);
+      border-radius: 22px;
+      padding: 20px;
+    }
+
+    .client-detail-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .client-detail-head h4 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      color: var(--azul-900);
+    }
+
+    .client-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .client-tabs {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .mini-timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-timeline .event {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px;
+      border: 1px solid var(--gris-200);
+      border-radius: 14px;
+      background: white;
+    }
+
+    .mini-timeline .event-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: var(--azul-100);
+    }
+
+    .mini-timeline strong {
+      display: block;
+      color: var(--azul-900);
+      margin-bottom: 2px;
+    }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      aside {
+        position: fixed;
+        z-index: 900;
+        left: -310px;
+        width: 290px;
+        transition: .25s ease;
+      }
+      aside.open { left: 0; }
+      main { padding: 18px; }
+      .mobile-top { display: flex; }
+      .grid-4, .grid-3, .grid-2, .quick-panel, .detail-grid, .control-head, .control-grid, .client-summary, .client-tabs, .report-kpi-strip, .chart-grid, .transaction-admin-head, .status-split { grid-template-columns: 1fr; }
+      .section-head { flex-direction: column; }
+      .hero h2 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="brand">
+        <div class="brand-icon">💳</div>
+        <div>
+          <h1>CXC 360</h1>
+          <small>Aplicación Inteligente de Pagos</small>
+        </div>
+      </div>
+
+      <div class="nav-title">Módulo de Pagos</div>
+      <nav class="nav" id="nav">
+        <button class="active" data-section="dashboard">📊 Dashboard de pagos</button>
+        <button data-section="integraciones">🔌 Integraciones</button>
+        <button data-section="carga-extractos">🏦 Carga de extractos</button>
+        <button data-section="comprobantes">🎫 Tickets MIAU / Comprobantes</button>
+        <button data-section="bandeja-pagos">📬 Pagos recibidos</button>
+        <button data-section="revision-manual">🔎 Revisión manual</button>
+        <button data-section="aplicacion-erp">🤖 Aplicación en ERP</button>
+        <button data-section="clientes-seguimiento">👥 Clientes / seguimiento</button>
+        <button data-section="transacciones">🏦 Transacciones bancarias</button>
+        <button data-section="reportes">📈 Reportes</button>
+      </nav>
+
+      <div class="nav-title">Estados operativos</div>
+      <div class="pill-list">
+        <span class="pill">Cargado</span>
+        <span class="pill">Identificado</span>
+        <span class="pill">Listo para aplicar</span>
+        <span class="pill">Aplicado</span>
+        <span class="pill">Revisión manual</span>
+        <span class="pill">Sin identificar</span>
+      </div>
+    </aside>
+
+    <main>
+      <div class="mobile-top">
+        <button class="btn btn-outline" id="menuBtn">☰ Menú</button>
+        <strong>CXC 360</strong>
+      </div>
+
+      <section class="control-head">
+        <div>
+          <span class="eyebrow">Centro de control CXC</span>
+          <h2>Seguimiento operativo de aplicación de pagos</h2>
+          <p>Panel enfocado en pagos recibidos desde MIAU/tiquetera, extractos bancarios, comprobantes adjuntos, gestión manual, aplicación automática en ERP y seguimiento por cliente.</p>
+        </div>
+        <div class="control-grid">
+          <div class="control-tile"><span>Tickets con comprobante</span><strong id="topVoucherCount">0</strong><small>Soportes recibidos vía MIAU</small></div>
+          <div class="control-tile"><span>Gestión manual</span><strong id="topManualCount">0</strong><small>Casos por validar</small></div>
+          <div class="control-tile"><span>Aplicación automática</span><strong id="topAutoCount">0</strong><small>Ejecutados por robot</small></div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section active">
+        <div class="section-head">
+          <div>
+            <h3>Dashboard de pagos</h3>
+            <p>Indicadores para seguimiento rápido de pagos cargados, identificados, pendientes, aplicados y en revisión.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-outline" onclick="exportTable('paymentsTable','pagos_cxc.csv')">⬇️ Exportar pagos</button>
+            <button class="btn btn-primary" onclick="refreshDashboard()">🔄 Actualizar indicadores</button>
+          </div>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="kpi"><div class="label">Pagos cargados</div><div class="value" id="kpiTotal">0</div><div class="delta">Movimientos registrados en plataforma</div></div>
+          <div class="kpi"><div class="label">Listos para aplicar</div><div class="value" id="kpiReady">0</div><div class="delta">Cumplen reglas mínimas de validación</div></div>
+          <div class="kpi"><div class="label">En revisión manual</div><div class="value" id="kpiReview">0</div><div class="delta">Requieren análisis del equipo CXC</div></div>
+          <div class="kpi"><div class="label">Monto aplicado</div><div class="value" id="kpiAppliedAmount">$0</div><div class="delta">Suma de pagos aplicados</div></div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:18px;">
+          <div class="card">
+            <h4>Distribución por estado <span class="muted">decisión rápida</span></h4>
+            <div class="donut" id="donutIdentified" data-label="0%" style="--p:0; --color: var(--azul-500);"></div>
+            <p class="muted" style="text-align:center;">Porcentaje de pagos identificados o listos para aplicar sobre el total cargado.</p>
+          </div>
+          <div class="card">
+            <h4>Monto por banco</h4>
+            <div class="bar-list" id="bankBars"></div>
+          </div>
+          <div class="card">
+            <h4>Alertas operativas</h4>
+            <div id="alertsBox"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:18px;">
+          <div class="card">
+            <h4>Productividad por analista</h4>
+            <div class="bar-list" id="analystBars"></div>
+          </div>
+          <div class="card">
+            <h4>Decisiones rápidas sugeridas</h4>
+            <div class="decision-card">
+              <div class="decision-icon">🔎</div>
+              <div><strong>Atender pagos sin identificar</strong><span class="muted">Priorizar transacciones sin cliente o factura para evitar atrasos de aplicación.</span></div>
+            </div>
+            <div class="decision-card">
+              <div class="decision-icon">🏦</div>
+              <div><strong>Revisar bancos con mayor pendiente</strong><span class="muted">Filtrar por banco/cuenta para identificar concentración de pagos sin procesar.</span></div>
+            </div>
+            <div class="decision-card">
+              <div class="decision-icon">✅</div>
+              <div><strong>Enviar a ERP solo pagos validados</strong><span class="muted">Aplicar únicamente pagos en estado “Listo para aplicar”.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="integraciones" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Integraciones del módulo de Aplicación Inteligente de Pagos</h3>
+            <p>Mapa de conexiones identificado en la revisión: los detalles de pago y comprobantes no se reciben por correo; se reciben por MIAU/tiquetera. El correo PDL queda asociado al envío de estados de cuenta.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>🎫 Tiquetera MIAU / Ingate</h4>
+            <p class="muted">Recepción de tickets donde las unidades o comerciales solicitan la aplicación del pago y adjuntan comprobantes, órdenes de pago, facturas a cancelar y retenciones cuando aplique.</p>
+            <div class="pill-list" style="margin-top:12px;"><span class="pill">API si existe</span><span class="pill">RPA si no hay API</span><span class="pill">Carga manual contingencia</span></div>
+          </div>
+          <div class="card">
+            <h4>🏦 Bancos / extractos</h4>
+            <p class="muted">Carga o recepción de estados de cuenta bancarios por banco, cuenta, empresa y moneda. Se contemplan opciones de carga manual, robot de descarga, carpeta compartida/API interna o API directa del banco.</p>
+            <div class="pill-list" style="margin-top:12px;"><span class="pill">5 bancos</span><span class="pill">92 cuentas</span><span class="pill">Extractos bancarios</span></div>
+          </div>
+          <div class="card">
+            <h4>🧾 SAP B1 / Integra / Opera / Yaipan</h4>
+            <p class="muted">Aplicación asistida o automática del pago en el sistema destino. El usuario confirma desde la plataforma y la integración o robot ejecuta la aplicación en el ERP/aplicación correspondiente.</p>
+            <div class="pill-list" style="margin-top:12px;"><span class="pill">SAP B1</span><span class="pill">Integra</span><span class="pill">Opera / Yaipan</span></div>
+          </div>
+          <div class="card">
+            <h4>✨ IA para lectura y cruce</h4>
+            <p class="muted">Extracción de datos desde comprobantes, órdenes de pago y retenciones para comparar contra extractos bancarios, cliente, factura, monto, moneda y referencia.</p>
+            <div class="pill-list" style="margin-top:12px;"><span class="pill">Comprobante</span><span class="pill">Orden de pago</span><span class="pill">Retenciones</span></div>
+          </div>
+          <div class="card">
+            <h4>📁 Cartera / facturas abiertas</h4>
+            <p class="muted">Consulta de saldos, facturas pendientes y cartera para validar si el pago recibido calza contra documentos abiertos antes de enviarlo a aplicación.</p>
+            <div class="pill-list" style="margin-top:12px;"><span class="pill">Cliente</span><span class="pill">Factura</span><span class="pill">Saldo</span></div>
+          </div>
+          <div class="card">
+            <h4>🔎 Bandeja de excepciones</h4>
+            <p class="muted">Cuando no exista nivel de confianza suficiente, existan montos repetidos, referencias inconsistentes, diferencias o notas de crédito, el caso queda pendiente de revisión manual.</p>
+            <div class="pill-list" style="margin-top:12px;"><span class="pill">Revisión manual</span><span class="pill">Sin identificar</span><span class="pill">Error aplicación</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="carga-extractos" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Carga de extractos bancarios</h3>
+            <p>Registro controlado de extractos por banco, cuenta, empresa, moneda y período. Incluye validaciones antes de aceptar el archivo.</p>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="card">
+            <h4>Formulario de carga</h4>
+            <form id="extractForm" novalidate>
+              <div class="grid grid-2">
+                <div class="field" data-field="bank">
+                  <label>Banco *</label>
+                  <select id="bank" required>
+                    <option value="">Seleccione banco</option>
+                    <option>Banco 1</option>
+                    <option>Banco 2</option>
+                    <option>Banco 3</option>
+                    <option>Banco 4</option>
+                    <option>Banco 5</option>
+                  </select>
+                  <span class="error-msg">Seleccione el banco.</span>
+                </div>
+                <div class="field" data-field="account">
+                  <label>Cuenta bancaria *</label>
+                  <input id="account" placeholder="Ej. CR00-0000-0000-0000" required />
+                  <span class="error-msg">Ingrese la cuenta bancaria.</span>
+                </div>
+                <div class="field" data-field="company">
+                  <label>Empresa / unidad *</label>
+                  <select id="company" required>
+                    <option value="">Seleccione empresa</option>
+                    <option>COMECA</option>
+                    <option>Grupo Comeca</option>
+                    <option>Chile</option>
+                    <option>Perú</option>
+                    <option>Única</option>
+                    <option>Centroserv</option>
+                    <option>Technoends</option>
+                    <option>Empaques Santo Domingo</option>
+                    <option>Hoteles</option>
+                    <option>Impresora Delta</option>
+                    <option>Inmobiliarias</option>
+                    <option>Metales Flix</option>
+                    <option>Empaques Santa Ana</option>
+                  </select>
+                  <span class="error-msg">Seleccione la empresa.</span>
+                </div>
+                <div class="field" data-field="currency">
+                  <label>Moneda *</label>
+                  <select id="currency" required>
+                    <option value="">Seleccione moneda</option>
+                    <option>CRC</option>
+                    <option>USD</option>
+                    <option>CLP</option>
+                    <option>PEN</option>
+                  </select>
+                  <span class="error-msg">Seleccione la moneda.</span>
+                </div>
+                <div class="field" data-field="period">
+                  <label>Fecha del extracto *</label>
+                  <input id="period" type="date" required />
+                  <span class="error-msg">Ingrese la fecha del extracto.</span>
+                </div>
+                <div class="field" data-field="sourceSystem">
+                  <label>ERP destino / sistema *</label>
+                  <select id="sourceSystem" required>
+                    <option value="">Seleccione sistema</option>
+                    <option>SAP B1</option>
+                    <option>Integra</option>
+                    <option>Opera / Integra</option>
+                    <option>Yaipan</option>
+                  </select>
+                  <span class="error-msg">Seleccione el sistema destino.</span>
+                </div>
+              </div>
+
+              <div class="field" data-field="extractFile" style="margin-top:14px;">
+                <label>Archivo de extracto *</label>
+                <label class="upload-zone" id="extractDrop">
+                  <input type="file" id="extractFile" accept=".xlsx,.xls,.csv,.txt,.pdf" required />
+                  <strong>Arrastre o seleccione el extracto bancario</strong>
+                  <span>Formatos permitidos: XLSX, XLS, CSV, TXT o PDF</span>
+                </label>
+                <span class="help" id="extractFileName">Ningún archivo seleccionado</span>
+                <span class="error-msg">Adjunte un archivo válido.</span>
+              </div>
+
+              <div style="margin:16px 0;">
+                <div class="progress"><span id="uploadProgress"></span></div>
+              </div>
+
+              <div class="row-actions">
+                <button class="btn btn-primary" type="submit">⬆️ Cargar y normalizar</button>
+                <button class="btn btn-outline" type="button" onclick="resetExtractForm()">Limpiar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h4>Validaciones incluidas</h4>
+            <ul class="checklist">
+              <li><span class="check">✓</span><span>Banco, cuenta, empresa, moneda, fecha y ERP destino son obligatorios.</span></li>
+              <li><span class="check">✓</span><span>El archivo debe tener un formato permitido para extractos bancarios; también se contempla descarga por robot, carpeta compartida/API o API bancaria directa.</span></li>
+              <li><span class="check">✓</span><span>El proceso asigna un lote de carga para trazabilidad.</span></li>
+              <li><span class="check">✓</span><span>La normalización prepara los movimientos para cruce contra clientes, facturas y cartera.</span></li>
+              <li><span class="check">✓</span><span>Los pagos cargados quedan en estado inicial “Cargado” o “Revisión manual” según validación.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h4>Lotes cargados</h4>
+          <div class="table-wrap">
+            <table id="batchesTable">
+              <thead>
+                <tr>
+                  <th>Lote</th><th>Banco</th><th>Cuenta</th><th>Empresa</th><th>Moneda</th><th>Fecha</th><th>Sistema</th><th>Archivo</th><th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="batchesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="comprobantes" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Tickets MIAU y comprobantes de pago</h3>
+            <p>Vista de consulta y seguimiento de tickets capturados desde MIAU/tiquetera. En esta pantalla no se crean tickets; las solicitudes llegan desde la integración y se muestran para validación, cruce y gestión operativa.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-primary" onclick="syncMiauTickets()">🔄 Sincronizar MIAU</button>
+            <button class="btn btn-outline" onclick="exportTable('vouchersTable','tickets_miau_comprobantes.csv')">⬇️ Exportar tickets</button>
+          </div>
+        </div>
+
+        <div class="grid grid-4" style="margin-bottom:18px;">
+          <div class="kpi"><div class="label">Tickets capturados</div><div class="value" id="ticketKpiTotal">0</div><div class="delta">Solicitudes recibidas por MIAU</div></div>
+          <div class="kpi"><div class="label">Con retención</div><div class="value" id="ticketKpiRetention">0</div><div class="delta">Incluyen retenciones para validar</div></div>
+          <div class="kpi"><div class="label">Pendientes de revisión</div><div class="value" id="ticketKpiReview">0</div><div class="delta">Tickets aún no aplicados</div></div>
+          <div class="kpi"><div class="label">Tickets sincronizados hoy</div><div class="value" id="ticketKpiToday">0</div><div class="delta">Última captura desde MIAU</div></div>
+        </div>
+
+        <div class="grid grid-2" style="margin-bottom:18px;">
+          <div class="card">
+            <h4>Captura automática desde MIAU</h4>
+            <ul class="checklist">
+              <li><span class="check">✓</span><span>Los tickets se reciben desde MIAU/tiquetera mediante integración, consulta automatizada o carga técnica definida con TI.</span></li>
+              <li><span class="check">✓</span><span>La plataforma muestra el ticket, empresa, forma de pago, cliente, referencia, facturas, comprobante, orden de pago y retenciones cuando aplique.</span></li>
+              <li><span class="check">✓</span><span>Los tickets capturados alimentan la bandeja de pagos recibidos para validar coincidencia con extractos, cartera y facturas antes de aplicar en ERP.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Validaciones sobre tickets capturados</h4>
+            <ul class="checklist">
+              <li><span class="check">✓</span><span>Identificación de tickets con comprobante, orden de pago o soporte de retención.</span></li>
+              <li><span class="check">✓</span><span>Detección de tickets sin factura relacionada, con datos incompletos o pendientes de cruce contra extracto bancario.</span></li>
+              <li><span class="check">✓</span><span>Clasificación para revisión manual cuando la información no tiene confianza suficiente para aplicación automática.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="filters">
+              <select id="ticketStatusFilter" style="width:210px;" onchange="renderVouchers()">
+                <option value="">Todos los estados</option>
+                <option>Asociado</option>
+                <option>En revisión</option>
+                <option>Aplicado</option>
+                <option>Error de aplicación</option>
+              </select>
+              <select id="ticketCompanyFilter" style="width:230px;" onchange="renderVouchers()">
+                <option value="">Todas las empresas</option>
+              </select>
+              <select id="ticketRetentionFilter" style="width:180px;" onchange="renderVouchers()">
+                <option value="">Retención: todas</option>
+                <option value="Sí">Con retención</option>
+                <option value="No">Sin retención</option>
+              </select>
+              <input id="ticketSearch" style="width:320px;" placeholder="Buscar ticket, cliente, referencia, factura o adjunto" oninput="renderVouchers()" />
+            </div>
+            <button class="btn btn-outline" onclick="clearTicketFilters()">Limpiar filtros</button>
+          </div>
+
+          <h4>Tickets MIAU capturados</h4>
+          <div class="table-wrap">
+            <table id="vouchersTable">
+              <thead><tr><th>Ticket</th><th>Empresa</th><th>Forma de pago</th><th>Cliente</th><th>Referencia / facturas</th><th>Monto</th><th>Retención</th><th>Adjunto</th><th>Estado</th><th>Acción</th></tr></thead>
+              <tbody id="vouchersBody"></tbody>
+            </table>
+          </div>
+          <div class="table-note">Los tickets se muestran como resultado de la captura desde MIAU/tiquetera. La gestión se realiza sobre el pago asociado; no existe creación manual de tickets en esta pantalla.</div>
+        </div>
+      </section>
+
+      <section id="bandeja-pagos" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Bandeja de pagos recibidos desde MIAU con comprobantes</h3>
+            <p>Vista operativa para gestionar pagos provenientes de tickets MIAU, validar coincidencias con extractos/cartera/facturas y visualizar qué pagos fueron aplicados automáticamente por el robot.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-primary" onclick="runMatching()">✨ Identificar pagos</button>
+            <button class="btn btn-success" onclick="applySelectedPayments()">✅ Aplicar seleccionados</button>
+          </div>
+        </div>
+
+        <div class="quick-panel">
+          <div class="quick-metric"><strong id="kpiReceivedWithVoucher">0</strong><span>Pagos recibidos vía MIAU</span></div>
+          <div class="quick-metric"><strong id="kpiManualQueue">0</strong><span>Casos para gestión manual</span></div>
+          <div class="quick-metric"><strong id="kpiAutoAppliedCount">0</strong><span>Aplicados automáticamente</span></div>
+          <div class="quick-metric"><strong id="kpiReadyVoucher">0</strong><span>Tickets listos para aplicar</span></div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="filters">
+              <select id="filterStatus" style="width:190px;" onchange="renderPayments()">
+                <option value="">Todos los estados</option>
+                <option value="Cargado">Cargado</option>
+                <option value="Identificado">Identificado</option>
+                <option value="Listo para aplicar">Listo para aplicar</option>
+                <option value="Aplicado">Aplicado</option>
+                <option value="Revisión manual">Revisión manual</option>
+                <option value="Sin identificar">Sin identificar</option>
+                <option value="Error de aplicación">Error de aplicación</option>
+              </select>
+              <select id="filterBank" style="width:160px;" onchange="renderPayments()">
+                <option value="">Todos los bancos</option>
+                <option>Banco 1</option><option>Banco 2</option><option>Banco 3</option><option>Banco 4</option><option>Banco 5</option>
+              </select>
+              <select id="filterVoucher" style="width:185px;" onchange="renderPayments()">
+                <option value="">Comprobante: todos</option>
+                <option value="con">Con comprobante</option>
+                <option value="sin">Sin comprobante</option>
+              </select>
+              <input id="searchPayment" style="width:280px;" placeholder="Buscar cliente, referencia, factura o comprobante" oninput="renderPayments()" />
+            </div>
+            <button class="btn btn-outline" onclick="clearFilters()">Limpiar filtros</button>
+          </div>
+          <div class="table-wrap">
+            <table id="paymentsTable">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="selectAll" onchange="toggleAllPayments(this.checked)" /></th>
+                  <th>ID Pago</th><th>Cliente</th><th>Comprobante</th><th>Banco / Cuenta</th><th>Referencia</th><th>Factura</th><th>Monto</th><th>Sistema</th><th>Estado</th><th>Aplicación</th><th>Analista</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:18px;">
+          <div class="card">
+            <h4>Pagos para gestión manual <span class="muted">desde MIAU / tiquetera</span></h4>
+            <p class="muted">Casos donde existe ticket/comprobante, pero falta validar cliente, factura, monto, moneda, retención o diferencia antes de aplicar.</p>
+            <div class="table-wrap" style="margin-top:12px;">
+              <table>
+                <thead><tr><th>ID</th><th>Cliente</th><th>Comprobante</th><th>Motivo</th><th>Acción</th></tr></thead>
+                <tbody id="manualVoucherBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Aplicaciones automáticas realizadas <span class="muted">resultado robot / ERP</span></h4>
+            <p class="muted">Permite visualizar qué pagos fueron aplicados de forma automática, el ERP destino y el resultado de ejecución.</p>
+            <div class="table-wrap" style="margin-top:12px;">
+              <table>
+                <thead><tr><th>ID</th><th>Cliente</th><th>ERP</th><th>Monto</th><th>Resultado</th><th>Fecha</th></tr></thead>
+                <tbody id="autoAppliedBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="revision-manual" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Revisión manual y gestión de excepciones</h3>
+            <p>Pagos que requieren intervención del analista por falta de cliente, factura, referencia, diferencias o información incompleta.</p>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <div class="kpi"><div class="label">Sin cliente identificado</div><div class="value" id="kpiNoClient">0</div><div class="delta">Requieren investigación</div></div>
+          <div class="kpi"><div class="label">Con diferencia de monto</div><div class="value" id="kpiDiff">0</div><div class="delta">Necesitan validación</div></div>
+          <div class="kpi"><div class="label">Sin factura relacionada</div><div class="value" id="kpiNoInvoice">0</div><div class="delta">Pendientes de asociación</div></div>
+        </div>
+        <div class="card" style="margin-top:18px;">
+          <h4>Casos para revisión</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Banco</th><th>Cliente sugerido</th><th>Referencia</th><th>Monto</th><th>Motivo</th><th>Estado</th><th>Acción</th></tr></thead>
+              <tbody id="reviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="aplicacion-erp" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Aplicación asistida / automática en ERP</h3>
+            <p>Preparación y ejecución controlada de pagos validados hacia SAP B1, Integra, Opera/Integra o Yaipan según alcance por fase.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>Validación previa a ERP</h4>
+            <ul class="checklist">
+              <li><span class="check">✓</span><span>El pago debe tener cliente identificado.</span></li>
+              <li><span class="check">✓</span><span>El pago debe tener factura, referencia o documento asociado cuando aplique.</span></li>
+              <li><span class="check">✓</span><span>El monto y moneda deben coincidir con la regla definida.</span></li>
+              <li><span class="check">✓</span><span>El ERP destino debe estar definido por empresa.</span></li>
+              <li><span class="check">✓</span><span>Las acciones del robot y del usuario quedan en bitácora.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Preparar lote de aplicación</h4>
+            <div class="grid grid-2">
+              <div class="field">
+                <label>Sistema destino</label>
+                <select id="erpTarget">
+                  <option>SAP B1</option>
+                  <option>Integra</option>
+                  <option>Opera / Integra</option>
+                  <option>Yaipan</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Modo</label>
+                <select id="erpMode">
+                  <option>Aplicación asistida</option>
+                  <option>Aplicación automática RPA</option>
+                  <option>Solo generar archivo de carga</option>
+                </select>
+              </div>
+            </div>
+            <div class="row-actions" style="margin-top:14px;">
+              <button class="btn btn-primary" onclick="prepareERPBatch()">🤖 Preparar lote ERP</button>
+              <button class="btn btn-outline" onclick="downloadERPTemplate()">⬇️ Descargar plantilla ERP</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h4>Lotes ERP generados</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Lote ERP</th><th>Sistema</th><th>Modo</th><th>Pagos incluidos</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr></thead>
+              <tbody id="erpBatchesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="clientes-seguimiento" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Administración y seguimiento de clientes</h3>
+            <p>Vista para monitorear clientes con pagos recibidos, comprobantes asociados, casos en revisión, pagos aplicados y estado de seguimiento operativo.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-outline" onclick="exportTable('clientsTable','seguimiento_clientes_pagos.csv')">⬇️ Exportar clientes</button>
+            <button class="btn btn-primary" onclick="renderClients()">🔄 Actualizar vista</button>
+          </div>
+        </div>
+
+        <div class="client-summary">
+          <div class="client-card"><span>Clientes con pagos</span><strong id="clientKpiTotal">0</strong></div>
+          <div class="client-card"><span>Con gestión manual</span><strong id="clientKpiManual">0</strong></div>
+          <div class="client-card"><span>Con aplicación automática</span><strong id="clientKpiAuto">0</strong></div>
+          <div class="client-card"><span>Sin identificar / riesgo</span><strong id="clientKpiRisk">0</strong></div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="filters">
+              <input id="clientSearch" style="width:280px;" placeholder="Buscar cliente, empresa, analista o sistema" oninput="renderClients()" />
+              <select id="clientCompanyFilter" style="width:220px;" onchange="renderClients()">
+                <option value="">Todas las empresas</option>
+                <option>COMECA</option><option>Grupo Comeca</option><option>Chile</option><option>Perú</option><option>Empaques Santo Domingo</option><option>Hoteles</option><option>Impresora Delta</option><option>Metales Flix</option>
+              </select>
+              <select id="clientStatusFilter" style="width:220px;" onchange="renderClients()">
+                <option value="">Todos los estados</option>
+                <option>En revisión</option>
+                <option>Listo para aplicar</option>
+                <option>Aplicado</option>
+                <option>Sin identificar</option>
+                <option>En seguimiento</option>
+              </select>
+            </div>
+            <button class="btn btn-outline" onclick="clearClientFilters()">Limpiar filtros</button>
+          </div>
+          <div class="table-wrap">
+            <table id="clientsTable">
+              <thead>
+                <tr>
+                  <th>Cliente</th><th>Empresa</th><th>Sistema</th><th>Analista</th><th>Pagos</th><th>Comprobantes</th><th>Monto pendiente</th><th>Monto aplicado</th><th>Última recepción</th><th>Estado seguimiento</th><th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="clientsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="clientDetailPanel" class="client-detail" style="display:none;"></div>
+      </section>
+
+      <section id="transacciones" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Administración de transacciones bancarias</h3>
+            <p>Vista para administrar las transacciones provenientes de los estados de cuenta bancarios, filtrar por banco, cuenta y fecha, y validar qué fue aplicado o qué continúa pendiente.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-outline" onclick="exportTable('transactionsTable','transacciones_estados_cuenta.csv')">⬇️ Exportar transacciones</button>
+            <button class="btn btn-primary" onclick="renderTransactions()">🔄 Actualizar vista</button>
+          </div>
+        </div>
+
+        <div class="transaction-admin-head">
+          <div class="transaction-tile"><span>Transacciones filtradas</span><strong id="trxTotalCount">0</strong><small>Movimientos en la vista actual</small></div>
+          <div class="transaction-tile"><span>Monto aplicado</span><strong id="trxAppliedAmount">$0</strong><small>Pagos registrados en ERP</small></div>
+          <div class="transaction-tile"><span>Monto pendiente</span><strong id="trxPendingAmount">$0</strong><small>Por identificar, revisar o aplicar</small></div>
+          <div class="transaction-tile"><span>Pendientes críticos</span><strong id="trxCriticalCount">0</strong><small>Sin identificar, revisión o error</small></div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="filters">
+              <select id="trxBankFilter" style="width:190px;" onchange="renderTransactions()">
+                <option value="">Todos los bancos</option>
+              </select>
+              <select id="trxAccountFilter" style="width:210px;" onchange="renderTransactions()">
+                <option value="">Todas las cuentas</option>
+              </select>
+              <select id="trxStatusFilter" style="width:210px;" onchange="renderTransactions()">
+                <option value="">Todos los estados</option>
+                <option value="Aplicado">Aplicado</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Listo para aplicar">Listo para aplicar</option>
+                <option value="Identificado">Identificado</option>
+                <option value="Revisión manual">Revisión manual</option>
+                <option value="Sin identificar">Sin identificar</option>
+                <option value="Error de aplicación">Error de aplicación</option>
+                <option value="Cargado">Cargado</option>
+              </select>
+              <input id="trxFromDate" type="date" style="width:170px;" onchange="renderTransactions()" />
+              <input id="trxToDate" type="date" style="width:170px;" onchange="renderTransactions()" />
+              <input id="trxSearch" style="width:260px;" placeholder="Buscar cliente, referencia, factura o ID" oninput="renderTransactions()" />
+            </div>
+            <button class="btn btn-outline" onclick="clearTransactionFilters()">Limpiar filtros</button>
+          </div>
+
+          <div class="grid grid-3" style="margin-bottom:18px;">
+            <div class="card" style="box-shadow:none;">
+              <h4>Aplicado vs pendiente</h4>
+              <div class="stacked-bar" id="trxStackedBar"><span class="stacked-applied" style="width:0%"></span><span class="stacked-ready" style="width:0%"></span><span class="stacked-review" style="width:0%"></span><span class="stacked-risk" style="width:0%"></span></div>
+              <div class="legend" id="trxLegend"></div>
+            </div>
+            <div class="card" style="box-shadow:none;">
+              <h4>Pendiente por banco</h4>
+              <div class="bar-list" id="trxPendingBankBars"></div>
+            </div>
+            <div class="card" style="box-shadow:none;">
+              <h4>Pendiente por cuenta</h4>
+              <div class="bar-list" id="trxPendingAccountBars"></div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table id="transactionsTable">
+              <thead>
+                <tr>
+                  <th>ID</th><th>Fecha</th><th>Banco</th><th>Cuenta</th><th>Empresa</th><th>Cliente</th><th>Referencia</th><th>Factura</th><th>Monto</th><th>Sistema</th><th>Comprobante</th><th>Estado</th><th>Aplicación</th><th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsBody"></tbody>
+            </table>
+          </div>
+          <div class="table-note">La columna Estado permite diferenciar lo aplicado en ERP de lo que permanece pendiente de identificación, revisión manual, corrección o aplicación.</div>
+        </div>
+      </section>
+
+      <section id="reportes" class="section">
+        <div class="section-head">
+          <div>
+            <h3>Reportes y decisiones rápidas</h3>
+            <p>Vista gerencial con KPIs y gráficos para priorizar pagos pendientes, controlar aplicaciones automáticas y tomar decisiones por banco, sistema, analista o canal de recepción.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-outline" onclick="exportReport()">⬇️ Descargar reporte ejecutivo</button>
+            <button class="btn btn-primary" onclick="renderReports()">🔄 Actualizar reportes</button>
+          </div>
+        </div>
+
+        <div class="report-kpi-strip">
+          <div class="report-kpi"><span>Tasa de aplicación</span><strong id="reportAppliedRate">0%</strong><small>Pagos aplicados sobre el total cargado.</small></div>
+          <div class="report-kpi"><span>Monto pendiente</span><strong id="reportPendingAmount">$0</strong><small>Transacciones aún no aplicadas.</small></div>
+          <div class="report-kpi"><span>Casos críticos</span><strong id="reportCriticalCount">0</strong><small>Sin identificar, revisión manual o error.</small></div>
+          <div class="report-kpi"><span>Automatización</span><strong id="reportAutoRate">0%</strong><small>Aplicaciones realizadas automáticamente.</small></div>
+        </div>
+
+        <div class="chart-grid">
+          <div class="card">
+            <h4>Aplicados vs pendientes <span class="muted">estado general</span></h4>
+            <div class="status-split">
+              <div class="donut" id="reportAppliedDonut" data-label="0%" style="--p:0; --color: var(--verde);"></div>
+              <div>
+                <div class="stacked-bar" id="reportStackedBar"><span class="stacked-applied" style="width:0%"></span><span class="stacked-ready" style="width:0%"></span><span class="stacked-review" style="width:0%"></span><span class="stacked-risk" style="width:0%"></span></div>
+                <div class="legend" id="reportLegend"></div>
+                <p class="muted">Permite identificar rápidamente qué proporción de pagos ya fue aplicada, qué está listo para aplicar y qué requiere intervención.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Top pendientes por banco</h4>
+            <div class="bar-list" id="reportPendingBankBars"></div>
+          </div>
+          <div class="card">
+            <h4>Gestión por analista</h4>
+            <div class="bar-list" id="reportAnalystBars"></div>
+          </div>
+          <div class="card">
+            <h4>Pagos por sistema ERP</h4>
+            <div class="bar-list" id="reportSystemBars"></div>
+          </div>
+          <div class="card">
+            <h4>Canal de recepción</h4>
+            <div class="bar-list" id="reportChannelBars"></div>
+          </div>
+          <div class="card">
+            <h4>Decisiones rápidas sugeridas</h4>
+            <div class="decision-table" id="reportDecisionList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle">Detalle del pago</h3>
+          <p class="muted" id="modalSubtitle"></p>
+        </div>
+        <button class="btn btn-outline" onclick="closeModal()">✕ Cerrar</button>
+      </div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const state = {
+      batches: [],
+      vouchers: [
+        { id:'COMP-0001', ticketId:'MIAU-1001', company:'COMECA', paymentMethod:'Transferencia bancaria', client:'Cliente A', amount:2450.00, currency:'USD', date:'2026-04-24', reference:'REF-77291', invoices:'FAC-10458', retention:'No', file:'comprobante_cliente_a.pdf', status:'Asociado', linkedPayment:'PAY-0001', receivedChannel:'MIAU / Tiquetera' },
+        { id:'COMP-0002', ticketId:'MIAU-1002', company:'Empaques Santo Domingo', paymentMethod:'Orden de pago', client:'Cliente C', amount:1200.00, currency:'USD', date:'2026-04-24', reference:'COM-2345', invoices:'Pendiente', retention:'No', file:'comprobante_cliente_c.png', status:'En revisión', linkedPayment:'PAY-0004', receivedChannel:'MIAU / Tiquetera' },
+        { id:'COMP-0003', ticketId:'MIAU-1003', company:'Perú', paymentMethod:'Pago con retención', client:'Cliente E', amount:3200.00, currency:'USD', date:'2026-04-24', reference:'OP-91000', invoices:'FAC-99210', retention:'Sí', file:'orden_pago_cliente_e.xlsx', status:'Aplicado', linkedPayment:'PAY-0006', receivedChannel:'MIAU / Tiquetera' },
+        { id:'COMP-0004', ticketId:'MIAU-1004', company:'Metales Flix', paymentMethod:'Transferencia bancaria', client:'Cliente F', amount:520.25, currency:'USD', date:'2026-04-24', reference:'DEP-3318', invoices:'FAC-33318', retention:'No', file:'comprobante_cliente_f.pdf', status:'Error de aplicación', linkedPayment:'PAY-0007', receivedChannel:'MIAU / Tiquetera' },
+        { id:'COMP-0005', ticketId:'MIAU-1005', company:'Chile', paymentMethod:'Orden de pago', client:'Cliente G', amount:412000.00, currency:'CLP', date:'2026-04-24', reference:'TR-9099', invoices:'FAC-22015', retention:'No', file:'comprobante_cliente_g.pdf', status:'Asociado', linkedPayment:'PAY-0008', receivedChannel:'MIAU / Tiquetera' }
+      ],
+      erpBatches: [],
+      payments: [
+        { id:'PAY-0001', bank:'Banco 1', account:'CR01-****-1010', company:'COMECA', client:'Cliente A', reference:'REF-77291', invoice:'FAC-10458', amount:2450.00, currency:'USD', system:'SAP B1', status:'Listo para aplicar', analyst:'Ivannia', reason:'Comprobante coincide con monto y referencia.', selected:false, voucher:'comprobante_cliente_a.pdf', voucherId:'COMP-0001', voucherStatus:'Validado', receivedChannel:'MIAU / Tiquetera', receivedDate:'2026-04-24', confidence:96, applicationMode:'Pendiente', erpResult:'Pendiente de aplicación', autoApplied:false, appliedAt:'' },
+        { id:'PAY-0002', bank:'Banco 2', account:'CR02-****-2234', company:'Grupo Comeca', client:'Cliente B', reference:'DEP-88422', invoice:'FAC-77811', amount:875000.00, currency:'CRC', system:'SAP B1', status:'Identificado', analyst:'Andrew', reason:'Pendiente validación final', selected:false, voucher:'', voucherId:'', voucherStatus:'Sin comprobante', receivedChannel:'Extracto bancario', receivedDate:'2026-04-24', confidence:82, applicationMode:'Pendiente', erpResult:'Pendiente de aplicación', autoApplied:false, appliedAt:'' },
+        { id:'PAY-0003', bank:'Banco 1', account:'CR01-****-1010', company:'Hoteles', client:'', reference:'SIN DETALLE', invoice:'', amount:380.00, currency:'USD', system:'Opera / Integra', status:'Sin identificar', analyst:'Wagner', reason:'No se identifica cliente en descripción bancaria', selected:false, voucher:'', voucherId:'', voucherStatus:'Sin comprobante', receivedChannel:'Extracto bancario', receivedDate:'2026-04-24', confidence:20, applicationMode:'Pendiente', erpResult:'Requiere investigación', autoApplied:false, appliedAt:'' },
+        { id:'PAY-0004', bank:'Banco 3', account:'CR03-****-4451', company:'Empaques Santo Domingo', client:'Cliente C', reference:'COM-2345', invoice:'', amount:1200.00, currency:'USD', system:'Integra', status:'Revisión manual', analyst:'Ivannia', reason:'Comprobante recibido, sin factura relacionada', selected:false, voucher:'comprobante_cliente_c.png', voucherId:'COMP-0002', voucherStatus:'Pendiente validación', receivedChannel:'MIAU / Tiquetera', receivedDate:'2026-04-24', confidence:68, applicationMode:'Manual asistida', erpResult:'Pendiente de completar factura', autoApplied:false, appliedAt:'' },
+        { id:'PAY-0005', bank:'Banco 5', account:'CR05-****-9344', company:'Impresora Delta', client:'Cliente D', reference:'PAGO-9081', invoice:'FAC-55210', amount:649.50, currency:'USD', system:'Yaipan', status:'Cargado', analyst:'Andrew', reason:'Pendiente ejecución de reglas', selected:false, voucher:'', voucherId:'', voucherStatus:'Sin comprobante', receivedChannel:'Extracto bancario', receivedDate:'2026-04-24', confidence:50, applicationMode:'Pendiente', erpResult:'Pendiente de aplicación', autoApplied:false, appliedAt:'' },
+        { id:'PAY-0006', bank:'Banco 4', account:'CR04-****-6678', company:'Perú', client:'Cliente E', reference:'OP-91000', invoice:'FAC-99210', amount:3200.00, currency:'USD', system:'SAP B1', status:'Aplicado', analyst:'Patricia', reason:'Aplicado automáticamente en ERP', selected:false, voucher:'orden_pago_cliente_e.xlsx', voucherId:'COMP-0003', voucherStatus:'Validado', receivedChannel:'MIAU / Tiquetera', receivedDate:'2026-04-24', confidence:98, applicationMode:'Automática RPA', erpResult:'Aplicado en SAP B1', autoApplied:true, appliedAt:'2026-04-24 11:35' },
+        { id:'PAY-0007', bank:'Banco 2', account:'CR02-****-2234', company:'Metales Flix', client:'Cliente F', reference:'DEP-3318', invoice:'FAC-33318', amount:520.25, currency:'USD', system:'Integra', status:'Error de aplicación', analyst:'Wagner', reason:'Error al registrar en sistema destino', selected:false, voucher:'comprobante_cliente_f.pdf', voucherId:'COMP-0004', voucherStatus:'Validado', receivedChannel:'MIAU / Tiquetera', receivedDate:'2026-04-24', confidence:94, applicationMode:'Automática RPA', erpResult:'Error en sistema destino', autoApplied:false, appliedAt:'' },
+        { id:'PAY-0008', bank:'Banco 3', account:'CR03-****-4451', company:'Chile', client:'Cliente G', reference:'TR-9099', invoice:'FAC-22015', amount:412000.00, currency:'CLP', system:'SAP B1', status:'Listo para aplicar', analyst:'Patricia', reason:'Comprobante y factura coinciden.', selected:false, voucher:'comprobante_cliente_g.pdf', voucherId:'COMP-0005', voucherStatus:'Validado', receivedChannel:'MIAU / Tiquetera', receivedDate:'2026-04-24', confidence:97, applicationMode:'Pendiente', erpResult:'Pendiente de aplicación', autoApplied:false, appliedAt:'' }
+      ]
+    };
+
+    const statusClass = {
+      'Cargado': 'cargado',
+      'Identificado': 'identificado',
+      'Listo para aplicar': 'listo',
+      'Aplicado': 'aplicado',
+      'Revisión manual': 'revision',
+      'Sin identificar': 'noidentificado',
+      'Error de aplicación': 'error'
+    };
+
+    const money = (value, currency='USD') => new Intl.NumberFormat('es-CR', {
+      style: 'currency', currency: currency === 'CRC' ? 'CRC' : currency === 'CLP' ? 'CLP' : currency === 'PEN' ? 'PEN' : 'USD', maximumFractionDigits: 2
+    }).format(value || 0);
+
+    const toast = (msg) => {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3300);
+    };
+
+    document.querySelectorAll('.nav button, [data-goto]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const section = btn.dataset.section || btn.dataset.goto;
+        if (!section) return;
+        showSection(section);
+      });
+    });
+
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+      document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.section === section));
+      document.getElementById('sidebar').classList.remove('open');
+      refreshDashboard();
+    }
+
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+    });
+
+    function setFieldError(fieldId, hasError) {
+      const field = document.querySelector(`[data-field="${fieldId}"]`);
+      if (field) field.classList.toggle('error', hasError);
+    }
+
+    function validateRequired(id) {
+      const el = document.getElementById(id);
+      const valid = !!(el && String(el.value).trim());
+      setFieldError(id, !valid);
+      return valid;
+    }
+
+    function validateFile(id, allowed) {
+      const input = document.getElementById(id);
+      const file = input.files && input.files[0];
+      let valid = false;
+      if (file) {
+        const ext = file.name.split('.').pop().toLowerCase();
+        valid = allowed.includes(ext);
+      }
+      setFieldError(id, !valid);
+      return valid;
+    }
+
+    function validateAmount(id) {
+      const value = Number(document.getElementById(id).value);
+      const valid = value > 0;
+      setFieldError(id, !valid);
+      return valid;
+    }
+
+    document.getElementById('extractFile').addEventListener('change', e => {
+      document.getElementById('extractFileName').textContent = e.target.files[0]?.name || 'Ningún archivo seleccionado';
+    });
+
+    document.getElementById('extractForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const valid = ['bank','account','company','currency','period','sourceSystem'].every(validateRequired) && validateFile('extractFile', ['xlsx','xls','csv','txt','pdf']);
+      if (!valid) {
+        toast('Revise los campos obligatorios y el formato del extracto.');
+        return;
+      }
+      const progress = document.getElementById('uploadProgress');
+      progress.style.width = '25%';
+      setTimeout(() => progress.style.width = '70%', 250);
+      setTimeout(() => {
+        progress.style.width = '100%';
+        const lot = 'LOT-' + String(state.batches.length + 1).padStart(4,'0');
+        const file = document.getElementById('extractFile').files[0].name;
+        state.batches.unshift({ lot, bank: bank.value, account: account.value, company: company.value, currency: currency.value, period: period.value, system: sourceSystem.value, file, status:'Normalizado' });
+        addPaymentsFromBatch(bank.value, account.value, company.value, currency.value, sourceSystem.value);
+        renderBatches();
+        renderPayments();
+        refreshDashboard();
+        toast('Extracto cargado y normalizado correctamente. Se generaron pagos para revisión.');
+      }, 700);
+    });
+
+    function addPaymentsFromBatch(bank, account, company, currency, system) {
+      const count = 3;
+      for (let i=0; i<count; i++) {
+        const index = state.payments.length + 1;
+        const status = i === 0 ? 'Cargado' : i === 1 ? 'Identificado' : 'Revisión manual';
+        state.payments.unshift({
+          id: 'PAY-' + String(index).padStart(4,'0'),
+          bank, account, company,
+          client: i === 2 ? '' : 'Cliente ' + String.fromCharCode(72 + i),
+          reference: 'EXT-' + Math.floor(10000 + Math.random()*89999),
+          invoice: i === 0 ? '' : 'FAC-' + Math.floor(10000 + Math.random()*89999),
+          amount: Math.round((200 + Math.random()*4500) * 100) / 100,
+          currency, system, status,
+          analyst: ['Ivannia','Andrew','Wagner','Patricia'][Math.floor(Math.random()*4)],
+          reason: status === 'Revisión manual' ? 'Información incompleta para aplicación' : '',
+          selected: false,
+          voucher: '',
+          voucherId: '',
+          voucherStatus: 'Sin comprobante',
+          receivedChannel: 'Extracto bancario',
+          receivedDate: new Date().toISOString().slice(0,10),
+          confidence: status === 'Identificado' ? 80 : status === 'Cargado' ? 45 : 35,
+          applicationMode: 'Pendiente',
+          erpResult: 'Pendiente de aplicación',
+          autoApplied: false,
+          appliedAt: ''
+        });
+      }
+    }
+
+    function resetExtractForm() {
+      extractForm.reset();
+      extractFileName.textContent = 'Ningún archivo seleccionado';
+      uploadProgress.style.width = '0';
+      document.querySelectorAll('#extractForm .field').forEach(f => f.classList.remove('error'));
+    }
+
+    function renderBatches() {
+      const body = document.getElementById('batchesBody');
+      if (!state.batches.length) {
+        body.innerHTML = `<tr><td colspan="9"><div class="empty">Aún no existen lotes cargados.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = state.batches.map(b => `
+        <tr>
+          <td><b>${b.lot}</b></td><td>${b.bank}</td><td>${b.account}</td><td>${b.company}</td><td>${b.currency}</td><td>${b.period}</td><td>${b.system}</td><td>${b.file}</td><td><span class="status listo">${b.status}</span></td>
+        </tr>`).join('');
+    }
+
+
+
+    function inferSystemForCompany(company) {
+      const sapCompanies = ['COMECA','Grupo Comeca','Chile','Perú','Única','Centroserv','Technoends'];
+      if (sapCompanies.includes(company)) return 'SAP B1';
+      if (company === 'Hoteles') return 'Opera / Integra';
+      if (company === 'Impresora Delta') return 'Yaipan';
+      if (company) return 'Integra';
+      return 'Por definir';
+    }
+
+
+    function syncMiauTickets() {
+      const next = state.vouchers.length + 1;
+      const ticket = {
+        id: 'COMP-' + String(next).padStart(4,'0'),
+        ticketId: 'MIAU-' + String(1000 + next),
+        company: ['COMECA','Grupo Comeca','Empaques Santo Domingo','Hoteles','Metales Flix'][next % 5],
+        paymentMethod: next % 3 === 0 ? 'Pago con retención' : next % 2 === 0 ? 'Orden de pago' : 'Transferencia bancaria',
+        client: 'Cliente sincronizado ' + String.fromCharCode(64 + next),
+        amount: Math.round((500 + Math.random() * 5000) * 100) / 100,
+        currency: 'USD',
+        date: new Date().toISOString().slice(0,10),
+        reference: 'MIAU-REF-' + Math.floor(10000 + Math.random() * 89999),
+        invoices: next % 2 === 0 ? 'Pendiente' : 'FAC-' + Math.floor(10000 + Math.random() * 89999),
+        retention: next % 3 === 0 ? 'Sí' : 'No',
+        file: 'adjunto_miau_' + String(next).padStart(4,'0') + '.pdf',
+        status: 'En revisión',
+        linkedPayment: '',
+        receivedChannel: 'MIAU / Tiquetera'
+      };
+      state.vouchers.unshift(ticket);
+      addPaymentFromVoucher(ticket, 'Ticket capturado desde integración MIAU. Pendiente validación contra extracto bancario y cartera.');
+      renderVouchers();
+      renderPayments();
+      refreshDashboard();
+      toast('Sincronización MIAU ejecutada. Se capturó un ticket de ejemplo para la bandeja de revisión.');
+    }
+
+    function clearTicketFilters() {
+      ['ticketStatusFilter','ticketCompanyFilter','ticketRetentionFilter','ticketSearch'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      renderVouchers();
+    }
+
+    function ensureTicketCompanyOptions() {
+      const select = document.getElementById('ticketCompanyFilter');
+      if (!select) return;
+      const current = select.value;
+      const companies = [...new Set(state.vouchers.map(v => v.company).filter(Boolean))].sort();
+      select.innerHTML = '<option value="">Todas las empresas</option>' + companies.map(c => `<option value="${c}">${c}</option>`).join('');
+      select.value = current;
+    }
+
+    function getFilteredVouchers() {
+      ensureTicketCompanyOptions();
+      const status = document.getElementById('ticketStatusFilter')?.value || '';
+      const company = document.getElementById('ticketCompanyFilter')?.value || '';
+      const retention = document.getElementById('ticketRetentionFilter')?.value || '';
+      const q = (document.getElementById('ticketSearch')?.value || '').toLowerCase().trim();
+      return state.vouchers.filter(v => {
+        const haystack = [v.ticketId, v.id, v.company, v.paymentMethod, v.client, v.reference, v.invoices, v.file, v.status].join(' ').toLowerCase();
+        return (!status || v.status === status) &&
+          (!company || v.company === company) &&
+          (!retention || v.retention === retention) &&
+          (!q || haystack.includes(q));
+      });
+    }
+
+    function renderVouchers() {
+      const body = document.getElementById('vouchersBody');
+      if (!body) return;
+      const totalEl = document.getElementById('ticketKpiTotal');
+      const retentionEl = document.getElementById('ticketKpiRetention');
+      const reviewEl = document.getElementById('ticketKpiReview');
+      const todayEl = document.getElementById('ticketKpiToday');
+      const today = new Date().toISOString().slice(0,10);
+      if (totalEl) totalEl.textContent = state.vouchers.length;
+      if (retentionEl) retentionEl.textContent = state.vouchers.filter(v => v.retention === 'Sí').length;
+      if (reviewEl) reviewEl.textContent = state.vouchers.filter(v => v.status !== 'Aplicado').length;
+      if (todayEl) todayEl.textContent = state.vouchers.filter(v => v.date === today).length;
+      const rows = getFilteredVouchers();
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="10"><div class="empty">No hay tickets MIAU que coincidan con los filtros seleccionados.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = rows.map(v => {
+        const linked = state.payments.find(p => p.voucherId === v.id || p.ticketId === v.ticketId);
+        return `<tr>
+          <td><b>${v.ticketId || v.id}</b><br><span class="muted">${v.receivedChannel || 'MIAU / Tiquetera'}</span></td>
+          <td>${v.company || 'Por validar'}</td>
+          <td>${v.paymentMethod || 'No definida'}</td>
+          <td>${v.client}</td>
+          <td>${v.reference}<br><span class="muted">${v.invoices || 'Sin facturas indicadas'}</span></td>
+          <td>${money(v.amount, v.currency || 'USD')}</td>
+          <td>${v.retention === 'Sí' ? '<span class="tag yellow">Con retención</span>' : '<span class="tag green">No</span>'}</td>
+          <td>${v.file ? `<button class="evidence-link" onclick="${linked ? `openPayment('${linked.id}')` : `toast('Adjunto disponible para revisión.')`}">📎 ${v.file}</button>` : '<span class="tag yellow">Sin adjunto</span>'}</td>
+          <td><span class="status ${v.status === 'Aplicado' ? 'aplicado' : v.status === 'Asociado' ? 'identificado' : v.status === 'Error de aplicación' ? 'error' : 'revision'}">${v.status}</span></td>
+          <td>${linked ? `<button class="mini-btn" onclick="openPayment('${linked.id}')">Gestionar pago</button>` : '<span class="muted">Sin pago asociado</span>'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function addPaymentFromVoucher(voucher, comment='') {
+      const index = state.payments.length + 1;
+      const paymentId = 'PAY-' + String(index).padStart(4,'0');
+      voucher.linkedPayment = paymentId;
+      state.payments.unshift({
+        id: paymentId,
+        bank: 'Pendiente extracto',
+        account: 'Pendiente extracto',
+        company: voucher.company || 'Por validar',
+        client: voucher.client,
+        reference: voucher.reference,
+        invoice: voucher.invoices || '',
+        amount: voucher.amount,
+        currency: voucher.currency || 'USD',
+        system: inferSystemForCompany(voucher.company),
+        status: voucher.invoices ? 'Revisión manual' : 'Revisión manual',
+        analyst: 'Por asignar',
+        reason: comment || `Ticket ${voucher.ticketId || voucher.id} recibido por MIAU. Falta cruzar contra extracto bancario y validar facturas/retenciones.`,
+        selected: false,
+        voucher: voucher.file,
+        voucherId: voucher.id,
+        ticketId: voucher.ticketId,
+        paymentMethod: voucher.paymentMethod,
+        retention: voucher.retention,
+        voucherStatus: 'Pendiente validación',
+        receivedChannel: 'MIAU / Tiquetera',
+        receivedDate: voucher.date,
+        confidence: 45,
+        applicationMode: 'Manual asistida',
+        erpResult: 'Pendiente de revisión',
+        autoApplied: false,
+        appliedAt: ''
+      });
+    }
+
+    function statusBadge(status) {
+      return `<span class="status ${statusClass[status] || 'cargado'}">${status}</span>`;
+    }
+
+    function renderPayments() {
+      const status = filterStatus.value;
+      const bank = filterBank.value;
+      const voucherFilter = document.getElementById('filterVoucher')?.value || '';
+      const q = searchPayment.value.toLowerCase().trim();
+      const filtered = state.payments.filter(p => {
+        const hasVoucher = !!p.voucher;
+        return (!status || p.status === status) &&
+          (!bank || p.bank === bank) &&
+          (!voucherFilter || (voucherFilter === 'con' ? hasVoucher : !hasVoucher)) &&
+          (!q || [p.client, p.reference, p.invoice, p.id, p.voucher, p.voucherId].join(' ').toLowerCase().includes(q));
+      });
+      const body = document.getElementById('paymentsBody');
+      if (!filtered.length) {
+        body.innerHTML = `<tr><td colspan="13"><div class="empty">No hay pagos que coincidan con los filtros seleccionados.</div></td></tr>`;
+      } else {
+        body.innerHTML = filtered.map(p => `
+          <tr>
+            <td><input type="checkbox" ${p.selected ? 'checked' : ''} onchange="togglePayment('${p.id}', this.checked)" ${p.status === 'Aplicado' ? 'disabled' : ''}/></td>
+            <td><b>${p.id}</b><br><span class="muted">${p.receivedDate || 'Sin fecha'}</span></td>
+            <td>${p.client || '<span class="muted">Sin identificar</span>'}</td>
+            <td>${p.voucher ? `<button class="evidence-link" onclick="openPayment('${p.id}')">📎 ${p.voucher}</button><br><span class="muted">${p.voucherStatus || 'Pendiente'}</span>` : '<span class="tag yellow">Sin comprobante</span>'}</td>
+            <td>${p.bank}<br><span class="muted">${p.account}</span></td>
+            <td>${p.reference}</td>
+            <td>${p.invoice || '<span class="muted">Pendiente</span>'}</td>
+            <td>${money(p.amount, p.currency)}<br><span class="muted">${p.currency}</span></td>
+            <td>${p.system}</td>
+            <td>${statusBadge(p.status)}</td>
+            <td>${p.autoApplied ? '<span class="tag green">Automática</span>' : `<span class="tag blue">${p.applicationMode || 'Pendiente'}</span>`}<br><span class="muted">${p.erpResult || ''}</span></td>
+            <td>${p.analyst}</td>
+            <td><div class="row-actions"><button class="mini-btn" onclick="openPayment('${p.id}')">Gestionar</button><button class="mini-btn" onclick="markReview('${p.id}')">Revisar</button><button class="mini-btn" onclick="applyAutomatic('${p.id}')">Auto aplicar</button></div></td>
+          </tr>
+        `).join('');
+      }
+      renderManualVoucherQueue();
+      renderAutoApplied();
+      renderReview();
+      refreshDashboard();
+    }
+
+    function togglePayment(id, checked) {
+      const p = state.payments.find(x => x.id === id);
+      if (p) p.selected = checked;
+    }
+
+    function toggleAllPayments(checked) {
+      state.payments.forEach(p => {
+        if (p.status !== 'Aplicado') p.selected = checked;
+      });
+      renderPayments();
+    }
+
+    function clearFilters() {
+      filterStatus.value = '';
+      filterBank.value = '';
+      const voucherFilter = document.getElementById('filterVoucher');
+      if (voucherFilter) voucherFilter.value = '';
+      searchPayment.value = '';
+      renderPayments();
+    }
+
+    document.getElementById('runMatchingBtn')?.addEventListener('click', runMatching);
+
+    function runMatching() {
+      let updated = 0;
+      state.payments.forEach(p => {
+        if (p.status === 'Cargado') {
+          p.status = p.client && p.invoice ? 'Listo para aplicar' : 'Identificado';
+          p.reason = p.status === 'Identificado' ? 'Validar factura antes de aplicar' : '';
+          updated++;
+        } else if (p.status === 'Sin identificar' && Math.random() > 0.45) {
+          p.client = 'Cliente sugerido';
+          p.status = 'Revisión manual';
+          p.reason = 'Cliente sugerido por referencia bancaria. Requiere confirmación.';
+          updated++;
+        }
+      });
+      renderPayments();
+      toast(updated ? `Identificación ejecutada. ${updated} pagos fueron actualizados.` : 'No hay pagos cargados pendientes de identificación.');
+    }
+
+    function markReview(id) {
+      const p = state.payments.find(x => x.id === id);
+      if (!p) return;
+      if (p.status === 'Aplicado') {
+        toast('El pago ya fue aplicado y no puede enviarse a revisión.');
+        return;
+      }
+      p.status = 'Revisión manual';
+      p.reason = p.reason || 'Revisión solicitada por analista.';
+      renderPayments();
+      toast(`${id} enviado a revisión manual.`);
+    }
+
+    function openPayment(id) {
+      const p = state.payments.find(x => x.id === id);
+      if (!p) return;
+      modalTitle.textContent = `Gestión del pago ${p.id}`;
+      modalSubtitle.textContent = `${p.bank} · ${p.company} · ${p.system} · ${p.receivedChannel || 'Origen no definido'}`;
+      const automaticReady = p.client && p.invoice && p.status !== 'Aplicado';
+      const ticket = state.vouchers.find(v => v.id === p.voucherId);
+      modalContent.innerHTML = `
+        <div class="grid grid-4">
+          <div class="kpi"><div class="label">Cliente</div><div class="value" style="font-size:19px;">${p.client || 'Sin identificar'}</div><div class="delta">Cliente asociado o sugerido</div></div>
+          <div class="kpi"><div class="label">Monto recibido</div><div class="value" style="font-size:20px;">${money(p.amount, p.currency)}</div><div class="delta">${p.currency}</div></div>
+          <div class="kpi"><div class="label">Confianza</div><div class="value" style="font-size:22px;">${p.confidence || 0}%</div><div class="delta">Coincidencia automática</div></div>
+          <div class="kpi"><div class="label">Estado</div><div class="value" style="font-size:18px;">${p.status}</div><div class="delta">Estado actual</div></div>
+        </div>
+        <div class="detail-grid" style="margin-top:18px;">
+          <div class="card" style="box-shadow:none;">
+            <h4>Datos del pago recibido</h4>
+            <p><b>Banco:</b> ${p.bank}</p>
+            <p><b>Cuenta:</b> ${p.account}</p>
+            <p><b>Referencia bancaria:</b> ${p.reference}</p>
+            <p><b>Factura / documento:</b> ${p.invoice || 'Pendiente de asociar'}</p>
+            <p><b>Canal de recepción:</b> ${p.receivedChannel || 'No definido'}</p>
+            <p><b>Ticket MIAU:</b> ${p.ticketId || ticket?.ticketId || 'No asociado'}</p>
+            <p><b>Forma de pago:</b> ${p.paymentMethod || ticket?.paymentMethod || 'No definida'}</p>
+            <p><b>Retención:</b> ${p.retention || ticket?.retention || 'No'}</p>
+            <p><b>Fecha recepción:</b> ${p.receivedDate || 'No definida'}</p>
+            <p><b>Analista asignado:</b> ${p.analyst}</p>
+            <p><b>Motivo / observación:</b> ${p.reason || 'Sin observaciones'}</p>
+            <p><b>Comprobante:</b> ${p.voucher ? `<span class="evidence-link">📎 ${p.voucher}</span>` : '<span class="tag yellow">Sin comprobante asociado</span>'}</p>
+          </div>
+          <div class="card" style="box-shadow:none;">
+            <h4>Gestión manual del caso</h4>
+            <div class="field"><label>Cliente</label><input id="modalClient" value="${p.client || ''}" placeholder="Cliente identificado" /></div>
+            <div class="field" style="margin-top:10px;"><label>Factura / documento</label><input id="modalInvoice" value="${p.invoice || ''}" placeholder="Factura o documento" /></div>
+            <div class="field" style="margin-top:10px;"><label>Sistema destino</label><select id="modalSystem"><option ${p.system==='SAP B1'?'selected':''}>SAP B1</option><option ${p.system==='Integra'?'selected':''}>Integra</option><option ${p.system==='Opera / Integra'?'selected':''}>Opera / Integra</option><option ${p.system==='Yaipan'?'selected':''}>Yaipan</option><option ${p.system==='Por definir'?'selected':''}>Por definir</option></select></div>
+            <div class="field" style="margin-top:10px;"><label>Comentario / resolución</label><textarea id="modalReason" placeholder="Comentario de revisión">${p.reason || ''}</textarea></div>
+            <div class="row-actions" style="margin-top:12px;">
+              <button class="btn btn-primary" onclick="savePaymentModal('${p.id}')">Guardar gestión</button>
+              <button class="btn btn-success" onclick="setReady('${p.id}')">Marcar listo</button>
+              <button class="btn btn-dark" onclick="applyAutomatic('${p.id}')" ${automaticReady ? '' : ''}>Aplicar automático</button>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-2" style="margin-top:18px;">
+          <div class="card" style="box-shadow:none;">
+            <h4>Resultado de aplicación</h4>
+            <p><b>Modo:</b> ${p.applicationMode || 'Pendiente'}</p>
+            <p><b>Resultado ERP:</b> ${p.erpResult || 'Pendiente de aplicación'}</p>
+            <p><b>Fecha / hora:</b> ${p.appliedAt || 'No aplicado'}</p>
+          </div>
+          <div class="card" style="box-shadow:none;">
+            <h4>Bitácora del pago</h4>
+            <div class="audit-list">
+              <div class="audit-item"><strong>Recepción</strong><span>${p.receivedDate || 'Sin fecha'} · ${p.receivedChannel || 'No definido'} · ${p.voucher || 'Sin comprobante'}</span></div>
+              <div class="audit-item"><strong>Identificación</strong><span>Confianza ${p.confidence || 0}% · Estado ${p.status}</span></div>
+              <div class="audit-item"><strong>Aplicación</strong><span>${p.erpResult || 'Pendiente'} · ${p.applicationMode || 'Pendiente'}</span></div>
+            </div>
+          </div>
+        </div>`;
+      modalBackdrop.classList.add('open');
+    }
+
+    function closeModal() { modalBackdrop.classList.remove('open'); }
+
+    function savePaymentModal(id) {
+      const p = state.payments.find(x => x.id === id);
+      p.client = modalClient.value.trim();
+      p.invoice = modalInvoice.value.trim();
+      p.system = document.getElementById('modalSystem')?.value || p.system;
+      p.reason = modalReason.value.trim();
+      p.voucherStatus = p.voucher ? 'Validado manualmente' : 'Sin comprobante';
+      p.applicationMode = 'Manual asistida';
+      p.status = p.client && p.invoice ? 'Identificado' : 'Revisión manual';
+      p.confidence = p.client && p.invoice ? Math.max(p.confidence || 0, 88) : p.confidence;
+      renderPayments();
+      closeModal();
+      toast('Gestión manual guardada correctamente.');
+    }
+
+    function setReady(id) {
+      const p = state.payments.find(x => x.id === id);
+      const client = modalClient?.value.trim() || p.client;
+      const invoice = modalInvoice?.value.trim() || p.invoice;
+      if (!client || !invoice) {
+        toast('Para marcar como listo, el pago debe tener cliente y factura/documento asociado.');
+        return;
+      }
+      p.client = client;
+      p.invoice = invoice;
+      p.system = document.getElementById('modalSystem')?.value || p.system;
+      p.reason = modalReason?.value.trim() || 'Validado para aplicación.';
+      p.voucherStatus = p.voucher ? 'Validado' : 'Sin comprobante';
+      p.status = 'Listo para aplicar';
+      p.applicationMode = 'Manual asistida';
+      p.confidence = Math.max(p.confidence || 0, 92);
+      renderPayments();
+      closeModal();
+      toast(`${id} marcado como listo para aplicar.`);
+    }
+
+    function applyAutomatic(id) {
+      const p = state.payments.find(x => x.id === id);
+      if (!p) return;
+      if (p.status === 'Aplicado') {
+        toast(`${id} ya se encuentra aplicado.`);
+        return;
+      }
+      if (!p.client || !p.invoice) {
+        toast('Para aplicar automáticamente se requiere cliente y factura/documento asociado.');
+        openPayment(id);
+        return;
+      }
+      p.status = 'Aplicado';
+      p.selected = false;
+      p.autoApplied = true;
+      p.applicationMode = 'Automática RPA';
+      p.erpResult = `Aplicado en ${p.system}`;
+      p.reason = 'Aplicado automáticamente en ERP';
+      p.appliedAt = new Date().toLocaleString('es-CR');
+      p.voucherStatus = p.voucher ? 'Validado' : 'Sin comprobante';
+      const voucher = state.vouchers.find(v => v.id === p.voucherId);
+      if (voucher) voucher.status = 'Aplicado';
+      renderVouchers();
+      renderPayments();
+      closeModal();
+      toast(`${id} aplicado automáticamente y registrado en bitácora.`);
+    }
+
+    function applySelectedPayments() {
+      const selected = state.payments.filter(p => p.selected);
+      if (!selected.length) {
+        toast('Seleccione al menos un pago para aplicar.');
+        return;
+      }
+      const invalid = selected.filter(p => p.status !== 'Listo para aplicar');
+      if (invalid.length) {
+        toast('Solo se pueden aplicar pagos en estado “Listo para aplicar”.');
+        return;
+      }
+      selected.forEach(p => {
+        p.status = 'Aplicado';
+        p.reason = 'Aplicado en ERP mediante lote asistido';
+        p.selected = false;
+        p.autoApplied = false;
+        p.applicationMode = 'Aplicación asistida';
+        p.erpResult = `Aplicado en ${p.system}`;
+        p.appliedAt = new Date().toLocaleString('es-CR');
+      });
+      renderPayments();
+      toast(`${selected.length} pago(s) aplicado(s) correctamente mediante aplicación asistida.`);
+    }
+
+    function renderManualVoucherQueue() {
+      const body = document.getElementById('manualVoucherBody');
+      if (!body) return;
+      const items = state.payments.filter(p => p.voucher && ['Revisión manual','Sin identificar','Error de aplicación','Identificado'].includes(p.status));
+      if (!items.length) {
+        body.innerHTML = `<tr><td colspan="5"><div class="empty">No hay comprobantes pendientes de gestión manual.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = items.map(p => `
+        <tr>
+          <td><b>${p.id}</b></td>
+          <td>${p.client || '<span class="muted">Sin identificar</span>'}</td>
+          <td><button class="evidence-link" onclick="openPayment('${p.id}')">📎 ${p.voucher}</button></td>
+          <td>${p.reason || 'Pendiente de revisión'}</td>
+          <td><button class="mini-btn" onclick="openPayment('${p.id}')">Gestionar</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAutoApplied() {
+      const body = document.getElementById('autoAppliedBody');
+      if (!body) return;
+      const items = state.payments.filter(p => p.autoApplied && p.status === 'Aplicado');
+      if (!items.length) {
+        body.innerHTML = `<tr><td colspan="6"><div class="empty">Aún no hay pagos aplicados automáticamente.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = items.map(p => `
+        <tr>
+          <td><b>${p.id}</b></td>
+          <td>${p.client}</td>
+          <td>${p.system}</td>
+          <td>${money(p.amount, p.currency)}</td>
+          <td><span class="status aplicado">${p.erpResult || 'Aplicado'}</span></td>
+          <td>${p.appliedAt || 'Registrado'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderReview() {
+      const review = state.payments.filter(p => ['Revisión manual','Sin identificar','Error de aplicación'].includes(p.status));
+      document.getElementById('kpiNoClient').textContent = review.filter(p => !p.client).length;
+      document.getElementById('kpiDiff').textContent = review.filter(p => /diferencia/i.test(p.reason)).length;
+      document.getElementById('kpiNoInvoice').textContent = review.filter(p => !p.invoice).length;
+      const body = document.getElementById('reviewBody');
+      if (!review.length) {
+        body.innerHTML = `<tr><td colspan="8"><div class="empty">No existen pagos en revisión manual.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = review.map(p => `
+        <tr><td><b>${p.id}</b></td><td>${p.bank}</td><td>${p.client || '<span class="muted">Sin identificar</span>'}</td><td>${p.reference}</td><td>${money(p.amount, p.currency)}</td><td>${p.reason || 'Pendiente de revisión'}</td><td>${statusBadge(p.status)}</td><td><button class="mini-btn" onclick="openPayment('${p.id}')">Resolver</button></td></tr>
+      `).join('');
+    }
+
+
+    function clientStatus(row) {
+      if (row.name === 'Sin identificar') return 'Sin identificar';
+      if (row.review > 0 || row.errors > 0) return 'En revisión';
+      if (row.ready > 0) return 'Listo para aplicar';
+      if (row.applied > 0 && row.pending === 0) return 'Aplicado';
+      return 'En seguimiento';
+    }
+
+    function clientStatusBadge(status) {
+      const map = {
+        'Sin identificar': 'noidentificado',
+        'En revisión': 'revision',
+        'Listo para aplicar': 'listo',
+        'Aplicado': 'aplicado',
+        'En seguimiento': 'identificado'
+      };
+      return `<span class="status ${map[status] || 'identificado'}">${status}</span>`;
+    }
+
+    function buildClientRows() {
+      const rows = {};
+      state.payments.forEach(p => {
+        const name = p.client || 'Sin identificar';
+        if (!rows[name]) {
+          rows[name] = {
+            name,
+            company: p.company || 'Por validar',
+            system: p.system || 'Por definir',
+            analyst: p.analyst || 'Por asignar',
+            payments: 0,
+            vouchers: 0,
+            pendingAmount: 0,
+            appliedAmount: 0,
+            lastDate: p.receivedDate || '',
+            review: 0,
+            ready: 0,
+            applied: 0,
+            errors: 0,
+            pending: 0
+          };
+        }
+        const r = rows[name];
+        r.payments += 1;
+        if (p.voucher) r.vouchers += 1;
+        if (p.status === 'Aplicado') {
+          r.applied += 1;
+          r.appliedAmount += Number(p.amount || 0);
+        } else {
+          r.pending += 1;
+          r.pendingAmount += Number(p.amount || 0);
+        }
+        if (['Revisión manual','Sin identificar'].includes(p.status)) r.review += 1;
+        if (p.status === 'Listo para aplicar') r.ready += 1;
+        if (p.status === 'Error de aplicación') r.errors += 1;
+        if ((p.receivedDate || '') > (r.lastDate || '')) r.lastDate = p.receivedDate;
+      });
+      return Object.values(rows).map(r => ({ ...r, status: clientStatus(r) }));
+    }
+
+    function renderClients() {
+      const body = document.getElementById('clientsBody');
+      if (!body) return;
+      const q = (document.getElementById('clientSearch')?.value || '').toLowerCase().trim();
+      const company = document.getElementById('clientCompanyFilter')?.value || '';
+      const status = document.getElementById('clientStatusFilter')?.value || '';
+      const rows = buildClientRows();
+      const filtered = rows.filter(r =>
+        (!q || [r.name, r.company, r.system, r.analyst].join(' ').toLowerCase().includes(q)) &&
+        (!company || r.company === company) &&
+        (!status || r.status === status)
+      );
+      const kTotal = document.getElementById('clientKpiTotal');
+      const kManual = document.getElementById('clientKpiManual');
+      const kAuto = document.getElementById('clientKpiAuto');
+      const kRisk = document.getElementById('clientKpiRisk');
+      if (kTotal) kTotal.textContent = rows.filter(r => r.name !== 'Sin identificar').length;
+      if (kManual) kManual.textContent = rows.filter(r => r.review > 0 || r.errors > 0).length;
+      if (kAuto) kAuto.textContent = rows.filter(r => state.payments.some(p => (p.client || 'Sin identificar') === r.name && p.autoApplied)).length;
+      if (kRisk) kRisk.textContent = rows.filter(r => r.name === 'Sin identificar' || r.errors > 0).length;
+      if (!filtered.length) {
+        body.innerHTML = `<tr><td colspan="11"><div class="empty">No hay clientes que coincidan con los filtros seleccionados.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = filtered.sort((a,b) => b.pendingAmount - a.pendingAmount).map(r => `
+        <tr>
+          <td><b>${r.name}</b></td>
+          <td>${r.company}</td>
+          <td>${r.system}</td>
+          <td>${r.analyst}</td>
+          <td>${r.payments}</td>
+          <td>${r.vouchers}</td>
+          <td>${money(r.pendingAmount)}</td>
+          <td>${money(r.appliedAmount)}</td>
+          <td>${r.lastDate || 'Sin fecha'}</td>
+          <td>${clientStatusBadge(r.status)}</td>
+          <td><button class="mini-btn" onclick="openClientDetail('${encodeURIComponent(r.name)}')">Ver seguimiento</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function clearClientFilters() {
+      const q = document.getElementById('clientSearch');
+      const c = document.getElementById('clientCompanyFilter');
+      const s = document.getElementById('clientStatusFilter');
+      if (q) q.value = '';
+      if (c) c.value = '';
+      if (s) s.value = '';
+      renderClients();
+    }
+
+    function openClientDetail(encodedName) {
+      const name = decodeURIComponent(encodedName);
+      const panel = document.getElementById('clientDetailPanel');
+      if (!panel) return;
+      const payments = state.payments.filter(p => (p.client || 'Sin identificar') === name);
+      const summary = buildClientRows().find(r => r.name === name);
+      const vouchers = state.vouchers.filter(v => payments.some(p => p.voucherId === v.id || p.voucher === v.file || p.reference === v.reference));
+      if (!summary) return;
+      panel.style.display = 'block';
+      panel.innerHTML = `
+        <div class="client-detail-head">
+          <div>
+            <h4>${summary.name}</h4>
+            <p class="muted">Seguimiento consolidado de pagos recibidos, comprobantes, aplicación ERP y gestiones pendientes.</p>
+            <div class="client-meta">
+              <span class="tag blue">${summary.company}</span>
+              <span class="tag blue">${summary.system}</span>
+              <span class="tag yellow">Analista: ${summary.analyst}</span>
+              ${clientStatusBadge(summary.status)}
+            </div>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-outline" onclick="downloadClientHistory('${encodeURIComponent(summary.name)}')">⬇️ Exportar historial</button>
+            <button class="btn btn-primary" onclick="showSection('bandeja-pagos')">📬 Ver pagos recibidos</button>
+          </div>
+        </div>
+        <div class="grid grid-4">
+          <div class="kpi"><div class="label">Pagos recibidos</div><div class="value">${summary.payments}</div><div class="delta">Movimientos asociados</div></div>
+          <div class="kpi"><div class="label">Comprobantes</div><div class="value">${summary.vouchers}</div><div class="delta">Soportes de cliente</div></div>
+          <div class="kpi"><div class="label">Pendiente</div><div class="value" style="font-size:20px;">${money(summary.pendingAmount)}</div><div class="delta">Por revisión o aplicación</div></div>
+          <div class="kpi"><div class="label">Aplicado</div><div class="value" style="font-size:20px;">${money(summary.appliedAmount)}</div><div class="delta">Registrado en ERP</div></div>
+        </div>
+        <div class="client-tabs">
+          <div class="card" style="box-shadow:none;">
+            <h4>Pagos del cliente</h4>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Referencia</th><th>Factura</th><th>Monto</th><th>Estado</th><th>Acción</th></tr></thead>
+                <tbody>${payments.map(p => `<tr><td><b>${p.id}</b></td><td>${p.reference}</td><td>${p.invoice || '<span class="muted">Pendiente</span>'}</td><td>${money(p.amount, p.currency)}</td><td>${statusBadge(p.status)}</td><td><button class="mini-btn" onclick="openPayment('${p.id}')">Gestionar</button></td></tr>`).join('')}</tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card" style="box-shadow:none;">
+            <h4>Historial y comprobantes</h4>
+            <div class="mini-timeline">
+              ${payments.slice().sort((a,b) => String(b.receivedDate).localeCompare(String(a.receivedDate))).map(p => `<div class="event"><div class="event-icon">${p.status === 'Aplicado' ? '✅' : p.voucher ? '📎' : '🔎'}</div><div><strong>${p.id} · ${p.status}</strong><span class="muted">${p.receivedDate || 'Sin fecha'} · ${p.receivedChannel || 'Sin canal'} · ${p.voucher || 'Sin comprobante'}<br>${p.reason || p.erpResult || 'Sin observación registrada'}</span></div></div>`).join('')}
+              ${!payments.length ? '<div class="empty">Sin historial disponible.</div>' : ''}
+            </div>
+            <div style="margin-top:14px;">
+              <h4>Archivos asociados</h4>
+              <div class="table-wrap">
+                <table><thead><tr><th>Comprobante</th><th>Referencia</th><th>Estado</th></tr></thead><tbody>${vouchers.length ? vouchers.map(v => `<tr><td>📎 ${v.file}</td><td>${v.reference}</td><td><span class="status ${v.status === 'Aplicado' ? 'aplicado' : v.status === 'Asociado' ? 'identificado' : 'revision'}">${v.status}</span></td></tr>`).join('') : '<tr><td colspan="3"><div class="empty">No hay comprobantes asociados.</div></td></tr>'}</tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      panel.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+
+    function downloadClientHistory(encodedName) {
+      const name = decodeURIComponent(encodedName);
+      const payments = state.payments.filter(p => (p.client || 'Sin identificar') === name);
+      const rows = ['Cliente,ID Pago,Referencia,Factura,Monto,Moneda,Estado,ERP,Comprobante,Fecha,Resultado'];
+      payments.forEach(p => rows.push([name,p.id,p.reference,p.invoice || '',p.amount,p.currency,p.status,p.system,p.voucher || '',p.receivedDate || '',p.erpResult || ''].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')));
+      downloadFile(rows.join('\n'), `historial_${name.replace(/\s+/g,'_').toLowerCase()}_pagos.csv`, 'text/csv');
+    }
+
+    function prepareERPBatch() {
+      const ready = state.payments.filter(p => p.status === 'Listo para aplicar');
+      if (!ready.length) {
+        toast('No existen pagos listos para preparar lote ERP.');
+        return;
+      }
+      const total = ready.reduce((a,p) => a + p.amount, 0);
+      const lot = 'ERP-' + String(state.erpBatches.length + 1).padStart(4,'0');
+      state.erpBatches.unshift({ lot, system: erpTarget.value, mode: erpMode.value, count: ready.length, total, status:'Preparado', date: new Date().toLocaleDateString('es-CR') });
+      renderERPBatches();
+      toast(`Lote ${lot} preparado con ${ready.length} pagos.`);
+    }
+
+    function renderERPBatches() {
+      const body = document.getElementById('erpBatchesBody');
+      if (!state.erpBatches.length) {
+        body.innerHTML = `<tr><td colspan="7"><div class="empty">No hay lotes ERP generados.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = state.erpBatches.map(l => `<tr><td><b>${l.lot}</b></td><td>${l.system}</td><td>${l.mode}</td><td>${l.count}</td><td>${money(l.total)}</td><td><span class="status listo">${l.status}</span></td><td>${l.date}</td></tr>`).join('');
+    }
+
+    function downloadERPTemplate() {
+      const csv = 'Sistema,Cliente,Factura,Referencia,Monto,Moneda,Banco,Cuenta\nSAP B1,Cliente Ejemplo,FAC-0000,REF-0000,0.00,USD,Banco 1,Cuenta';
+      downloadFile(csv, 'plantilla_lote_erp.csv', 'text/csv');
+    }
+
+    function refreshDashboard() {
+      const total = state.payments.length;
+      const ready = state.payments.filter(p => p.status === 'Listo para aplicar').length;
+      const review = state.payments.filter(p => ['Revisión manual','Sin identificar','Error de aplicación'].includes(p.status)).length;
+      const appliedAmount = state.payments.filter(p => p.status === 'Aplicado').reduce((a,p) => a + p.amount, 0);
+      kpiTotal.textContent = total;
+      kpiReady.textContent = ready;
+      kpiReview.textContent = review;
+      kpiAppliedAmount.textContent = money(appliedAmount);
+      const withVoucher = state.payments.filter(p => p.voucher).length;
+      const manualQueue = state.payments.filter(p => p.voucher && ['Revisión manual','Sin identificar','Error de aplicación','Identificado'].includes(p.status)).length;
+      const autoApplied = state.payments.filter(p => p.autoApplied && p.status === 'Aplicado').length;
+      const readyVoucher = state.payments.filter(p => p.voucher && p.status === 'Listo para aplicar').length;
+      const receivedKpi = document.getElementById('kpiReceivedWithVoucher');
+      const manualKpi = document.getElementById('kpiManualQueue');
+      const autoKpi = document.getElementById('kpiAutoAppliedCount');
+      const readyVoucherKpi = document.getElementById('kpiReadyVoucher');
+      if (receivedKpi) receivedKpi.textContent = withVoucher;
+      if (manualKpi) manualKpi.textContent = manualQueue;
+      if (autoKpi) autoKpi.textContent = autoApplied;
+      if (readyVoucherKpi) readyVoucherKpi.textContent = readyVoucher;
+      const topVoucherCount = document.getElementById('topVoucherCount');
+      const topManualCount = document.getElementById('topManualCount');
+      const topAutoCount = document.getElementById('topAutoCount');
+      if (topVoucherCount) topVoucherCount.textContent = withVoucher;
+      if (topManualCount) topManualCount.textContent = manualQueue;
+      if (topAutoCount) topAutoCount.textContent = autoApplied;
+      const identified = state.payments.filter(p => ['Identificado','Listo para aplicar','Aplicado'].includes(p.status)).length;
+      const pct = total ? Math.round((identified / total) * 100) : 0;
+      donutIdentified.style.setProperty('--p', pct);
+      donutIdentified.setAttribute('data-label', pct + '%');
+      renderBars('bankBars', groupSum(state.payments, 'bank', 'amount'), moneyLabel);
+      renderBars('analystBars', groupCount(state.payments, 'analyst'), countLabel);
+      renderBars('statusBars', groupCount(state.payments, 'status'), countLabel);
+      renderBars('systemBars', groupCount(state.payments, 'system'), countLabel);
+      renderBars('pendingBankBars', groupSum(state.payments.filter(p => p.status !== 'Aplicado'), 'bank', 'amount'), moneyLabel);
+      renderManualVoucherQueue();
+      renderAutoApplied();
+      renderAlerts();
+      renderReview();
+      renderClients();
+      renderTransactions();
+      renderReports();
+    }
+
+    function renderAlerts() {
+      const sinIdentificar = state.payments.filter(p => p.status === 'Sin identificar').length;
+      const errores = state.payments.filter(p => p.status === 'Error de aplicación').length;
+      const listos = state.payments.filter(p => p.status === 'Listo para aplicar').length;
+      const alerts = [];
+      if (sinIdentificar) alerts.push({ icon:'⚠️', title:`${sinIdentificar} pagos sin identificar`, text:'Requieren análisis para asignar cliente o factura.' });
+      if (errores) alerts.push({ icon:'⛔', title:`${errores} errores de aplicación`, text:'Revisar respuesta del sistema destino antes de reintentar.' });
+      if (listos) alerts.push({ icon:'✅', title:`${listos} pagos listos para aplicar`, text:'Pueden prepararse para lote ERP o aplicación asistida.' });
+      const auto = state.payments.filter(p => p.autoApplied && p.status === 'Aplicado').length;
+      if (auto) alerts.push({ icon:'🤖', title:`${auto} pagos aplicados automáticamente`, text:'Disponibles en la bandeja de aplicaciones automáticas realizadas.' });
+      if (!alerts.length) alerts.push({ icon:'👌', title:'Sin alertas críticas', text:'No hay pagos pendientes de intervención inmediata.' });
+      alertsBox.innerHTML = alerts.map(a => `<div class="decision-card"><div class="decision-icon">${a.icon}</div><div><strong>${a.title}</strong><span class="muted">${a.text}</span></div></div>`).join('');
+    }
+
+    function groupCount(items, key) {
+      return items.reduce((acc, item) => { acc[item[key]] = (acc[item[key]] || 0) + 1; return acc; }, {});
+    }
+
+    function groupSum(items, key, valueKey) {
+      return items.reduce((acc, item) => { acc[item[key]] = (acc[item[key]] || 0) + Number(item[valueKey] || 0); return acc; }, {});
+    }
+
+    const countLabel = v => String(v);
+    const moneyLabel = v => money(v);
+
+    function renderBars(containerId, data, formatter) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const entries = Object.entries(data).sort((a,b) => b[1] - a[1]);
+      if (!entries.length) {
+        el.innerHTML = '<div class="empty">Sin datos disponibles.</div>';
+        return;
+      }
+      const max = Math.max(...entries.map(e => e[1]), 1);
+      el.innerHTML = entries.slice(0,5).map(([label, value]) => `
+        <div class="bar-row">
+          <span title="${label}">${label}</span>
+          <div class="bar-bg"><div class="bar-fill" style="width:${Math.max(6, (value/max)*100)}%"></div></div>
+          <b>${formatter(value)}</b>
+        </div>
+      `).join('');
+    }
+
+
+
+    function uniqueValues(items, key) {
+      return [...new Set(items.map(item => item[key]).filter(Boolean))].sort();
+    }
+
+    function ensureTransactionFilterOptions() {
+      const bankSelect = document.getElementById('trxBankFilter');
+      const accountSelect = document.getElementById('trxAccountFilter');
+      if (!bankSelect || !accountSelect) return;
+      const selectedBank = bankSelect.value;
+      const selectedAccount = accountSelect.value;
+      const bankOptions = ['<option value="">Todos los bancos</option>'].concat(uniqueValues(state.payments, 'bank').map(v => `<option value="${v}">${v}</option>`));
+      bankSelect.innerHTML = bankOptions.join('');
+      bankSelect.value = selectedBank;
+      const accounts = state.payments.filter(p => !bankSelect.value || p.bank === bankSelect.value);
+      const accountOptions = ['<option value="">Todas las cuentas</option>'].concat(uniqueValues(accounts, 'account').map(v => `<option value="${v}">${v}</option>`));
+      accountSelect.innerHTML = accountOptions.join('');
+      accountSelect.value = selectedAccount;
+    }
+
+    function transactionPendingStatus(status) {
+      return status === 'Aplicado' ? 'Aplicado' : 'Pendiente';
+    }
+
+    function getFilteredTransactions() {
+      ensureTransactionFilterOptions();
+      const bank = document.getElementById('trxBankFilter')?.value || '';
+      const account = document.getElementById('trxAccountFilter')?.value || '';
+      const status = document.getElementById('trxStatusFilter')?.value || '';
+      const from = document.getElementById('trxFromDate')?.value || '';
+      const to = document.getElementById('trxToDate')?.value || '';
+      const q = (document.getElementById('trxSearch')?.value || '').toLowerCase().trim();
+      return state.payments.filter(p => {
+        const basicStatus = transactionPendingStatus(p.status);
+        const haystack = [p.id, p.client, p.reference, p.invoice, p.bank, p.account, p.company, p.system, p.voucher].join(' ').toLowerCase();
+        return (!bank || p.bank === bank) &&
+          (!account || p.account === account) &&
+          (!status || p.status === status || basicStatus === status) &&
+          (!from || (p.receivedDate || '') >= from) &&
+          (!to || (p.receivedDate || '') <= to) &&
+          (!q || haystack.includes(q));
+      });
+    }
+
+    function renderStatusStack(containerId, legendId, items) {
+      const total = Math.max(items.length, 1);
+      const applied = items.filter(p => p.status === 'Aplicado').length;
+      const ready = items.filter(p => ['Listo para aplicar','Identificado'].includes(p.status)).length;
+      const review = items.filter(p => ['Revisión manual','Cargado'].includes(p.status)).length;
+      const risk = items.filter(p => ['Sin identificar','Error de aplicación'].includes(p.status)).length;
+      const parts = [
+        { cls:'stacked-applied', label:'Aplicado', value:applied },
+        { cls:'stacked-ready', label:'Listo / identificado', value:ready },
+        { cls:'stacked-review', label:'En revisión', value:review },
+        { cls:'stacked-risk', label:'Riesgo / error', value:risk }
+      ];
+      const bar = document.getElementById(containerId);
+      const legend = document.getElementById(legendId);
+      if (bar) bar.innerHTML = parts.map(p => `<span class="${p.cls}" style="width:${items.length ? (p.value/total*100) : 0}%"></span>`).join('');
+      if (legend) legend.innerHTML = parts.map(p => `<span><i class="${p.cls}"></i>${p.label}: <b>${p.value}</b></span>`).join('');
+    }
+
+    function renderTransactions() {
+      const section = document.getElementById('transacciones');
+      if (!section) return;
+      const items = getFilteredTransactions();
+      const applied = items.filter(p => p.status === 'Aplicado');
+      const pending = items.filter(p => p.status !== 'Aplicado');
+      const critical = items.filter(p => ['Sin identificar','Revisión manual','Error de aplicación'].includes(p.status));
+      document.getElementById('trxTotalCount').textContent = items.length;
+      document.getElementById('trxAppliedAmount').textContent = money(applied.reduce((a,p) => a + p.amount, 0));
+      document.getElementById('trxPendingAmount').textContent = money(pending.reduce((a,p) => a + p.amount, 0));
+      document.getElementById('trxCriticalCount').textContent = critical.length;
+      renderStatusStack('trxStackedBar','trxLegend',items);
+      renderBars('trxPendingBankBars', groupSum(pending, 'bank', 'amount'), moneyLabel);
+      renderBars('trxPendingAccountBars', groupSum(pending, 'account', 'amount'), moneyLabel);
+      const body = document.getElementById('transactionsBody');
+      if (!items.length) {
+        body.innerHTML = `<tr><td colspan="14"><div class="empty">No hay transacciones que coincidan con los filtros seleccionados.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = items.map(p => {
+        const pendingLabel = p.status === 'Aplicado' ? '<span class="tag green">Aplicado</span>' : '<span class="tag yellow">Pendiente</span>';
+        return `<tr>
+          <td><b>${p.id}</b></td>
+          <td>${p.receivedDate || 'Sin fecha'}</td>
+          <td>${p.bank}</td>
+          <td>${p.account}</td>
+          <td>${p.company}</td>
+          <td>${p.client || '<span class="muted">Sin identificar</span>'}</td>
+          <td>${p.reference}</td>
+          <td>${p.invoice || '<span class="muted">Pendiente</span>'}</td>
+          <td>${money(p.amount, p.currency)}</td>
+          <td>${p.system}</td>
+          <td>${p.voucher ? `<button class="evidence-link" onclick="openPayment('${p.id}')">📎 ${p.voucher}</button>` : '<span class="tag yellow">Sin comprobante</span>'}</td>
+          <td>${statusBadge(p.status)}<br>${pendingLabel}</td>
+          <td>${p.erpResult || 'Pendiente'}<br><span class="muted">${p.appliedAt || p.applicationMode || 'Sin aplicación'}</span></td>
+          <td><div class="row-actions"><button class="mini-btn" onclick="openPayment('${p.id}')">Ver / gestionar</button>${p.status !== 'Aplicado' ? `<button class="mini-btn" onclick="applyAutomatic('${p.id}')">Auto aplicar</button>` : ''}</div></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function clearTransactionFilters() {
+      ['trxBankFilter','trxAccountFilter','trxStatusFilter','trxFromDate','trxToDate','trxSearch'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      renderTransactions();
+    }
+
+    function renderReports() {
+      const total = state.payments.length;
+      const applied = state.payments.filter(p => p.status === 'Aplicado');
+      const pending = state.payments.filter(p => p.status !== 'Aplicado');
+      const critical = state.payments.filter(p => ['Sin identificar','Revisión manual','Error de aplicación'].includes(p.status));
+      const autoApplied = state.payments.filter(p => p.autoApplied && p.status === 'Aplicado');
+      const appliedRate = total ? Math.round((applied.length / total) * 100) : 0;
+      const autoRate = applied.length ? Math.round((autoApplied.length / applied.length) * 100) : 0;
+      const appliedDonut = document.getElementById('reportAppliedDonut');
+      if (appliedDonut) {
+        appliedDonut.style.setProperty('--p', appliedRate);
+        appliedDonut.setAttribute('data-label', appliedRate + '%');
+      }
+      const rateEl = document.getElementById('reportAppliedRate');
+      const pendingEl = document.getElementById('reportPendingAmount');
+      const criticalEl = document.getElementById('reportCriticalCount');
+      const autoEl = document.getElementById('reportAutoRate');
+      if (rateEl) rateEl.textContent = appliedRate + '%';
+      if (pendingEl) pendingEl.textContent = money(pending.reduce((a,p) => a + p.amount, 0));
+      if (criticalEl) criticalEl.textContent = critical.length;
+      if (autoEl) autoEl.textContent = autoRate + '%';
+      renderStatusStack('reportStackedBar','reportLegend',state.payments);
+      renderBars('reportPendingBankBars', groupSum(pending, 'bank', 'amount'), moneyLabel);
+      renderBars('reportAnalystBars', groupCount(state.payments, 'analyst'), countLabel);
+      renderBars('reportSystemBars', groupCount(state.payments, 'system'), countLabel);
+      renderBars('reportChannelBars', groupCount(state.payments, 'receivedChannel'), countLabel);
+      const decisions = [];
+      if (critical.length) decisions.push({ icon:'⚠️', level:'high', tag:'Alta', title:'Atender casos críticos', text:`${critical.length} pagos requieren investigación, corrección o reintento de aplicación.` });
+      const ready = state.payments.filter(p => p.status === 'Listo para aplicar').length;
+      if (ready) decisions.push({ icon:'✅', level:'ok', tag:'Acción', title:'Preparar lote de aplicación', text:`${ready} pagos cuentan con información suficiente para aplicar en ERP.` });
+      const noVoucher = pending.filter(p => !p.voucher).length;
+      if (noVoucher) decisions.push({ icon:'📎', level:'medium', tag:'Media', title:'Revisar tickets MIAU / soportes', text:`${noVoucher} pagos pendientes no tienen soporte/ticket asociado o requieren validación del adjunto.` });
+      const topPendingBank = Object.entries(groupSum(pending, 'bank', 'amount')).sort((a,b)=>b[1]-a[1])[0];
+      if (topPendingBank) decisions.push({ icon:'🏦', level:'medium', tag:'Banco', title:`Revisar ${topPendingBank[0]}`, text:`Concentra ${money(topPendingBank[1])} pendientes de aplicación.` });
+      if (!decisions.length) decisions.push({ icon:'👌', level:'ok', tag:'OK', title:'Operación sin alertas críticas', text:'No se identifican pendientes críticos en la muestra actual.' });
+      const list = document.getElementById('reportDecisionList');
+      if (list) list.innerHTML = decisions.map(d => `<div class="decision-row"><div class="decision-icon">${d.icon}</div><div><strong>${d.title}</strong><span class="muted">${d.text}</span></div><span class="level ${d.level}">${d.tag}</span></div>`).join('');
+    }
+
+    function exportTable(tableId, filename) {
+      const table = document.getElementById(tableId);
+      const rows = [...table.querySelectorAll('tr')].map(row => [...row.children].map(cell => '"' + cell.innerText.replace(/"/g,'""').trim() + '"').join(','));
+      downloadFile(rows.join('\n'), filename, 'text/csv');
+    }
+
+    function exportReport() {
+      const total = state.payments.length;
+      const applied = state.payments.filter(p => p.status === 'Aplicado');
+      const pending = state.payments.filter(p => p.status !== 'Aplicado');
+      const critical = state.payments.filter(p => ['Revisión manual','Sin identificar','Error de aplicación'].includes(p.status));
+      const autoApplied = state.payments.filter(p => p.autoApplied && p.status === 'Aplicado');
+      const lines = [
+        'Indicador,Valor',
+        `Pagos cargados,${total}`,
+        `Pagos aplicados,${applied.length}`,
+        `Tasa de aplicación,${total ? Math.round((applied.length/total)*100) : 0}%`,
+        `Aplicados automáticamente,${autoApplied.length}`,
+        `Listos para aplicar,${state.payments.filter(p => p.status === 'Listo para aplicar').length}`,
+        `Casos críticos,${critical.length}`,
+        `Monto aplicado,${applied.reduce((a,p) => a + p.amount, 0)}`,
+        `Monto pendiente,${pending.reduce((a,p) => a + p.amount, 0)}`,
+        '',
+        'Banco,Monto pendiente',
+        ...Object.entries(groupSum(pending, 'bank', 'amount')).map(([bank, amount]) => `${bank},${amount}`)
+      ];
+      downloadFile(lines.join('\n'), 'reporte_ejecutivo_aplicacion_pagos.csv', 'text/csv');
+    }
+
+    function downloadFile(content, filename, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function initDragDrop() {
+      const zone = document.getElementById('extractDrop');
+      const input = document.getElementById('extractFile');
+      ['dragenter','dragover'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.add('dragover'); }));
+      ['dragleave','drop'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.remove('dragover'); }));
+      zone.addEventListener('drop', e => {
+        input.files = e.dataTransfer.files;
+        extractFileName.textContent = input.files[0]?.name || 'Ningún archivo seleccionado';
+      });
+    }
+
+    renderPayments();
+    renderBatches();
+    renderVouchers();
+    renderERPBatches();
+    renderClients();
+    renderTransactions();
+    renderReports();
+    initDragDrop();
+    refreshDashboard();
+  </script>
+</body>
+</html>
