@@ -1045,7 +1045,7 @@
 
           <div class="toolbar">
             <div class="field"><label>Buscar cliente</label><input id="searchClient" placeholder="Nombre, código o correo" oninput="renderCartera()" /></div>
-            <div class="field"><label>Sistema origen</label><select id="filterSystem" onchange="renderCartera()"><option value="">Todos</option><option>SAP B1</option><option>Integra</option><option>Opera/Integra</option><option>Yaipan</option></select></div>
+            <div class="field"><label>Sistema origen</label><select id="filterSystem" onchange="renderCartera()"><option value="">Todos</option><option>SAP B1</option></select></div>
             <div class="field"><label>Estado de gestión</label><select id="filterStatus" onchange="renderCartera()"><option value="">Todos</option><option>Pendiente de gestión</option><option>Estado enviado</option><option>Promesa registrada</option><option>Escalado</option></select></div>
             <button class="btn btn-outline" onclick="clearCarteraFilters()">Limpiar filtros</button>
           </div>
@@ -1208,8 +1208,8 @@
           </div>
           <form id="reassignForm" onsubmit="saveReassignment(event)">
             <div class="toolbar">
-              <div class="field"><label>Analista actual *</label><select id="raFrom" required onchange="renderReassignClients()"><option value="">Seleccione</option><option>Andrew Navarro</option><option>Wagner Rodríguez</option><option>Ivannia Carmona</option><option>Relacionadas</option></select><span class="help-error">Seleccione el responsable actual.</span></div>
-              <div class="field"><label>Nuevo analista *</label><select id="raTo" required><option value="">Seleccione</option><option>Andrew Navarro</option><option>Wagner Rodríguez</option><option>Ivannia Carmona</option><option>Relacionadas</option></select><span class="help-error">Debe ser diferente del analista actual.</span></div>
+              <div class="field"><label>Analista actual *</label><select id="raFrom" required onchange="renderReassignClients()"><option value="">Seleccione</option><option>Andrew Navarro</option><option>Gustavo</option></select><span class="help-error">Seleccione el responsable actual.</span></div>
+              <div class="field"><label>Nuevo analista *</label><select id="raTo" required><option value="">Seleccione</option><option>Andrew Navarro</option><option>Gustavo</option></select><span class="help-error">Debe ser diferente del analista actual.</span></div>
               <div class="field"><label>Motivo *</label><select id="raReason" required><option value="">Seleccione</option><option>Vacaciones</option><option>Respaldo operativo</option><option>Redistribución de carga</option><option>Seguimiento especial</option></select><span class="help-error">Seleccione un motivo.</span></div>
             </div>
             <div id="reassignClients" class="grid grid-3" style="margin-top:12px;"></div>
@@ -1388,7 +1388,7 @@
         <button class="close-btn" onclick="closeModal('modalUploadCartera')">×</button>
       </div>
       <div class="grid grid-2">
-        <div class="field"><label>Sistema origen *</label><select id="uploadSystem"><option value="">Seleccione</option><option>SAP B1</option><option>Integra</option><option>Opera/Integra</option><option>Yaipan</option></select><span class="help-error">Seleccione el sistema origen.</span></div>
+        <div class="field"><label>Sistema origen *</label><select id="uploadSystem"><option value="">Seleccione</option><option>SAP B1</option></select><span class="help-error">Seleccione el sistema origen.</span></div>
         <div class="field"><label>Compañía *</label><input id="uploadCompany" placeholder="Ej. Comeca" /><span class="help-error">Ingrese la compañía.</span></div>
       </div>
       <div class="file-drop" style="margin-top:14px;">
@@ -1415,39 +1415,39 @@
     });
 
     const clients = [
-      { id: 1, name: 'Cliente Alfa S.A.', company: 'COMECA', system: 'SAP B1', currency: 'USD', balance: 18450.25, overdue: 42, analyst: 'Andrew Navarro', status: 'Pendiente de gestión', email: 'cuentas@clientealfa.com', lastSent: '2026-04-22' },
-      { id: 2, name: 'Distribuidora Norte', company: 'EMPAQUES SANTO DOMINGO', system: 'Integra', currency: 'CRC', balance: 9320000, overdue: 15, analyst: 'Wagner Rodríguez', status: 'Estado enviado', email: 'pagos@dnorte.com', lastSent: '2026-04-21' },
-      { id: 3, name: 'Hotel Central', company: 'HOTELES', system: 'Opera/Integra', currency: 'USD', balance: 6800.00, overdue: 7, analyst: 'Ivannia Carmona', status: 'Promesa registrada', email: 'finanzas@hotelcentral.com', lastSent: '2026-04-20' },
-      { id: 4, name: 'Cliente sin correo', company: 'METALES FLIX', system: 'Integra', currency: 'USD', balance: 2210.42, overdue: 0, analyst: 'Relacionadas', status: 'Pendiente de gestión', email: '', lastSent: '' },
-      { id: 5, name: 'Impresora Delta Cliente 12', company: 'IMPRESORA DELTA', system: 'Yaipan', currency: 'USD', balance: 14550.00, overdue: 91, analyst: 'Andrew Navarro', status: 'Escalado', email: 'tesoreria@delta12.com', lastSent: '2026-04-18' },
-      { id: 6, name: 'Inmobiliaria del Este', company: 'INMOBILIARIAS', system: 'Integra', currency: 'USD', balance: 0, overdue: 0, analyst: 'Relacionadas', status: 'Estado enviado', email: 'admin@inmobiliariaeste.com', lastSent: '2026-04-22' }
+      { id: 1, name: 'NESTLE PANAMA S.A.', company: 'ENVASES COMECA', system: 'SAP B1', currency: 'USD', balance: 18450.25, overdue: 42, analyst: 'Andrew Navarro', status: 'Pendiente de gestión', email: 'cuentas@nestlepanama.com', lastSent: '2026-05-28' },
+      { id: 2, name: 'CERVECERIA PANAMA S.A.', company: 'ENVASES COMECA', system: 'SAP B1', currency: 'USD', balance: 7320.00, overdue: 43, analyst: 'Gustavo', status: 'Estado enviado', email: 'cxp@cervezapanama.com', lastSent: '2026-05-27' },
+      { id: 3, name: 'INTACO COSTA RICA S.A.', company: 'CENTRO DE SERVICIOS', system: 'SAP B1', currency: 'CRC', balance: 4450000, overdue: 41, analyst: 'Andrew Navarro', status: 'Promesa registrada', email: 'tesoreria@intaco.co.cr', lastSent: '2026-05-25' },
+      { id: 4, name: 'PANASONIC CENTROAMERICANA S.A.', company: 'INDUSTRIAS UNICAN', system: 'SAP B1', currency: 'CRC', balance: 3120000, overdue: 21, analyst: 'Gustavo', status: 'Pendiente de gestión', email: '', lastSent: '' },
+      { id: 5, name: 'SUR QUIMICA S.A. (caso especial)', company: 'CENTRO DE SERVICIOS', system: 'SAP B1', currency: 'USD', balance: 14550.00, overdue: 101, analyst: 'Andrew Navarro', status: 'Escalado', email: 'cuentas@surquimica.co.cr', lastSent: '2026-05-20' },
+      { id: 6, name: 'FÁBRICA DE ENVASES DEL PACÍFICO (relacionada · TECHOENDS)', company: 'TECHOENDS', system: 'SAP B1', currency: 'CRC', balance: 2450000, overdue: 56, analyst: 'Gustavo', status: 'Estado enviado', email: 'cxc@envasespacifico.com', lastSent: '2026-05-18' }
     ];
 
     let auditLog = [
-      { date: new Date().toLocaleString(), user: 'Sistema', action: 'Carga inicial', detail: 'Datos de demostración del módulo cargados.' }
+      { date: new Date().toLocaleString(), user: 'Sistema', action: 'Carga inicial', detail: 'Datos de ejemplo del módulo cargados.' }
     ];
     let managements = [
-      { client: 'Hotel Central', type: 'Correo electrónico', result: 'Promesa de pago', date: todayISO, comment: 'Cliente confirma pago parcial para esta semana.' },
-      { client: 'Cliente Alfa S.A.', type: 'Llamada telefónica', result: 'Cliente contactado', date: todayISO, comment: 'Solicita reenvío de estado de cuenta actualizado.' }
+      { client: 'INTACO COSTA RICA S.A.', type: 'Correo electrónico', result: 'Promesa de pago', date: todayISO, comment: 'Cliente confirma pago parcial para esta semana.' },
+      { client: 'NESTLE PANAMA S.A.', type: 'Llamada telefónica', result: 'Cliente contactado', date: todayISO, comment: 'Solicita reenvío de estado de cuenta actualizado.' }
     ];
     let promises = [
-      { id: 1, client: 'Hotel Central', amount: 2800, date: todayISO, status: 'Pendiente' }
+      { id: 1, client: 'INTACO COSTA RICA S.A.', amount: 2800000, date: todayISO, status: 'Pendiente' }
     ];
     let templates = [
       { name: 'Informativo 0-7 días', from: 0, to: 7, subject: 'Estado de cuenta {{CLIENTE}}', body: 'Estimado cliente, adjuntamos su estado de cuenta para su revisión.' },
       { name: 'Gestión mayor a 8 días', from: 8, to: 999, subject: 'Seguimiento de saldo pendiente {{CLIENTE}}', body: 'Estimado cliente, agradecemos su apoyo con la revisión del saldo pendiente adjunto.' }
     ];
     let repository = [
-      { client: 'Cliente Alfa S.A.', type: 'Estado de cuenta', file: 'estado_cliente_alfa.xlsx', date: todayISO },
-      { client: 'Hotel Central', type: 'Evidencia de gestión', file: 'correo_hotel_central.pdf', date: todayISO },
-      { client: 'Impresora Delta Cliente 12', type: 'Estado de cuenta enviado', file: 'estado_delta_cliente_12_20260418.xlsx', date: '2026-04-18' },
-      { client: 'Distribuidora Norte', type: 'Estado de cuenta enviado', file: 'estado_distribuidora_norte_20260421.xlsx', date: '2026-04-21' }
+      { client: 'NESTLE PANAMA S.A.', type: 'Estado de cuenta', file: 'estado_nestle_panama.xlsx', date: todayISO },
+      { client: 'INTACO COSTA RICA S.A.', type: 'Evidencia de gestión', file: 'correo_intaco.pdf', date: todayISO },
+      { client: 'SUR QUIMICA S.A. (caso especial)', type: 'Estado de cuenta enviado', file: 'estado_sur_quimica_20260520.xlsx', date: '2026-05-20' },
+      { client: 'CERVECERIA PANAMA S.A.', type: 'Estado de cuenta enviado', file: 'estado_cerveceria_panama_20260527.xlsx', date: '2026-05-27' }
     ];
     let statementSends = [
-      { client: 'Cliente Alfa S.A.', date: '2026-04-22', file: 'estado_cliente_alfa_20260422.xlsx', to: 'cuentas@clientealfa.com', template: 'Gestión mayor a 8 días', status: 'Enviado', analyst: 'Andrew Navarro', channel: 'Correo automático' },
-      { client: 'Distribuidora Norte', date: '2026-04-21', file: 'estado_distribuidora_norte_20260421.xlsx', to: 'pagos@dnorte.com', template: 'Gestión mayor a 8 días', status: 'Enviado', analyst: 'Wagner Rodríguez', channel: 'Correo automático' },
-      { client: 'Hotel Central', date: '2026-04-20', file: 'estado_hotel_central_20260420.xlsx', to: 'finanzas@hotelcentral.com', template: 'Informativo 0-7 días', status: 'Enviado', analyst: 'Ivannia Carmona', channel: 'Correo automático' },
-      { client: 'Impresora Delta Cliente 12', date: '2026-04-18', file: 'estado_delta_cliente_12_20260418.xlsx', to: 'tesoreria@delta12.com', template: 'Gestión mayor a 8 días', status: 'Enviado', analyst: 'Andrew Navarro', channel: 'Correo manual asistido' }
+      { client: 'NESTLE PANAMA S.A.', date: '2026-05-28', file: 'estado_nestle_panama_20260528.xlsx', to: 'cuentas@nestlepanama.com', template: 'Gestión mayor a 8 días', status: 'Enviado', analyst: 'Andrew Navarro', channel: 'Correo automático' },
+      { client: 'CERVECERIA PANAMA S.A.', date: '2026-05-27', file: 'estado_cerveceria_panama_20260527.xlsx', to: 'cxp@cervezapanama.com', template: 'Gestión mayor a 8 días', status: 'Enviado', analyst: 'Gustavo', channel: 'Correo automático' },
+      { client: 'INTACO COSTA RICA S.A.', date: '2026-05-25', file: 'estado_intaco_20260525.xlsx', to: 'tesoreria@intaco.co.cr', template: 'Informativo 0-7 días', status: 'Enviado', analyst: 'Andrew Navarro', channel: 'Correo automático' },
+      { client: 'SUR QUIMICA S.A. (caso especial)', date: '2026-05-20', file: 'estado_sur_quimica_20260520.xlsx', to: 'cuentas@surquimica.co.cr', template: 'Gestión mayor a 8 días', status: 'Enviado', analyst: 'Andrew Navarro', channel: 'Correo manual asistido' }
     ];
     let selectedClientId = 1;
 
