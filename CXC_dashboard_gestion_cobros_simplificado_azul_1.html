@@ -188,6 +188,7 @@
     function envioSave(){const c=envioCounts();document.getElementById('envSaveBtn').disabled=true;toast('Configuración guardada','El robot enviará el estado de cuenta a '+c.on+' clientes; '+c.off+' quedan como caso especial (sin envío).','success');}
     function activateFromHash(){const hpart=(location.hash||'').replace('#','');if(!hpart)return;const btn=document.querySelector('.nav-btn[data-target="'+hpart+'"]');if(btn)btn.click();}
     document.addEventListener('DOMContentLoaded', () => { setupNavigation(); fillReassignSelectors(); renderAll(); renderEnvio(); activateFromHash(); });
+    window.addEventListener('hashchange', activateFromHash);
 
     function setupNavigation(){
       const titles = {
