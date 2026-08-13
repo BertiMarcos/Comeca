@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CXC Comeca | Gestión de Cobros</title>
+  <title>CXC Comeca | Seguimiento de Cobros</title>
   <style>
     :root{
       --blue-950:#081d33;--blue-900:#0b2a4a;--blue-800:#0f3d6b;--blue-700:#155a96;--blue-600:#1d75bd;--blue-500:#2b91da;--blue-100:#e8f4ff;--blue-050:#f4faff;
@@ -17,7 +17,7 @@
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="brand"><div class="brand-icon">CXC</div><div><h1>CXC Comeca</h1><small>Gestión de cobros</small></div></div>
+      <div class="brand"><div class="brand-icon">CXC</div><div><h1>CXC Comeca</h1><small>Seguimiento de cobros</small></div></div>
       <div class="menu-label">Panel</div>
       <button class="nav-btn active" data-target="dashboard"><span>📊</span>Dashboard</button>
       <button class="nav-btn" data-target="cartera"><span>📁</span>Cartera consolidada</button>
@@ -29,7 +29,7 @@
     </aside>
     <main class="main">
       <div class="topbar">
-        <div class="title"><h2 id="pageTitle">Dashboard de Gestión de Cobros</h2><p id="pageSubtitle">Vista ejecutiva para seguimiento de cartera, facturas, promesas y gestiones.</p></div>
+        <div class="title"><h2 id="pageTitle">Dashboard de Seguimiento de Cobros</h2><p id="pageSubtitle">Vista ejecutiva para seguimiento de cartera, facturas, promesas y gestiones.</p></div>
         <div class="user-chip"><span class="avatar">IC</span><div><strong>Analista CXC</strong><br><span class="small-muted">Perfil operativo</span></div></div>
       </div>
 
@@ -83,7 +83,7 @@
 
       <section id="contactos" class="section">
         <div class="card">
-          <div class="card-header"><div><h3 class="card-title">Clientes y contactos</h3><p class="card-subtitle">Administración de teléfonos, correos y direcciones para gestión de cobro.</p></div><button class="btn btn-outline" onclick="exportContacts()">⬇ Exportar contactos</button></div>
+          <div class="card-header"><div><h3 class="card-title">Clientes y contactos</h3><p class="card-subtitle">Administración de teléfonos, correos y direcciones para seguimiento de cobro.</p></div><button class="btn btn-outline" onclick="exportContacts()">⬇ Exportar contactos</button></div>
           <div class="toolbar"><div class="field"><label>Buscar cliente</label><input id="searchContactClient" placeholder="Nombre, código, teléfono o correo" oninput="renderContacts()"></div><button class="btn btn-secondary" onclick="document.getElementById('searchContactClient').value='';renderContacts();">Limpiar</button></div>
           <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Responsable</th><th>Teléfonos</th><th>Correos</th><th>Direcciones</th><th>Último agregado por</th><th>Acción</th></tr></thead><tbody id="contactsBody"></tbody></table></div>
           <div id="contactDetail" class="detail-panel"><div class="empty-state">Seleccione “Ver detalle” para cargar teléfonos, correos, direcciones y revisar historial de agregados.</div></div>
@@ -101,7 +101,7 @@
 
       <section id="reportes" class="section">
         <div class="grid grid-4">
-          <div class="card kpi-card"><div class="kpi-label">Clientes gestionados</div><div class="kpi-value" id="repManaged">0%</div><div class="kpi-note">Indicadores gestión de cobro.</div></div>
+          <div class="card kpi-card"><div class="kpi-label">Clientes gestionados</div><div class="kpi-value" id="repManaged">0%</div><div class="kpi-note">Indicadores seguimiento de cobro.</div></div>
           <div class="card kpi-card"><div class="kpi-label">Facturas cobradas</div><div class="kpi-value" id="repPaidInvoices">0</div><div class="kpi-note">Documentos cerrados en histórico.</div></div>
           <div class="card kpi-card"><div class="kpi-label">Promesas de pago</div><div class="kpi-value" id="repPromises">0</div><div class="kpi-note">Activas, recibidas y canceladas.</div></div>
           <div class="card kpi-card"><div class="kpi-label">Categorías activas</div><div class="kpi-value" id="repCategories">0</div><div class="kpi-note">Causas parametrizadas en facturas.</div></div>
@@ -192,13 +192,13 @@
 
     function setupNavigation(){
       const titles = {
-        dashboard:['Dashboard de Gestión de Cobros','Vista ejecutiva para seguimiento de cartera, facturas, promesas y gestiones.'],
+        dashboard:['Dashboard de Seguimiento de Cobros','Vista ejecutiva para seguimiento de cartera, facturas, promesas y gestiones.'],
         envio:['Envío automático','El negocio controla a qué clientes el robot envía el estado de cuenta. El robot lee este catálogo antes de cada corrida.'],
         cartera:['Cartera consolidada','Gestión por cliente y por factura con historial, archivos y promesas.'],
         promesas:['Promesas de pago','Confirmación de recibido con soporte o cancelación con motivo.'],
-        contactos:['Clientes y contactos','Administración de teléfonos, correos y direcciones para gestión de cobro.'],
+        contactos:['Clientes y contactos','Administración de teléfonos, correos y direcciones para seguimiento de cobro.'],
         reasignacion:['Reasignación de cartera','Cambio de responsable operativo con trazabilidad del movimiento.'],
-        reportes:['Indicadores gestión de cobro','Indicadores de promesas, categorías, cartera y actividad operativa.']
+        reportes:['Indicadores seguimiento de cobro','Indicadores de promesas, categorías, cartera y actividad operativa.']
       };
       document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
