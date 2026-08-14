@@ -31,7 +31,8 @@
     .transaction-admin-head,.report-kpi-strip,.client-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.transaction-tile,.report-kpi,.client-card{background:#fff;border:1px solid var(--gris-200);border-radius:18px;padding:16px;box-shadow:0 10px 24px rgba(15,47,87,.07)}.transaction-tile span,.report-kpi span,.client-card span{display:block;font-size:12px;color:var(--gris-500);font-weight:800;text-transform:uppercase;letter-spacing:.35px;margin-bottom:6px}.transaction-tile strong,.report-kpi strong,.client-card strong{display:block;font-size:25px;color:var(--azul-900);line-height:1.05}.transaction-tile small,.report-kpi small{color:var(--gris-700);font-size:12px}.stacked-bar{height:18px;background:var(--gris-200);border-radius:999px;overflow:hidden;display:flex;margin:12px 0 10px}.stacked-bar span{display:block;height:100%;min-width:3%}.stacked-applied{background:var(--verde)}.stacked-pending{background:var(--amarillo)}.legend{display:flex;flex-wrap:wrap;gap:10px 14px;font-size:12px;color:var(--gris-700);margin-top:8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
     @media(max-width:1180px){.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-panel,.transaction-admin-head,.report-kpi-strip,.client-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:860px){.layout{grid-template-columns:1fr}aside{position:fixed;z-index:900;left:-310px;width:290px;transition:.25s ease}aside.open{left:0}main{padding:18px}.mobile-top{display:flex}.grid-4,.grid-3,.grid-2,.quick-panel,.transaction-admin-head,.report-kpi-strip,.client-summary{grid-template-columns:1fr}.section-head{flex-direction:column}}
-  </style>
+  .status.acuenta{background:#fef3c7;color:#92400e}.status.observado{background:#e0e7ff;color:#3730a3}.status.rechazado{background:#fee2e2;color:#991b1b}.btn-xs{padding:4px 10px;font-size:12px;line-height:1.1}.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.reg-sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;padding:12px;background:#f4f7fb;border-radius:10px}
+</style>
 </head>
 <body>
   <div class="layout">
@@ -73,7 +74,7 @@
       <section id="bandeja-pagos" class="section">
         <div class="section-head"><div><h3>Bandeja de pagos recibidos</h3><p>Vista operativa de pagos recibidos por canal de recepción. Los casos de ejemplo corresponden a MIAU / tiquetera.</p></div></div>
         <div class="quick-panel"><div class="quick-metric"><strong id="kpiReceivedWithVoucher">0</strong><span>Pagos recibidos</span></div><div class="quick-metric"><strong id="kpiManualQueue">0</strong><span>Pendientes</span></div><div class="quick-metric"><strong id="kpiAutoAppliedCount">0</strong><span>Aplicados</span></div><div class="quick-metric"><strong id="kpiReadyVoucher">0</strong><span>Con comprobante</span></div></div>
-        <div class="card"><div class="toolbar"><div class="filters"><select id="filterStatus" style="width:190px;" onchange="renderPayments()"><option value="">Todos los estados</option><option>Pendiente</option><option>Aplicado</option></select><select id="filterChannel" style="width:190px;" onchange="renderPayments()"><option value="">Todos los canales</option><option>MIAU</option></select><input id="searchPayment" style="width:320px;" placeholder="Buscar código cliente, referencia o comprobante" oninput="renderPayments()"></div><div class="row-actions"><button class="btn btn-outline" onclick="clearFilters()">Limpiar filtros</button><button class="btn btn-primary" onclick="openAddCaseModal()">➕ Agregar caso</button></div></div><div class="table-wrap"><table id="paymentsTable"><thead><tr><th>ID Pago</th><th>Canal de recepción</th><th>Código cliente</th><th>Comprobante</th><th>Referencia banco</th><th>Monto</th><th>Sistema destino</th><th>Estado</th><th>Observación</th><th>Fecha</th></tr></thead><tbody id="paymentsBody"></tbody></table></div><div class="table-note">Al agregar un caso manual desde esta bandeja, el pago queda aplicado en el sistema destino seleccionado.</div></div>
+        <div class="card"><div class="toolbar"><div class="filters"><select id="filterStatus" style="width:190px;" onchange="renderPayments()"><option value="">Todos los estados</option><option>Pendiente</option><option>Aplicado</option></select><select id="filterChannel" style="width:190px;" onchange="renderPayments()"><option value="">Todos los canales</option><option>MIAU</option></select><input id="searchPayment" style="width:320px;" placeholder="Buscar código cliente, referencia o comprobante" oninput="renderPayments()"></div><div class="row-actions"><button class="btn btn-outline" onclick="clearFilters()">Limpiar filtros</button><button class="btn btn-primary" onclick="openAddCaseModal()">➕ Agregar caso</button></div></div><div class="table-wrap"><table id="paymentsTable"><thead><tr><th>ID Pago</th><th>Canal de recepción</th><th>Código cliente</th><th>Comprobante</th><th>Referencia banco</th><th>Monto</th><th>Sistema destino</th><th>Estado</th><th>Observación</th><th>Fecha</th><th>Acción</th></tr></thead><tbody id="paymentsBody"></tbody></table></div><div class="table-note">Al agregar un caso manual desde esta bandeja, el pago queda aplicado en el sistema destino seleccionado.</div></div>
       </section>
 
       <section id="clientes-seguimiento" class="section">
@@ -117,7 +118,8 @@
 
     const money = (value,currency='USD') => new Intl.NumberFormat('es-CR',{style:'currency',currency: currency==='CRC'?'CRC':currency==='CLP'?'CLP':currency==='PEN'?'PEN':'USD',maximumFractionDigits:2}).format(value||0);
     const toast = msg => { const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3300); };
-    const statusBadge = status => `<span class="status ${status==='Aplicado'?'aplicado':'pendiente'}">${status}</span>`;
+    const STCLASS={'Aplicado':'aplicado','Pendiente':'pendiente','A cuenta':'acuenta','Observado':'observado','Rechazado':'rechazado'};
+    const statusBadge = status => `<span class="status ${STCLASS[status]||'pendiente'}">${status}</span>`;
     const nextPaymentId = () => 'PAG-' + String(state.payments.length + 1).padStart(4,'0');
 
     document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>showSection(btn.dataset.section)));
@@ -140,7 +142,7 @@
     function downloadExtract(lot){ const b=state.batches.find(x=>x.lot===lot); if(!b){toast('No se encontró el extracto.');return;} downloadFile(['Banco,Cuenta,Fecha,Archivo,Lote',`${b.bank},${b.account},${b.period},${b.file},${b.lot}`].join('\n'),`${lot}_extracto_bancario.csv`,'text/csv'); }
 
     function getFilteredPayments(){ const status=filterStatus.value, channel=filterChannel.value, q=searchPayment.value.toLowerCase().trim(); return state.payments.filter(p=>(!status||p.status===status)&&(!channel||p.channel===channel)&&(!q||[p.id,p.clientCode,p.reference,p.voucher,p.system,p.observation].join(' ').toLowerCase().includes(q))); }
-    function renderPayments(){ const rows=getFilteredPayments(); paymentsBody.innerHTML = rows.length ? rows.map(p=>`<tr><td><b>${p.id}</b></td><td><span class="tag blue">${p.channel}</span></td><td>${p.clientCode}</td><td>${p.voucher ? `<span class="evidence-link">📎 ${p.voucher}</span>` : '<span class="tag yellow">Sin comprobante</span>'}</td><td>${p.reference}</td><td>${money(p.amount,p.currency)}<br><span class="muted">${p.currency}</span></td><td>${p.system}</td><td>${statusBadge(p.status)}</td><td>${p.observation || '<span class="muted">Sin observación</span>'}</td><td>${p.receivedDate}</td></tr>`).join('') : `<tr><td colspan="10"><div class="empty">No hay pagos que coincidan con los filtros.</div></td></tr>`; refreshDashboard(); }
+    function renderPayments(){ const rows=getFilteredPayments(); paymentsBody.innerHTML = rows.length ? rows.map(p=>`<tr><td><b>${p.id}</b></td><td><span class="tag blue">${p.channel}</span></td><td>${p.clientCode}</td><td>${p.voucher ? `<span class="evidence-link">📎 ${p.voucher}</span>` : '<span class="tag yellow">Sin comprobante</span>'}</td><td>${p.reference}</td><td>${money(p.amount,p.currency)}<br><span class="muted">${p.currency}</span></td><td>${p.system}</td><td>${statusBadge(p.status)}</td><td>${p.observation || '<span class="muted">Sin observación</span>'}</td><td>${p.receivedDate}</td><td>${p.status==='Pendiente'?`<button class="btn btn-primary btn-xs" onclick="openRegisterModal('${p.id}')">Registrar</button>`:`<button class="btn btn-outline btn-xs" onclick="openRegisterModal('${p.id}')">Ver registro</button>`}</td></tr>`).join('') : `<tr><td colspan="11"><div class="empty">No hay pagos que coincidan con los filtros.</div></td></tr>`; refreshDashboard(); }
     function clearFilters(){ filterStatus.value=''; filterChannel.value=''; searchPayment.value=''; renderPayments(); }
 
     function openAddCaseModal(){ modalTitle.textContent='Agregar caso de pago recibido'; modalSubtitle.textContent='El caso quedará aplicado en el sistema destino al guardar.'; modalContent.innerHTML=`<form id="addCaseForm" novalidate><div class="grid grid-2"><div class="field" data-field="caseClient"><label>Código de cliente *</label><input id="caseClient" placeholder="Ej. CLI-10200" required><span class="error-msg">Ingrese el código de cliente.</span></div><div class="field" data-field="caseSystem"><label>Sistema destino *</label><select id="caseSystem" required><option value="">Seleccione sistema</option><option>SAP B1</option><option>Integra</option><option>Opera / Integra</option><option>Yaipan</option></select><span class="error-msg">Seleccione sistema destino.</span></div><div class="field" data-field="caseReference"><label>Referencia banco *</label><input id="caseReference" placeholder="Referencia del movimiento" required><span class="error-msg">Ingrese la referencia bancaria.</span></div><div class="field" data-field="caseAmount"><label>Monto *</label><input id="caseAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required><span class="error-msg">Ingrese un monto válido.</span></div><div class="field"><label>Moneda</label><select id="caseCurrency"><option>USD</option><option>CRC</option><option>CLP</option><option>PEN</option></select></div><div class="field"><label>Comprobante opcional</label><input id="caseVoucher" type="file" accept=".pdf,.png,.jpg,.jpeg,.xlsx,.xls,.csv"></div></div><div class="row-actions" style="margin-top:18px;"><button class="btn btn-primary" type="submit">Guardar y aplicar</button><button class="btn btn-outline" type="button" onclick="closeModal()">Cancelar</button></div></form>`; modalBackdrop.classList.add('open'); document.getElementById('addCaseForm').addEventListener('submit',saveNewCase); }
@@ -159,6 +161,56 @@
     function openTransactionComment(id){ const p=state.payments.find(x=>x.id===id); if(!p) return; modalTitle.textContent=`Agregar comentario · ${p.id}`; modalSubtitle.textContent=`${p.bank} · ${p.account} · ${p.reference}`; modalContent.innerHTML=`<div class="grid grid-3"><div class="kpi"><div class="label">Estado</div><div class="value" style="font-size:20px;">${p.status}</div><div class="delta">Estado actual</div></div><div class="kpi"><div class="label">Monto</div><div class="value" style="font-size:20px;">${money(p.amount,p.currency)}</div><div class="delta">${p.currency}</div></div><div class="kpi"><div class="label">Referencia</div><div class="value" style="font-size:18px;">${p.reference}</div><div class="delta">Banco</div></div></div><div class="card" style="box-shadow:none;margin-top:18px;"><h4>Comentario operativo</h4><div class="field"><label>Comentario</label><textarea id="transactionComment">${p.observation || ''}</textarea></div><div class="row-actions" style="margin-top:12px;"><button class="btn btn-primary" onclick="saveTransactionComment('${p.id}')">Guardar comentario</button><button class="btn btn-outline" onclick="closeModal()">Cancelar</button></div></div>`; modalBackdrop.classList.add('open'); }
     function saveTransactionComment(id){ const p=state.payments.find(x=>x.id===id); if(!p) return; p.observation=transactionComment.value.trim(); closeModal(); refreshAll(); toast('Comentario agregado correctamente.'); }
     function closeModal(){ modalBackdrop.classList.remove('open'); modalContent.innerHTML=''; }
+    function openRegisterModal(id){
+      const p=state.payments.find(x=>x.id===id); if(!p) return;
+      const applied=p.status!=='Pendiente';
+      modalTitle.textContent=applied?('Registro del pago '+p.id):('Registrar aplicación · '+p.id);
+      modalSubtitle.textContent=p.clientCode+' · '+money(p.amount,p.currency)+' · destino '+p.system;
+      modalContent.innerHTML=`
+        <div class="reg-sum">
+          <div><span class="muted">Cliente</span><br><b>${p.clientCode}</b></div>
+          <div><span class="muted">Referencia banco</span><br><b>${p.reference}</b></div>
+          <div><span class="muted">Monto</span><br><b>${money(p.amount,p.currency)}</b></div>
+          <div><span class="muted">Comprobante</span><br>${p.voucher?('📎 '+p.voucher):'<span class=\'tag yellow\'>Sin comprobante</span>'}</div>
+        </div>
+        <form id="regForm" novalidate>
+          <div class="reg-grid">
+            <div class="field"><label>Resultado *</label><select id="regStatus"><option>Aplicado</option><option>A cuenta</option><option>Observado</option><option>Rechazado</option></select></div>
+            <div class="field"><label>Sistema destino</label><input id="regSystem" value="${p.system}"></div>
+            <div class="field"><label>Factura(s) aplicada(s)</label><input id="regFactura" value="${p.factura||''}" placeholder="Ej. FE-000123"></div>
+            <div class="field"><label>Ticket MIAW</label><input id="regTicket" value="${p.ticket||''}" placeholder="Ej. MIAW-4471 (si aplica)"></div>
+            <div class="field"><label>Cuenta contable (catálogo)</label><input id="regCuenta" value="${p.cuenta||''}" placeholder="Ej. 1101-01 / cuenta de orden"></div>
+            <div class="field"><label>Evidencia</label><input id="regEvidencia" value="${p.voucher||''}" placeholder="archivo / comprobante"></div>
+          </div>
+          <div class="field"><label>Comentario</label><input id="regComment" placeholder="Nota de la registración"></div>
+          <div style="display:flex;gap:10px;margin-top:14px"><button class="btn btn-primary" type="submit">Guardar registro</button><button class="btn btn-outline" type="button" onclick="closeModal()">Cancelar</button></div>
+        </form>
+        <div id="regBitacora"></div>`;
+      renderBitacora(p);
+      modalBackdrop.classList.add('open');
+      document.getElementById('regForm').addEventListener('submit',function(e){e.preventDefault();saveRegister(id);});
+    }
+    function renderBitacora(p){
+      const box=document.getElementById('regBitacora'); if(!box) return;
+      const items=(state.bitacora||[]).filter(b=>b.id===p.id);
+      box.innerHTML=items.length?('<div class="table-note" style="margin-top:16px"><b>Bitácora del pago</b> (registro en PagoControl)</div>'+items.map(b=>`<div class="muted" style="font-size:12px;margin-top:5px">• <b>${b.when}</b> — <b>${b.status}</b>${b.factura?(' · factura '+b.factura):''}${b.ticket?(' · '+b.ticket):''}${b.cuenta?(' · cta '+b.cuenta):''}${b.comment?(' · '+b.comment):''} <i>(${b.user})</i></div>`).join('')):'<div class="muted" style="font-size:12px;margin-top:14px">Sin registros previos para este pago.</div>';
+    }
+    function saveRegister(id){
+      const p=state.payments.find(x=>x.id===id); if(!p) return;
+      if(!state.bitacora) state.bitacora=[];
+      const status=document.getElementById('regStatus').value;
+      const factura=document.getElementById('regFactura').value.trim();
+      const ticket=document.getElementById('regTicket').value.trim();
+      const cuenta=document.getElementById('regCuenta').value.trim();
+      const evid=document.getElementById('regEvidencia').value.trim();
+      const comment=document.getElementById('regComment').value.trim();
+      const now=new Date(); const when=now.toISOString().slice(0,16).replace('T',' ');
+      p.status=status; p.appliedAt=when; p.system=document.getElementById('regSystem').value||p.system;
+      p.factura=factura; p.ticket=ticket; p.cuenta=cuenta; if(evid)p.voucher=evid;
+      p.observation=(status==='Aplicado')?('Aplicado'+(factura?(' · '+factura):'')):(status+(comment?(' · '+comment):''));
+      state.bitacora.unshift({id:id,when:when,status:status,factura:factura,ticket:ticket,cuenta:cuenta,comment:comment,user:'RPA · PagoControl'});
+      renderPayments(); closeModal();
+    }
 
     function renderClients(){ const rows={}; state.payments.forEach(p=>{ const key=p.clientCode || 'Sin código'; if(!rows[key]) rows[key]={clientCode:key,total:0,pending:0,applied:0,pendingAmount:0,appliedAmount:0,last:p.receivedDate}; const r=rows[key]; r.total++; if(p.status==='Aplicado'){ r.applied++; r.appliedAmount+=p.amount; } else { r.pending++; r.pendingAmount+=p.amount; } if(p.receivedDate>r.last) r.last=p.receivedDate; }); let data=Object.values(rows); const q=clientSearch.value.toLowerCase().trim(), status=clientStatusFilter.value; data=data.filter(r=>(!q||r.clientCode.toLowerCase().includes(q))&&(!status||(status==='Aplicado'?r.applied>0:r.pending>0))); clientKpiTotal.textContent=Object.keys(rows).length; clientKpiManual.textContent=Object.values(rows).filter(r=>r.pending>0).length; clientKpiAuto.textContent=Object.values(rows).filter(r=>r.applied>0).length; clientKpiRisk.textContent=money(Object.values(rows).reduce((a,r)=>a+r.appliedAmount,0)); clientsBody.innerHTML=data.length?data.map(r=>`<tr><td><b>${r.clientCode}</b></td><td>${r.total}</td><td>${r.pending}</td><td>${r.applied}</td><td>${money(r.pendingAmount)}</td><td>${money(r.appliedAmount)}</td><td>${r.last}</td><td>${statusBadge(r.pending>0?'Pendiente':'Aplicado')}</td></tr>`).join(''):`<tr><td colspan="8"><div class="empty">No hay clientes que coincidan con los filtros.</div></td></tr>`; }
     function clearClientFilters(){ clientSearch.value=''; clientStatusFilter.value=''; renderClients(); }
