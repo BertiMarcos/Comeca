@@ -526,8 +526,11 @@
     function closeModal(){ modalBackdrop.classList.remove('open'); modalContent.innerHTML=''; }
     function openRegisterModal(id){
       const p=state.payments.find(x=>x.id===id); if(!p) return;
-      const applied=p.status!=='Pendiente';
-      modalTitle.textContent=applied?('Registro del pago '+p.id):('Registrar aplicación · '+p.id);
+      const readonly=p.status==='Aplicado';
+      const dis=readonly?'disabled':'';
+      const st=p.status==='Excepción'?'Excepción':'Aplicado';
+      const escv=s=>String(s||'').replace(/"/g,'&quot;');
+      modalTitle.textContent=readonly?('Registro del pago '+p.id+' · solo lectura'):('Registrar aplicación · '+p.id);
       modalSubtitle.textContent=p.clientCode+' · '+money(p.amount,p.currency)+' · destino '+p.system;
       modalContent.innerHTML=`
         <div class="reg-sum">
@@ -536,22 +539,23 @@
           <div><span class="muted">Monto</span><br><b>${money(p.amount,p.currency)}</b></div>
           <div><span class="muted">Comprobante</span><br>${p.voucher?('📎 '+p.voucher):'<span class=\'tag yellow\'>Sin comprobante</span>'}</div>
         </div>
+        ${readonly?'<div class="table-note" style="margin-top:2px;color:#166534;"><b>✔ Pago aplicado — registro bloqueado.</b> Se muestra en solo lectura para no aplicarlo dos veces.</div>':''}
         <form id="regForm" novalidate>
           <div class="reg-grid">
-            <div class="field"><label>Resultado *</label><select id="regStatus"><option>Aplicado</option><option>Excepción</option></select></div>
-            <div class="field"><label>Sistema destino</label><input id="regSystem" value="${p.system}"></div>
-            <div class="field"><label>Factura(s) aplicada(s)</label><input id="regFactura" value="${p.factura||''}" placeholder="Ej. FE-000123"></div>
-            <div class="field"><label>Ticket MIAW</label><input id="regTicket" value="${p.ticket||''}" placeholder="Ej. MIAW-4471 (si aplica)"></div>
-            <div class="field"><label>Cuenta contable (catálogo)</label><input id="regCuenta" value="${p.cuenta||''}" placeholder="Ej. 1101-01 / cuenta de orden"></div>
-            <div class="field"><label>Evidencia</label><input id="regEvidencia" value="${p.voucher||''}" placeholder="archivo / comprobante"></div>
+            <div class="field"><label>Resultado *</label><select id="regStatus" ${dis}><option${st==='Aplicado'?' selected':''}>Aplicado</option><option${st==='Excepción'?' selected':''}>Excepción</option></select></div>
+            <div class="field"><label>Sistema destino</label><input id="regSystem" value="${escv(p.system)}" ${dis}></div>
+            <div class="field"><label>Factura(s) aplicada(s)</label><input id="regFactura" value="${escv(p.factura)}" placeholder="Ej. FE-000123" ${dis}></div>
+            <div class="field"><label>Ticket MIAW</label><input id="regTicket" value="${escv(p.ticket)}" placeholder="Ej. MIAW-4471 (si aplica)" ${dis}></div>
+            <div class="field"><label>Cuenta contable (catálogo)</label><input id="regCuenta" value="${escv(p.cuenta)}" placeholder="Ej. 1101-01 / cuenta de orden" ${dis}></div>
+            <div class="field"><label>Evidencia</label><input id="regEvidencia" value="${escv(p.voucher)}" placeholder="archivo / comprobante" ${dis}></div>
           </div>
-          <div class="field"><label>Comentario / motivo <span class="muted">(obligatorio si es Excepción — se notifica en MIAW)</span></label><input id="regComment" placeholder="Motivo de la excepción o nota de la registración"></div>
-          <div style="display:flex;gap:10px;margin-top:14px"><button class="btn btn-primary" type="submit">Guardar registro</button><button class="btn btn-outline" type="button" onclick="closeModal()">Cancelar</button></div>
+          <div class="field"><label>Comentario / motivo <span class="muted">(obligatorio si es Excepción — se notifica en MIAW)</span></label><input id="regComment" value="${escv(p.motivo)}" placeholder="Motivo de la excepción o nota de la registración" ${dis}></div>
+          <div style="display:flex;gap:10px;margin-top:14px">${readonly?'':'<button class="btn btn-primary" type="submit">Guardar registro</button>'}<button class="btn btn-outline" type="button" onclick="closeModal()">${readonly?'Cerrar':'Cancelar'}</button></div>
         </form>
         <div id="regBitacora"></div>`;
       renderBitacora(p);
       modalBackdrop.classList.add('open');
-      document.getElementById('regForm').addEventListener('submit',function(e){e.preventDefault();saveRegister(id);});
+      if(!readonly) document.getElementById('regForm').addEventListener('submit',function(e){e.preventDefault();saveRegister(id);});
     }
     function renderBitacora(p){
       const box=document.getElementById('regBitacora'); if(!box) return;
