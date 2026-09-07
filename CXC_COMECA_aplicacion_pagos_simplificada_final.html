@@ -169,7 +169,7 @@
               <h3 class="card-title">Estado global de vencimientos</h3>
               <p class="card-subtitle">Aging de la cartera pendiente por tramo de antig&uuml;edad. Permite ver de un vistazo cu&aacute;nto est&aacute; por vencer y cu&aacute;nto lleva vencido.</p>
             </div>
-            <div id="agingTabs" class="aging-tabs"></div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-small" onclick="exportAging()">&#8595; Descargar</button><div id="agingTabs" class="aging-tabs"></div></div>
           </div>
           <div id="agingTiles" class="aging-tiles"></div>
           <div id="agingBarWrap" style="margin-top:16px">
@@ -398,6 +398,16 @@
     function agingBucketIndex(d){ if(d>90) return 4; if(d>60) return 3; if(d>30) return 2; if(d>0) return 1; return 0; }
     function agingCurrencies(){ var seen={}; var out=[]; invoices.forEach(function(i){ if(i.collectionStatus==="Pendiente"){ if(!seen[i.currency]){ seen[i.currency]=1; out.push(i.currency); } } }); return out.sort(); }
     function setAgingCur(c){ agingCur=c; renderAging(); }
+    function agingTramoLabel(d){ var L=["Por vencer","1-30 dias","31-60 dias","61-90 dias","+90 dias"]; return L[agingBucketIndex(Number(d||0))]; }
+    function exportAging(){
+      var rows = invoices.filter(function(i){ return i.collectionStatus==="Pendiente"; }).map(function(i){
+        var c = clientById(i.clientId) || {};
+        var d = Number(i.days||0);
+        return { cliente:(c.name||""), codigo:(c.code||""), empresa:(c.company||""), responsable:(c.analyst||""), factura:i.id, emision:(i.issue||""), vencimiento:(i.due||""), dias_vencidos:d, tramo:agingTramoLabel(d), moneda:i.currency, saldo:Number(i.amount||0) };
+      });
+      rows.sort(function(a,b){ return b.dias_vencidos - a.dias_vencidos; });
+      downloadCSV("aging_vencimientos_cxc.csv", rows);
+    }
     function renderAging(){
       var curs = agingCurrencies();
       if(curs.length===0){ curs=["USD"]; }
