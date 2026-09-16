@@ -121,7 +121,7 @@
     .aging-tabs{display:flex;gap:6px}
     .aging-tab{border:1px solid var(--gris-300);background:var(--white);color:var(--gris-700);font-weight:800;font-size:12px;border-radius:8px;padding:6px 12px;cursor:pointer;line-height:1}
     .aging-tab.on{background:var(--azul-600);border-color:var(--azul-600);color:#fff}
-    .aging-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:14px}
+    .aging-tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:14px}
     .aging-tile{border:1px solid var(--gris-200);border-top:4px solid var(--gris-300);border-radius:12px;padding:12px 13px;background:var(--white)}
     .aging-tile .at-lab{font-size:12px;font-weight:800;color:var(--gris-700)}
     .aging-tile .at-val{font-size:20px;font-weight:900;color:var(--azul-900);margin-top:6px;line-height:1.15}
@@ -340,7 +340,7 @@
     function envioSave(){const c=envioCounts();document.getElementById(&#39;envSaveBtn&#39;).disabled=true;toast(&#39;Configuración guardada&#39;,&#39;El robot enviará el estado de cuenta a &#39;+c.on+&#39; clientes; &#39;+c.off+&#39; quedan como caso especial (sin envío).&#39;,&#39;success&#39;);}
     function envioRun(i){const d=sendList[i];toast(&#39;Envío ejecutado&#39;,&#39;Se disparó el envío del estado de cuenta a &#39;+d.nom+&#39; (ejecución manual desde la app).&#39;,&#39;success&#39;);}
     function activateFromHash(){const hpart=(location.hash||&#39;&#39;).replace(&#39;#&#39;,&#39;&#39;);if(!hpart)return;const btn=document.querySelector(&#39;.nav-btn[data-target="&#39;+hpart+&#39;"]&#39;);if(btn)btn.click();}
-    document.addEventListener(&#39;DOMContentLoaded&#39;, () => { setupNavigation(); initEmails(); initCompanySel(); fillReassignSelectors(); renderAll(); renderEnvio(); activateFromHash(); });
+    document.addEventListener(&#39;DOMContentLoaded&#39;, () => { setupNavigation(); initEmails(); initAging(); initCompanySel(); fillReassignSelectors(); renderAll(); renderEnvio(); activateFromHash(); });
     window.addEventListener(&#39;hashchange&#39;, activateFromHash);
 
     function setupNavigation(){
@@ -379,6 +379,7 @@
     function coInvoices(){ var ids=coClientIds(); return invoices.filter(function(i){ return ids[i.clientId]; }); }
     function companyList(){ var s={}; clients.forEach(function(c){ if(c.company) s[c.company]=1; }); estadosData.forEach(function(c){ if(c.empresa) s[c.empresa]=1; }); sendList.forEach(function(d){ if(d.empresa) s[d.empresa]=1; }); return Object.keys(s).sort(); }
     function initCompanySel(){ var sel=document.getElementById("companySel"); if(!sel) return; sel.innerHTML=&#39;<option value="__ALL__">Todas las compañías</option>&#39;+companyList().map(function(x){return &#39;<option value="&#39;+x+&#39;">&#39;+x+&#39;</option>&#39;;}).join(&#39;&#39;); sel.value=activeCompany; }
+    function initAging(){ var j=invoices.find(function(i){return i.id==="F-1201";}); if(j) j.judicial=true; if(!invoices.some(function(i){return i.id==="F-100120";})){ invoices.push({id:"F-100120",clientId:1,issue:"2026-05-20",due:"2026-06-05",days:103,amount:6200,currency:"USD",collectionStatus:"Pendiente",category:"Gestión",comment:"Saldo en tramo +91 (demo)"}); } }
     function initEmails(){ clients.forEach(function(c){ if(!Array.isArray(c.emails)){ c.emails = c.email ? [c.email] : []; } }); var n=clientById(1); if(n &amp;&amp; n.emails.indexOf(&#39;cobranzas@nestlepanama.com&#39;)<0) n.emails.push(&#39;cobranzas@nestlepanama.com&#39;); }
     function emailListHtml(id){ var c=clientById(id); if(!c.emails||!c.emails.length){ return &#39;<div class="small-muted">Sin correos cargados. Agregue al menos uno para el envío automático.</div>&#39;; } return c.emails.map(function(e,idx){ var isP=idx===0; return &#39;<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--gris-100)"><span style="width:74px">&#39;+(isP?&#39;<span class="badge badge-green">Principal</span>&#39;:&#39;<span class="badge badge-blue">Copia</span>&#39;)+&#39;</span><span style="flex:1;font-weight:600">&#39;+e+&#39;</span>&#39;+(isP?&#39;&#39;:&#39;<button class="btn btn-small btn-outline" onclick="setPrimaryEmail(&#39;+id+&#39;,&#39;+idx+&#39;)">Hacer principal</button>&#39;)+&#39;<button class="btn btn-small btn-danger" onclick="removeEmail(&#39;+id+&#39;,&#39;+idx+&#39;)">✕</button></div>&#39;; }).join(&#39;&#39;); }
     function refreshEmails(id){ var el=document.getElementById(&#39;emailList_&#39;+id); if(el) el.innerHTML=emailListHtml(id); renderContacts(); }
@@ -415,21 +416,22 @@
     }
     var agingCur = "USD";
     var AGING_BUCKETS = [
-      {lab:"Por vencer", col:"#18a058"},
-      {lab:"1 – 30 días", col:"#d99800"},
-      {lab:"31 – 60 días", col:"#e07b1a"},
-      {lab:"61 – 90 días", col:"#dc5a1e"},
-      {lab:"+90 días", col:"#d92d20"}
+      {lab:"Sin vencer", col:"#18a058", grupo:"ok"},
+      {lab:"1 – 30 días", col:"#d99800", grupo:"ok"},
+      {lab:"31 – 60 días", col:"#e07b1a", grupo:"no"},
+      {lab:"61 – 90 días", col:"#dc5a1e", grupo:"no"},
+      {lab:"+91 días", col:"#d92d20", grupo:"no"},
+      {lab:"Cobro Judicial", col:"#7a1420", grupo:"no"}
     ];
-    function agingBucketIndex(d){ if(d>90) return 4; if(d>60) return 3; if(d>30) return 2; if(d>0) return 1; return 0; }
+    function agingBucketIndex(d,judicial){ if(judicial) return 5; if(d>90) return 4; if(d>60) return 3; if(d>30) return 2; if(d>0) return 1; return 0; }
     function agingCurrencies(){ var seen={}; var out=[]; coInvoices().forEach(function(i){ if(i.collectionStatus==="Pendiente"){ if(!seen[i.currency]){ seen[i.currency]=1; out.push(i.currency); } } }); return out.sort(); }
     function setAgingCur(c){ agingCur=c; renderAging(); }
-    function agingTramoLabel(d){ var L=["Por vencer","1-30 dias","31-60 dias","61-90 dias","+90 dias"]; return L[agingBucketIndex(Number(d||0))]; }
+    function agingTramoLabel(d,judicial){ var L=["Sin vencer","1-30 dias","31-60 dias","61-90 dias","+91 dias","Cobro Judicial"]; return L[agingBucketIndex(Number(d||0),judicial)]; }
     function exportAging(){
       var rows = coInvoices().filter(function(i){ return i.collectionStatus==="Pendiente"; }).map(function(i){
         var c = clientById(i.clientId) || {};
-        var d = Number(i.days||0);
-        return { cliente:(c.name||""), codigo:(c.code||""), empresa:(c.company||""), responsable:(c.analyst||""), factura:i.id, emision:(i.issue||""), vencimiento:(i.due||""), dias_vencidos:d, tramo:agingTramoLabel(d), moneda:i.currency, saldo:Number(i.amount||0) };
+        var d = Number(i.days||0); var bi=agingBucketIndex(d,i.judicial);
+        return { cliente:(c.name||""), codigo:(c.code||""), empresa:(c.company||""), responsable:(c.analyst||""), factura:i.id, emision:(i.issue||""), vencimiento:(i.due||""), dias_vencidos:d, tramo:agingTramoLabel(d,i.judicial), grupo:(bi<=1?"Aceptable":"No Aceptable"), moneda:i.currency, saldo:Number(i.amount||0) };
       });
       rows.sort(function(a,b){ return b.dias_vencidos - a.dias_vencidos; });
       downloadCSV("aging_vencimientos_cxc.csv", rows);
@@ -441,11 +443,11 @@
       var tabsEl=document.getElementById("agingTabs"); if(!tabsEl) return;
       tabsEl.innerHTML = curs.map(function(c){ return "<button type=\"button\" class=\"aging-tab"+(c===agingCur?" on":"")+"\" onclick=\"setAgingCur(&#39;"+c+"&#39;)\">"+c+"</button>"; }).join("");
       var pend = coInvoices().filter(function(i){ return i.collectionStatus==="Pendiente"; }).filter(function(i){ return i.currency===agingCur; });
-      var sums=[0,0,0,0,0], counts=[0,0,0,0,0], total=0;
-      pend.forEach(function(i){ var b=agingBucketIndex(Number(i.days||0)); var a=Number(i.amount||0); sums[b]+=a; counts[b]+=1; total+=a; });
-      var vencido = sums[1]+sums[2]+sums[3]+sums[4];
+      var sums=[0,0,0,0,0,0], counts=[0,0,0,0,0,0], total=0;
+      pend.forEach(function(i){ var b=agingBucketIndex(Number(i.days||0),i.judicial); var a=Number(i.amount||0); sums[b]+=a; counts[b]+=1; total+=a; });
+      var aceptable = sums[0]+sums[1];
+      var noAceptable = sums[2]+sums[3]+sums[4]+sums[5];
       var pct = function(v){ return total>0 ? Math.round(v/total*100) : 0; };
-      // tiles
       document.getElementById("agingTiles").innerHTML = AGING_BUCKETS.map(function(bk,idx){
         return "<div class=\"aging-tile\" style=\"border-top-color:"+bk.col+"\">"+
           "<div class=\"at-lab\">"+bk.lab+"</div>"+
@@ -453,19 +455,20 @@
           "<div class=\"at-sub\">"+pct(sums[idx])+"% · "+counts[idx]+" fact.</div>"+
         "</div>";
       }).join("");
-      // stacked bar
       document.getElementById("agingBar").innerHTML = AGING_BUCKETS.map(function(bk,idx){
-        var w = total>0 ? (sums[idx]/total*100) : 0;
-        if(w<=0) return "";
+        var w = total>0 ? (sums[idx]/total*100) : 0; if(w<=0) return "";
         return "<span title=\""+bk.lab+"\" style=\"width:"+w+"%;background:"+bk.col+"\"></span>";
       }).join("");
       document.getElementById("agingLegend").innerHTML = AGING_BUCKETS.map(function(bk){
         return "<span class=\"lg\"><span class=\"dot\" style=\"background:"+bk.col+"\"></span>"+bk.lab+"</span>";
       }).join("");
-      // footer
+      // Aceptable / No Aceptable summary (concepto del reporte de Comeca)
       document.getElementById("agingFoot").innerHTML =
-        "Total vencido ("+agingCur+"): <strong>"+formatMoney(vencido,agingCur)+"</strong> · "+pct(vencido)+"% de la cartera pendiente en "+agingCur+"."+
-        "<br>Cartera pendiente total en "+agingCur+": <strong>"+formatMoney(total,agingCur)+"</strong> ("+pend.length+" facturas). Cambie de moneda con las pestañas de arriba.";
+        "<div style=\"display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px\">"+
+          "<div style=\"flex:1;min-width:220px;background:#eafaf0;border:1px solid #bfe6d0;border-radius:10px;padding:10px 14px\"><div style=\"font-size:12px;font-weight:800;color:#1c7a4d\">Total Aceptable <span style=\"font-weight:600;color:#5b8f73\">(Sin vencer + 1–30)</span></div><div style=\"font-size:19px;font-weight:900;color:#1c7a4d\">"+formatMoney(aceptable,agingCur)+" · "+pct(aceptable)+"%</div></div>"+
+          "<div style=\"flex:1;min-width:220px;background:#fdecec;border:1px solid #f3c2c2;border-radius:10px;padding:10px 14px\"><div style=\"font-size:12px;font-weight:800;color:#b3261e\">Total No Aceptable <span style=\"font-weight:600;color:#c07a76\">(31–60 + 61–90 + +91 + Judicial)</span></div><div style=\"font-size:19px;font-weight:900;color:#b3261e\">"+formatMoney(noAceptable,agingCur)+" · "+pct(noAceptable)+"%</div></div>"+
+        "</div>"+
+        "Cartera pendiente total en "+agingCur+": <strong>"+formatMoney(total,agingCur)+"</strong> ("+pend.length+" facturas). Cambie de moneda con las pestañas de arriba.";
     }
     function renderAnalystChart(){
       const _cl=coClients(); const analysts = [...new Set(_cl.map(c=>c.analyst))]; const max = Math.max(...analysts.map(a=>_cl.filter(c=>c.analyst===a).length),1);
