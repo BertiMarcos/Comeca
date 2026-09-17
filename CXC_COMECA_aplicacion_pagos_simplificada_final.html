@@ -156,7 +156,8 @@
     <main class="main">
       <div class="topbar">
         <div class="title"><h2 id="pageTitle">Dashboard de Seguimiento de Cobros</h2><p id="pageSubtitle">Vista ejecutiva para seguimiento de cartera, facturas, promesas y gestiones.</p></div>
-        <div class="company-picker" style="display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:16px"><span style="font-size:12px;font-weight:800;color:var(--gris-700)">Compañía:</span><select id="companySel" onchange="companyChange(this.value)" style="padding:7px 10px;border:1px solid var(--gris-300);border-radius:8px;font-size:13px;font-weight:700;color:var(--azul-900);background:#fff;min-width:190px"></select></div><div class="user-chip"><span class="avatar">IC</span><div><strong>Analista CXC</strong><br><span class="small-muted">Perfil operativo</span></div></div>
+        <div class="period-picker" style="display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:14px"><span style="font-size:12px;font-weight:800;color:var(--gris-700)">Período:</span><select id="yearSel" onchange="periodChange()" style="padding:7px 8px;border:1px solid var(--gris-300);border-radius:8px;font-size:13px;font-weight:700;color:var(--azul-900);background:#fff"></select><select id="monthSel" onchange="periodChange()" style="padding:7px 8px;border:1px solid var(--gris-300);border-radius:8px;font-size:13px;font-weight:700;color:var(--azul-900);background:#fff"></select></div>
+        <div class="company-picker" style="display:flex;align-items:center;gap:8px;margin-right:16px"><span style="font-size:12px;font-weight:800;color:var(--gris-700)">Compañía:</span><select id="companySel" onchange="companyChange(this.value)" style="padding:7px 10px;border:1px solid var(--gris-300);border-radius:8px;font-size:13px;font-weight:700;color:var(--azul-900);background:#fff;min-width:190px"></select></div><div class="user-chip"><span class="avatar">IC</span><div><strong>Analista CXC</strong><br><span class="small-muted">Perfil operativo</span></div></div>
       </div>
 
       <section id="dashboard" class="section active">
@@ -340,7 +341,7 @@
     function envioSave(){const c=envioCounts();document.getElementById(&#39;envSaveBtn&#39;).disabled=true;toast(&#39;Configuración guardada&#39;,&#39;El robot enviará el estado de cuenta a &#39;+c.on+&#39; clientes; &#39;+c.off+&#39; quedan como caso especial (sin envío).&#39;,&#39;success&#39;);}
     function envioRun(i){const d=sendList[i];toast(&#39;Envío ejecutado&#39;,&#39;Se disparó el envío del estado de cuenta a &#39;+d.nom+&#39; (ejecución manual desde la app).&#39;,&#39;success&#39;);}
     function activateFromHash(){const hpart=(location.hash||&#39;&#39;).replace(&#39;#&#39;,&#39;&#39;);if(!hpart)return;const btn=document.querySelector(&#39;.nav-btn[data-target="&#39;+hpart+&#39;"]&#39;);if(btn)btn.click();}
-    document.addEventListener(&#39;DOMContentLoaded&#39;, () => { setupNavigation(); initEmails(); initAging(); initCompanySel(); fillReassignSelectors(); renderAll(); renderEnvio(); activateFromHash(); });
+    document.addEventListener(&#39;DOMContentLoaded&#39;, () => { setupNavigation(); initEmails(); initAging(); initCompanySel(); initPeriodSel(); fillReassignSelectors(); renderAll(); renderEnvio(); activateFromHash(); });
     window.addEventListener(&#39;hashchange&#39;, activateFromHash);
 
     function setupNavigation(){
@@ -386,6 +387,13 @@
     function addEmail(id){ var inp=document.getElementById(&#39;newEmail_&#39;+id); var v=(inp.value||&#39;&#39;).trim(); if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) return toast(&#39;Correo inválido&#39;,&#39;Ingrese un correo con formato válido.&#39;,&#39;warn&#39;); var c=clientById(id); c.emails=c.emails||[]; if(c.emails.indexOf(v)>=0) return toast(&#39;Duplicado&#39;,&#39;Ese correo ya está cargado.&#39;,&#39;warn&#39;); c.emails.push(v); c.email=c.emails[0]; inp.value=&#39;&#39;; contactHistory.push({id:Date.now(),clientId:id,date:todayISO,type:&#39;Correo&#39;,value:v,detail:&#39;Alta de correo&#39;,user:&#39;Analista CXC&#39;}); refreshEmails(id); toast(&#39;Correo agregado&#39;,&#39;El estado de cuenta se enviará también a este correo.&#39;,&#39;success&#39;); }
     function removeEmail(id,idx){ var c=clientById(id); c.emails.splice(idx,1); c.email=c.emails[0]||&#39;&#39;; refreshEmails(id); toast(&#39;Correo quitado&#39;,&#39;Se actualizó la lista de correos del cliente.&#39;,&#39;success&#39;); }
     function setPrimaryEmail(id,idx){ var c=clientById(id); var e=c.emails.splice(idx,1)[0]; c.emails.unshift(e); c.email=e; refreshEmails(id); toast(&#39;Principal actualizado&#39;,&#39;Ese correo quedó como principal (destinatario To).&#39;,&#39;success&#39;); }
+    var MESES=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Set","Oct","Nov","Dic"];
+    var _now=new Date(); var baseYear=_now.getFullYear(), baseMonth=_now.getMonth();
+    var activeYear=baseYear, activeMonth=baseMonth;
+    function periodIsBase(){ return activeYear===baseYear &amp;&amp; activeMonth===baseMonth; }
+    function periodLabel(){ return MESES[activeMonth]+" "+activeYear; }
+    function initPeriodSel(){ var ys=document.getElementById("yearSel"), ms=document.getElementById("monthSel"); if(!ys||!ms) return; var years=[baseYear-1,baseYear]; ys.innerHTML=years.map(function(y){return "<option"+(y===activeYear?" selected":"")+">"+y+"</option>";}).join(""); ms.innerHTML=MESES.map(function(m,idx){return "<option value=\""+idx+"\""+(idx===activeMonth?" selected":"")+">"+m+"</option>";}).join(""); }
+    function periodChange(){ var ys=document.getElementById("yearSel"), ms=document.getElementById("monthSel"); activeYear=Number(ys.value); activeMonth=Number(ms.value); renderAging(); }
     function companyChange(v){ activeCompany=v; var sel=document.getElementById("companySel"); if(sel) sel.value=v; renderAll(); renderEnvio(); }
     function renderAll(){ renderDashboard(); renderCartera(); renderPromises(); renderContacts(); renderReassignClients(); renderReassignHistory(); renderReports(); renderEstados(); }
     function clientById(id){ return clients.find(c => c.id === Number(id)); }
@@ -442,6 +450,11 @@
       if(curs.indexOf(agingCur)===-1){ agingCur = curs[0]; }
       var tabsEl=document.getElementById("agingTabs"); if(!tabsEl) return;
       tabsEl.innerHTML = curs.map(function(c){ return "<button type=\"button\" class=\"aging-tab"+(c===agingCur?" on":"")+"\" onclick=\"setAgingCur(&#39;"+c+"&#39;)\">"+c+"</button>"; }).join("");
+      if(!periodIsBase()){
+        document.getElementById("agingTiles").innerHTML="<div style=\"grid-column:1/-1\" class=\"empty-state\">No hay foto de la cartera guardada para <strong>"+periodLabel()+"</strong>.<br><span class=\"small-muted\">La automatización guarda una foto de la cartera en cada cierre de mes. En la demo solo está cargado el mes actual ("+MESES[baseMonth]+" "+baseYear+").</span></div>";
+        document.getElementById("agingBar").innerHTML=""; document.getElementById("agingLegend").innerHTML=""; document.getElementById("agingFoot").innerHTML="";
+        return;
+      }
       var pend = coInvoices().filter(function(i){ return i.collectionStatus==="Pendiente"; }).filter(function(i){ return i.currency===agingCur; });
       var sums=[0,0,0,0,0,0], counts=[0,0,0,0,0,0], total=0;
       pend.forEach(function(i){ var b=agingBucketIndex(Number(i.days||0),i.judicial); var a=Number(i.amount||0); sums[b]+=a; counts[b]+=1; total+=a; });
@@ -468,7 +481,7 @@
           "<div style=\"flex:1;min-width:220px;background:#eafaf0;border:1px solid #bfe6d0;border-radius:10px;padding:10px 14px\"><div style=\"font-size:12px;font-weight:800;color:#1c7a4d\">Total Aceptable <span style=\"font-weight:600;color:#5b8f73\">(Sin vencer + 1–30)</span></div><div style=\"font-size:19px;font-weight:900;color:#1c7a4d\">"+formatMoney(aceptable,agingCur)+" · "+pct(aceptable)+"%</div></div>"+
           "<div style=\"flex:1;min-width:220px;background:#fdecec;border:1px solid #f3c2c2;border-radius:10px;padding:10px 14px\"><div style=\"font-size:12px;font-weight:800;color:#b3261e\">Total No Aceptable <span style=\"font-weight:600;color:#c07a76\">(31–60 + 61–90 + +91 + Judicial)</span></div><div style=\"font-size:19px;font-weight:900;color:#b3261e\">"+formatMoney(noAceptable,agingCur)+" · "+pct(noAceptable)+"%</div></div>"+
         "</div>"+
-        "Cartera pendiente total en "+agingCur+": <strong>"+formatMoney(total,agingCur)+"</strong> ("+pend.length+" facturas). Cambie de moneda con las pestañas de arriba.";
+        "Foto: <strong>"+periodLabel()+"</strong> · Cartera pendiente total en "+agingCur+": <strong>"+formatMoney(total,agingCur)+"</strong> ("+pend.length+" facturas). Cambie moneda con las pestañas y mes con el selector de arriba.";
     }
     function renderAnalystChart(){
       const _cl=coClients(); const analysts = [...new Set(_cl.map(c=>c.analyst))]; const max = Math.max(...analysts.map(a=>_cl.filter(c=>c.analyst===a).length),1);
