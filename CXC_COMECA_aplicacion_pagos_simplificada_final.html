@@ -436,13 +436,38 @@
     function setAgingCur(c){ agingCur=c; renderAging(); }
     function agingTramoLabel(d,judicial){ var L=["Sin vencer","1-30 dias","31-60 dias","61-90 dias","+91 dias","Cobro Judicial"]; return L[agingBucketIndex(Number(d||0),judicial)]; }
     function exportAging(){
-      var rows = coInvoices().filter(function(i){ return i.collectionStatus==="Pendiente"; }).map(function(i){
-        var c = clientById(i.clientId) || {};
-        var d = Number(i.days||0); var bi=agingBucketIndex(d,i.judicial);
-        return { cliente:(c.name||""), codigo:(c.code||""), empresa:(c.company||""), responsable:(c.analyst||""), factura:i.id, emision:(i.issue||""), vencimiento:(i.due||""), dias_vencidos:d, tramo:agingTramoLabel(d,i.judicial), grupo:(bi<=1?"Aceptable":"No Aceptable"), moneda:i.currency, saldo:Number(i.amount||0) };
+      if(!window.XLSX){ toast("Generador no disponible","No se pudo cargar el generador de Excel (revisá la conexión).","warn"); return; }
+      var pend = coInvoices().filter(function(i){ return i.collectionStatus==="Pendiente"; });
+      var comp = (activeCompany==="__ALL__")?"Todas las compañías":activeCompany;
+      // --- Hoja Detalle ---
+      var head=["Cliente","Código","Empresa","Responsable","N° factura","Emisión","Vencimiento","Días vencidos","Tramo","Grupo","Moneda","Saldo"];
+      var aoa=[["Estado global de vencimientos (aging)"],["Período:",periodLabel(),"","Compañía:",comp],[],head];
+      pend.slice().sort(function(a,b){return Number(b.days||0)-Number(a.days||0);}).forEach(function(i){
+        var c=clientById(i.clientId)||{}; var d=Number(i.days||0); var bi=agingBucketIndex(d,i.judicial);
+        aoa.push([(c.name||""),(c.code||""),(c.company||""),(c.analyst||""),i.id,(i.issue||""),(i.due||""),d,agingTramoLabel(d,i.judicial),(bi<=1?"Aceptable":"No Aceptable"),i.currency,Number(i.amount||0)]);
       });
-      rows.sort(function(a,b){ return b.dias_vencidos - a.dias_vencidos; });
-      downloadCSV("aging_vencimientos_cxc.csv", rows);
+      var ws=window.XLSX.utils.aoa_to_sheet(aoa);
+      ws["!cols"]=[{wch:34},{wch:12},{wch:20},{wch:16},{wch:12},{wch:12},{wch:12},{wch:14},{wch:16},{wch:14},{wch:8},{wch:16}];
+      // --- Hoja Resumen (por moneda y tramo + Aceptable/No Aceptable) ---
+      var r=[["Resumen de aging por moneda"],[]];
+      agingCurrencies().forEach(function(cur){
+        var sums=[0,0,0,0,0,0], counts=[0,0,0,0,0,0], tot=0;
+        pend.filter(function(i){return i.currency===cur;}).forEach(function(i){ var b=agingBucketIndex(Number(i.days||0),i.judicial); sums[b]+=Number(i.amount||0); counts[b]++; tot+=Number(i.amount||0); });
+        r.push(["Moneda: "+cur]);
+        r.push(["Tramo","Monto","% cartera","Facturas"]);
+        AGING_BUCKETS.forEach(function(bk,idx){ r.push([bk.lab, sums[idx], tot>0?Math.round(sums[idx]/tot*100):0, counts[idx]]); });
+        var ace=sums[0]+sums[1], noace=sums[2]+sums[3]+sums[4]+sums[5];
+        r.push(["Total Aceptable (Sin vencer + 1-30)", ace, tot>0?Math.round(ace/tot*100):0, ""]);
+        r.push(["Total No Aceptable (31 en adelante + Judicial)", noace, tot>0?Math.round(noace/tot*100):0, ""]);
+        r.push(["TOTAL", tot, 100, pend.filter(function(i){return i.currency===cur;}).length]);
+        r.push([]);
+      });
+      var ws2=window.XLSX.utils.aoa_to_sheet(r); ws2["!cols"]=[{wch:42},{wch:16},{wch:12},{wch:10}];
+      var wb=window.XLSX.utils.book_new();
+      window.XLSX.utils.book_append_sheet(wb, ws, "Detalle");
+      window.XLSX.utils.book_append_sheet(wb, ws2, "Resumen");
+      var suf=(activeCompany!=="__ALL__")?("_"+activeCompany.replace(/\s+/g,"_")):"";
+      window.XLSX.writeFile(wb, "aging_vencimientos"+suf+".xlsx");
     }
     function renderAging(){
       var curs = agingCurrencies();
