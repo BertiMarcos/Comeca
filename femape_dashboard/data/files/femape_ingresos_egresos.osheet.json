@@ -1,0 +1,1789 @@
+{
+  "version": "18.5.10",
+  "sheets": [
+    {
+      "id": "79c4e0b5-23d3-4905-a663-11ebee4d70ae",
+      "name": "Tablero",
+      "colNumber": 7,
+      "rowNumber": 96,
+      "rows": {
+        "26": {
+          "size": 40
+        },
+        "27": {
+          "size": 40
+        },
+        "39": {
+          "size": 40
+        },
+        "40": {
+          "size": 40
+        },
+        "52": {
+          "size": 40
+        },
+        "53": {
+          "size": 40
+        },
+        "28": {
+          "size": 27
+        },
+        "29": {
+          "size": 27
+        },
+        "30": {
+          "size": 27
+        },
+        "31": {
+          "size": 27
+        },
+        "32": {
+          "size": 27
+        },
+        "33": {
+          "size": 27
+        },
+        "34": {
+          "size": 27
+        },
+        "35": {
+          "size": 27
+        },
+        "36": {
+          "size": 27
+        },
+        "37": {
+          "size": 27
+        },
+        "41": {
+          "size": 27
+        },
+        "42": {
+          "size": 27
+        },
+        "43": {
+          "size": 27
+        },
+        "44": {
+          "size": 27
+        },
+        "45": {
+          "size": 27
+        },
+        "46": {
+          "size": 27
+        },
+        "47": {
+          "size": 27
+        },
+        "48": {
+          "size": 27
+        },
+        "49": {
+          "size": 27
+        },
+        "50": {
+          "size": 27
+        },
+        "54": {
+          "size": 27
+        },
+        "55": {
+          "size": 27
+        },
+        "56": {
+          "size": 27
+        },
+        "57": {
+          "size": 27
+        },
+        "58": {
+          "size": 27
+        },
+        "59": {
+          "size": 27
+        },
+        "60": {
+          "size": 27
+        },
+        "61": {
+          "size": 27
+        },
+        "62": {
+          "size": 27
+        },
+        "63": {
+          "size": 27
+        },
+        "66": {
+          "size": 44
+        },
+        "67": {
+          "size": 14
+        },
+        "68": {
+          "size": 32
+        },
+        "69": {
+          "size": 26
+        },
+        "70": {
+          "size": 26
+        },
+        "71": {
+          "size": 26
+        },
+        "72": {
+          "size": 26
+        },
+        "73": {
+          "size": 26
+        },
+        "74": {
+          "size": 30
+        },
+        "91": {
+          "size": 20
+        },
+        "92": {
+          "size": 20
+        }
+      },
+      "cols": {
+        "0": {
+          "size": 240
+        },
+        "1": {
+          "size": 190
+        },
+        "2": {
+          "size": 100
+        },
+        "3": {
+          "size": 15
+        },
+        "4": {
+          "size": 240
+        },
+        "5": {
+          "size": 190
+        },
+        "6": {
+          "size": 100
+        }
+      },
+      "merges": [
+        "A92:G93"
+      ],
+      "cells": {
+        "A27": "Facturación por cuenta",
+        "E27": "Compras por cuenta",
+        "A28": "=PIVOT(9, 10, FALSE, FALSE)",
+        "E28": "=PIVOT(10, 10, FALSE, FALSE)",
+        "A40": "Socios con mas facturacion (sin IOMA)",
+        "E40": "Proveedores con mas facturacion",
+        "A41": "=PIVOT(11, 10, FALSE, FALSE)",
+        "E41": "=PIVOT(12, 10, FALSE, FALSE)",
+        "A53": "Facturas sin cobrar",
+        "E53": "Facturas de proveedor sin pagar",
+        "A54": "=ODOO.LIST.HEADER(1, \"name\", \"Comprobante\")",
+        "B54": "=ODOO.LIST.HEADER(1, \"invoice_partner_display_name\", \"Contacto\")",
+        "C54": "=ODOO.LIST.HEADER(1, \"amount_residual\", \"Saldo\")",
+        "A55": "=ODOO.LIST(1,1,\"name\")",
+        "B55": "=ODOO.LIST(1,1,\"invoice_partner_display_name\")",
+        "C55": "=ODOO.LIST(1,1,\"amount_residual\")",
+        "A56": "=ODOO.LIST(1,2,\"name\")",
+        "B56": "=ODOO.LIST(1,2,\"invoice_partner_display_name\")",
+        "C56": "=ODOO.LIST(1,2,\"amount_residual\")",
+        "A57": "=ODOO.LIST(1,3,\"name\")",
+        "B57": "=ODOO.LIST(1,3,\"invoice_partner_display_name\")",
+        "C57": "=ODOO.LIST(1,3,\"amount_residual\")",
+        "A58": "=ODOO.LIST(1,4,\"name\")",
+        "B58": "=ODOO.LIST(1,4,\"invoice_partner_display_name\")",
+        "C58": "=ODOO.LIST(1,4,\"amount_residual\")",
+        "A59": "=ODOO.LIST(1,5,\"name\")",
+        "B59": "=ODOO.LIST(1,5,\"invoice_partner_display_name\")",
+        "C59": "=ODOO.LIST(1,5,\"amount_residual\")",
+        "A60": "=ODOO.LIST(1,6,\"name\")",
+        "B60": "=ODOO.LIST(1,6,\"invoice_partner_display_name\")",
+        "C60": "=ODOO.LIST(1,6,\"amount_residual\")",
+        "A61": "=ODOO.LIST(1,7,\"name\")",
+        "B61": "=ODOO.LIST(1,7,\"invoice_partner_display_name\")",
+        "C61": "=ODOO.LIST(1,7,\"amount_residual\")",
+        "A62": "=ODOO.LIST(1,8,\"name\")",
+        "B62": "=ODOO.LIST(1,8,\"invoice_partner_display_name\")",
+        "C62": "=ODOO.LIST(1,8,\"amount_residual\")",
+        "A63": "=ODOO.LIST(1,9,\"name\")",
+        "B63": "=ODOO.LIST(1,9,\"invoice_partner_display_name\")",
+        "C63": "=ODOO.LIST(1,9,\"amount_residual\")",
+        "A64": "=ODOO.LIST(1,10,\"name\")",
+        "B64": "=ODOO.LIST(1,10,\"invoice_partner_display_name\")",
+        "C64": "=ODOO.LIST(1,10,\"amount_residual\")",
+        "E54": "=ODOO.LIST.HEADER(2, \"name\", \"Comprobante\")",
+        "F54": "=ODOO.LIST.HEADER(2, \"invoice_partner_display_name\", \"Contacto\")",
+        "G54": "=ODOO.LIST.HEADER(2, \"amount_residual\", \"Saldo\")",
+        "E55": "=ODOO.LIST(2,1,\"name\")",
+        "F55": "=ODOO.LIST(2,1,\"invoice_partner_display_name\")",
+        "G55": "=ODOO.LIST(2,1,\"amount_residual\")",
+        "E56": "=ODOO.LIST(2,2,\"name\")",
+        "F56": "=ODOO.LIST(2,2,\"invoice_partner_display_name\")",
+        "G56": "=ODOO.LIST(2,2,\"amount_residual\")",
+        "E57": "=ODOO.LIST(2,3,\"name\")",
+        "F57": "=ODOO.LIST(2,3,\"invoice_partner_display_name\")",
+        "G57": "=ODOO.LIST(2,3,\"amount_residual\")",
+        "E58": "=ODOO.LIST(2,4,\"name\")",
+        "F58": "=ODOO.LIST(2,4,\"invoice_partner_display_name\")",
+        "G58": "=ODOO.LIST(2,4,\"amount_residual\")",
+        "E59": "=ODOO.LIST(2,5,\"name\")",
+        "F59": "=ODOO.LIST(2,5,\"invoice_partner_display_name\")",
+        "G59": "=ODOO.LIST(2,5,\"amount_residual\")",
+        "E60": "=ODOO.LIST(2,6,\"name\")",
+        "F60": "=ODOO.LIST(2,6,\"invoice_partner_display_name\")",
+        "G60": "=ODOO.LIST(2,6,\"amount_residual\")",
+        "E61": "=ODOO.LIST(2,7,\"name\")",
+        "F61": "=ODOO.LIST(2,7,\"invoice_partner_display_name\")",
+        "G61": "=ODOO.LIST(2,7,\"amount_residual\")",
+        "E62": "=ODOO.LIST(2,8,\"name\")",
+        "F62": "=ODOO.LIST(2,8,\"invoice_partner_display_name\")",
+        "G62": "=ODOO.LIST(2,8,\"amount_residual\")",
+        "E63": "=ODOO.LIST(2,9,\"name\")",
+        "F63": "=ODOO.LIST(2,9,\"invoice_partner_display_name\")",
+        "G63": "=ODOO.LIST(2,9,\"amount_residual\")",
+        "E64": "=ODOO.LIST(2,10,\"name\")",
+        "F64": "=ODOO.LIST(2,10,\"invoice_partner_display_name\")",
+        "G64": "=ODOO.LIST(2,10,\"amount_residual\")",
+        "A67": "Cobranza: cuánto falta cobrar, y desde cuándo",
+        "A69": "Antigüedad",
+        "B69": "Importe",
+        "C69": "% del total",
+        "A70": "Por vencer",
+        "B70": "=Data!$B$40",
+        "C70": "=IFERROR(B70/$B$75,0)",
+        "A71": "Vencido 1 a 30 días",
+        "B71": "=Data!$B$41",
+        "C71": "=IFERROR(B71/$B$75,0)",
+        "A72": "Vencido 31 a 60 días",
+        "B72": "=Data!$B$42",
+        "C72": "=IFERROR(B72/$B$75,0)",
+        "A73": "Vencido 61 a 90 días",
+        "B73": "=Data!$B$43",
+        "C73": "=IFERROR(B73/$B$75,0)",
+        "A74": "Vencido más de 90 días",
+        "B74": "=Data!$B$44",
+        "C74": "=IFERROR(B74/$B$75,0)",
+        "A75": "Total pendiente de cobro",
+        "B75": "=Data!$B$45",
+        "C75": "=Data!$C$49",
+        "A92": "Nota: \"Cobrado\" puede superar a \"Facturado\" porque incluye cobranzas de facturas de períodos anteriores. La antigüedad se calcula por MES de vencimiento, no por días exactos; las facturas de este período que vencen el año que viene se cuentan en \"Por vencer\". La celda a la derecha del total avisa si algo no cuadra."
+      },
+      "styles": {
+        "A27": 1,
+        "E27": 1,
+        "A40": 1,
+        "E40": 1,
+        "A53": 1,
+        "E53": 1,
+        "A54:C54": 2,
+        "E54:G54": 2,
+        "A55:A64": 3,
+        "E55:E64": 3,
+        "B55:C64": 4,
+        "F55:G64": 4,
+        "A29:C38": 4,
+        "E29:G38": 4,
+        "A42:C51": 4,
+        "E42:G51": 4,
+        "A67": 1,
+        "A69": 2,
+        "B69": 2,
+        "C69": 2,
+        "A70": 3,
+        "B70": 4,
+        "C70": 4,
+        "A71": 3,
+        "B71": 4,
+        "C71": 4,
+        "A72": 3,
+        "B72": 4,
+        "C72": 4,
+        "A73": 3,
+        "B73": 4,
+        "C73": 4,
+        "A74": 3,
+        "B74": 4,
+        "C74": 4,
+        "A75": 2,
+        "B75": 2,
+        "C75": 4,
+        "A92": 6,
+        "A28:C28": 2,
+        "E28:G28": 2,
+        "A41:C41": 2,
+        "E41:G41": 2
+      },
+      "formats": {
+        "C55:C64": 1,
+        "G55:G64": 1,
+        "B29:B38": 1,
+        "F29:F38": 1,
+        "B42:B51": 1,
+        "F42:F51": 1,
+        "B70": 1,
+        "C70": 2,
+        "B71": 1,
+        "C71": 2,
+        "B72": 1,
+        "C72": 2,
+        "B73": 1,
+        "C73": 2,
+        "B74": 1,
+        "C74": 2,
+        "B75": 1
+      },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "d97509e1-0a11-4d1e-91ef-9121c72fe66c",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Facturado",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C2",
+            "baselineDescr": {
+              "text": ""
+            },
+            "keyValue": "Data!C1",
+            "humanize": false,
+            "chartId": "d97509e1-0a11-4d1e-91ef-9121c72fe66c"
+          },
+          "offset": {
+            "x": 0,
+            "y": 11
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "9c9b82c8-9de4-4ff0-bfe4-9fbf72e77277",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Cobrado",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#F0FDF4",
+            "baseline": "Data!C12",
+            "baselineDescr": {
+              "text": "del facturado"
+            },
+            "keyValue": "Data!C5",
+            "humanize": false,
+            "chartId": "9c9b82c8-9de4-4ff0-bfe4-9fbf72e77277"
+          },
+          "offset": {
+            "x": 340,
+            "y": 11
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "2c4c7836-e5b7-4eb0-abc6-a2623b7d46ac",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Pendiente de cobro",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C13",
+            "baselineDescr": {
+              "text": ""
+            },
+            "keyValue": "Data!C7",
+            "humanize": false,
+            "chartId": "2c4c7836-e5b7-4eb0-abc6-a2623b7d46ac"
+          },
+          "offset": {
+            "x": 680,
+            "y": 11
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "8110e1af-147d-4f20-ae2e-33f2a08ab366",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Facturas de proveedor",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C4",
+            "baselineDescr": {
+              "text": "oxigeno"
+            },
+            "keyValue": "Data!C3",
+            "humanize": false,
+            "chartId": "8110e1af-147d-4f20-ae2e-33f2a08ab366"
+          },
+          "offset": {
+            "x": 0,
+            "y": 130
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "46c48af1-3aec-4f55-be51-232345413834",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Pagado",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#F0FDF4",
+            "baseline": "Data!C14",
+            "baselineDescr": {
+              "text": "de lo facturado por proveedores"
+            },
+            "keyValue": "Data!C6",
+            "humanize": false,
+            "chartId": "46c48af1-3aec-4f55-be51-232345413834"
+          },
+          "offset": {
+            "x": 340,
+            "y": 130
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "127c722d-35c2-442c-91f6-70f4cc85b9d9",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Pendiente de pago",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C15",
+            "baselineDescr": {
+              "text": "facturas sin pagar"
+            },
+            "keyValue": "Data!C8",
+            "humanize": false,
+            "chartId": "127c722d-35c2-442c-91f6-70f4cc85b9d9"
+          },
+          "offset": {
+            "x": 680,
+            "y": 130
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "2a2ee620-c551-4817-bb5b-53055b589f72",
+          "width": 490,
+          "height": 345,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "Facturado vs. facturas de proveedor por mes",
+              "color": "#434343",
+              "bold": true
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": [
+                "invoice_date:month",
+                "move_type"
+              ],
+              "measure": "amount_untaxed",
+              "order": null,
+              "resModel": "account.move",
+              "mode": "bar",
+              "cumulatedStart": false
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [
+                "&",
+                [
+                  "state",
+                  "=",
+                  "posted"
+                ],
+                [
+                  "move_type",
+                  "in",
+                  [
+                    "out_invoice",
+                    "in_invoice"
+                  ]
+                ]
+              ],
+              "groupBy": [
+                "invoice_date",
+                "move_type"
+              ],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [
+              {}
+            ],
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "cumulatedStart": false,
+            "chartId": "2a2ee620-c551-4817-bb5b-53055b589f72",
+            "fieldMatching": {
+              "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+                "chain": "invoice_date",
+                "type": "date",
+                "offset": 0
+              }
+            }
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "col": 0,
+          "row": 11
+        },
+        {
+          "id": "6b9624b8-fa6f-43a0-b69d-454442244d10",
+          "width": 490,
+          "height": 345,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "Cobrado vs. pagado por mes",
+              "color": "#434343",
+              "bold": true
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": [
+                "date:month",
+                "payment_type"
+              ],
+              "measure": "amount",
+              "order": null,
+              "resModel": "account.payment",
+              "mode": "bar",
+              "cumulatedStart": false
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [
+                [
+                  "state",
+                  "in",
+                  [
+                    "paid",
+                    "in_process"
+                  ]
+                ]
+              ],
+              "groupBy": [
+                "date",
+                "payment_type"
+              ],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [
+              {}
+            ],
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "cumulatedStart": false,
+            "chartId": "6b9624b8-fa6f-43a0-b69d-454442244d10",
+            "fieldMatching": {
+              "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+                "chain": "date",
+                "type": "date",
+                "offset": 0
+              }
+            }
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "col": 4,
+          "row": 11
+        },
+        {
+          "id": "244ccd66-6a14-4574-b370-2daaa375b388",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Días de cobro",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!B22",
+            "baselineDescr": {
+              "text": "promedio del período"
+            },
+            "keyValue": "Data!C20",
+            "humanize": false,
+            "chartId": "244ccd66-6a14-4574-b370-2daaa375b388"
+          },
+          "offset": {
+            "x": 0,
+            "y": 119
+          },
+          "col": 4,
+          "row": 68
+        },
+        {
+          "id": "6d82b886-c81a-41eb-9dd9-fcdfce47cfd7",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Días de pago",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!B22",
+            "baselineDescr": {
+              "text": "promedio del período"
+            },
+            "keyValue": "Data!C21",
+            "humanize": false,
+            "chartId": "6d82b886-c81a-41eb-9dd9-fcdfce47cfd7"
+          },
+          "offset": {
+            "x": 0,
+            "y": 238
+          },
+          "col": 4,
+          "row": 68
+        },
+        {
+          "id": "80fa2315-b046-4d45-ba66-abfca1696632",
+          "width": 320,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": {
+              "text": "Vencido",
+              "color": "#434343",
+              "bold": true
+            },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C47",
+            "baselineDescr": {
+              "text": "del pendiente de cobro"
+            },
+            "keyValue": "Data!C46",
+            "humanize": false,
+            "chartId": "80fa2315-b046-4d45-ba66-abfca1696632"
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "col": 4,
+          "row": 68
+        },
+        {
+          "id": "c5af802a-0c56-4420-9c5b-1b36495a7644",
+          "width": 490,
+          "height": 300,
+          "tag": "chart",
+          "data": {
+            "type": "bar",
+            "title": {
+              "text": "Deuda vencida por antigüedad (días)",
+              "color": "#434343",
+              "bold": true
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "stacked": false,
+            "aggregated": false,
+            "dataSetsHaveTitle": false,
+            "verticalAxisPosition": "left",
+            "dataSets": [
+              {
+                "dataRange": "Data!B41:B44",
+                "label": "Vencido"
+              }
+            ],
+            "labelRange": "Data!D41:D44"
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "col": 0,
+          "row": 77
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "ff6db645-9193-487d-b0b5-ee99a8d82eb5",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {
+        "0": {
+          "size": 220
+        },
+        "1": {
+          "size": 160
+        },
+        "2": {
+          "size": 160
+        }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "KPI - Facturado",
+        "B1": "=PIVOT.VALUE(1,\"price_subtotal\")",
+        "A2": "KPI - Facturado IOMA / socios",
+        "B2": "=PIVOT.VALUE(2,\"price_subtotal\")",
+        "A3": "KPI - Facturas de proveedor",
+        "B3": "=PIVOT.VALUE(3,\"balance\")",
+        "A4": "KPI - Proveedores oxigeno",
+        "B4": "=PIVOT.VALUE(4,\"balance\")",
+        "A5": "KPI - Cobrado",
+        "B5": "=PIVOT.VALUE(5,\"amount\")",
+        "A6": "KPI - Pagado",
+        "B6": "=PIVOT.VALUE(6,\"amount\")",
+        "A7": "KPI - Pendiente de cobro",
+        "B7": "=PIVOT.VALUE(7,\"amount_residual\")",
+        "A8": "KPI - Pendiente de pago",
+        "B8": "=PIVOT.VALUE(8,\"amount_residual\")",
+        "A9": "Socios (facturado - IOMA)",
+        "B9": "=B1-B2",
+        "C1": "=CONCATENATE(IF($B$1<0,\"-$\",\"$\"),IF(ABS($B$1)>=1000000000,TEXT(ABS($B$1)/1000000,\"#,##0\"),TEXT(ABS($B$1)/1000000,\"#,##0.0\")),\" M\")",
+        "C2": "=CONCATENATE(TEXT(B2/1000000,\"#,##0\"),\" M IOMA · \",TEXT(B9/1000000,\"#,##0\"),\" M socios\")",
+        "C3": "=CONCATENATE(IF($B$3<0,\"-$\",\"$\"),IF(ABS($B$3)>=1000000000,TEXT(ABS($B$3)/1000000,\"#,##0\"),TEXT(ABS($B$3)/1000000,\"#,##0.0\")),\" M\")",
+        "C4": "=CONCATENATE(IF($B$4<0,\"-$\",\"$\"),IF(ABS($B$4)>=1000000000,TEXT(ABS($B$4)/1000000,\"#,##0\"),TEXT(ABS($B$4)/1000000,\"#,##0.0\")),\" M\")",
+        "C5": "=CONCATENATE(IF($B$5<0,\"-$\",\"$\"),IF(ABS($B$5)>=1000000000,TEXT(ABS($B$5)/1000000,\"#,##0\"),TEXT(ABS($B$5)/1000000,\"#,##0.0\")),\" M\")",
+        "C6": "=CONCATENATE(IF($B$6<0,\"-$\",\"$\"),IF(ABS($B$6)>=1000000000,TEXT(ABS($B$6)/1000000,\"#,##0\"),TEXT(ABS($B$6)/1000000,\"#,##0.0\")),\" M\")",
+        "C7": "=CONCATENATE(IF($B$7<0,\"-$\",\"$\"),IF(ABS($B$7)>=1000000000,TEXT(ABS($B$7)/1000000,\"#,##0\"),TEXT(ABS($B$7)/1000000,\"#,##0.0\")),\" M\")",
+        "C8": "=CONCATENATE(IF($B$8<0,\"-$\",\"$\"),IF(ABS($B$8)>=1000000000,TEXT(ABS($B$8)/1000000,\"#,##0\"),TEXT(ABS($B$8)/1000000,\"#,##0.0\")),\" M\")",
+        "A12": "% cobrado",
+        "B12": "=IFERROR(B5/B1,0)",
+        "C12": "=TEXT(B12,\"0%\")",
+        "A13": "Facturas sin cobrar",
+        "B13": "=PIVOT.VALUE(7,\"__count\")",
+        "C13": "=CONCATENATE(TEXT($B$13,\"#,##0\"),\" facturas · \",TEXT($B$47,\"0.0%\"),\" vencido\")",
+        "A14": "% pagado",
+        "B14": "=IFERROR(B6/B3,0)",
+        "C14": "=TEXT(B14,\"0%\")",
+        "A15": "Facturas sin pagar",
+        "B15": "=PIVOT.VALUE(8,\"__count\")",
+        "C15": "=TEXT($B$15,\"#,##0\")",
+        "A17": "Periodo (filtro)",
+        "B17": "=ODOO.FILTER.VALUE(\"Periodo\")",
+        "A18": "Año",
+        "B18": "=IFERROR(YEAR(B17),VALUE(RIGHT(B17,4)))",
+        "A19": "Dias transcurridos del periodo",
+        "B19": "=MAX(1,MIN(TODAY(),DATE(B18,12,31))-DATE(B18,1,1)+1)",
+        "A20": "Dias de cobro (DSO)",
+        "B20": "=IFERROR(B7/(B1/B19),0)",
+        "C20": "=CONCATENATE(TEXT(ROUND(B20,0),\"0\"),\" días\")",
+        "A21": "Dias de pago (DPO)",
+        "B21": "=IFERROR(B8/(B3/B19),0)",
+        "C21": "=CONCATENATE(TEXT(ROUND(B21,0),\"0\"),\" días\")",
+        "A22": "Periodo mostrado",
+        "B22": "=CONCATENATE(\"año \",B18)",
+        "A24": "ANTIGUEDAD DE LA DEUDA",
+        "A25": "mes de vencimiento",
+        "B25": "importe",
+        "C25": "nro de mes",
+        "A26": "=\"01/\"&$B$18",
+        "B26": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A26),0)",
+        "C26": "1",
+        "A27": "=\"02/\"&$B$18",
+        "B27": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A27),0)",
+        "C27": "2",
+        "A28": "=\"03/\"&$B$18",
+        "B28": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A28),0)",
+        "C28": "3",
+        "A29": "=\"04/\"&$B$18",
+        "B29": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A29),0)",
+        "C29": "4",
+        "A30": "=\"05/\"&$B$18",
+        "B30": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A30),0)",
+        "C30": "5",
+        "A31": "=\"06/\"&$B$18",
+        "B31": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A31),0)",
+        "C31": "6",
+        "A32": "=\"07/\"&$B$18",
+        "B32": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A32),0)",
+        "C32": "7",
+        "A33": "=\"08/\"&$B$18",
+        "B33": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A33),0)",
+        "C33": "8",
+        "A34": "=\"09/\"&$B$18",
+        "B34": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A34),0)",
+        "C34": "9",
+        "A35": "=\"10/\"&$B$18",
+        "B35": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A35),0)",
+        "C35": "10",
+        "A36": "=\"11/\"&$B$18",
+        "B36": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A36),0)",
+        "C36": "11",
+        "A37": "=\"12/\"&$B$18",
+        "B37": "=IFERROR(PIVOT.VALUE(13,\"amount_residual\",\"invoice_date_due:month\",A37),0)",
+        "C37": "12",
+        "A39": "mes en curso",
+        "B39": "=MONTH(TODAY())",
+        "A40": "por vencer",
+        "B40": "=$B$7-$B$46",
+        "A41": "vencido 1-30",
+        "B41": "=SUMIF($C$26:$C$37,\"=\"&($B$39-1),$B$26:$B$37)",
+        "A42": "vencido 31-60",
+        "B42": "=SUMIF($C$26:$C$37,\"=\"&($B$39-2),$B$26:$B$37)",
+        "A43": "vencido 61-90",
+        "B43": "=SUMIF($C$26:$C$37,\"=\"&($B$39-3),$B$26:$B$37)",
+        "A44": "vencido +90",
+        "B44": "=SUMIF($C$26:$C$37,\"<=\"&($B$39-4),$B$26:$B$37)",
+        "A45": "total pendiente",
+        "B45": "=$B$7",
+        "A46": "VENCIDO",
+        "B46": "=SUM($B$41:$B$44)",
+        "C46": "=CONCATENATE(IF($B$46<0,\"-$\",\"$\"),IF(ABS($B$46)>=1000000000,TEXT(ABS($B$46)/1000000,\"#,##0\"),TEXT(ABS($B$46)/1000000,\"#,##0.0\")),\" M\")",
+        "A47": "% vencido",
+        "B47": "=IFERROR($B$46/$B$45,0)",
+        "C47": "=TEXT($B$47,\"0.0%\")",
+        "D41": "1 a 30",
+        "D42": "31 a 60",
+        "D43": "61 a 90",
+        "D44": "+ de 90",
+        "A48": "suma de los doce meses",
+        "B48": "=SUM($B$26:$B$37)",
+        "A49": "control",
+        "B49": "=$B$45-$B$48",
+        "C49": "=IF($B$45=0,\"sin pendiente\",IF($B$48=0,\"ERROR: el pivot de vencimientos devuelve cero\",IF(ABS($B$49)<1,\"cuadra\",CONCATENATE(\"vencen fuera del año: \",TEXT($B$49,\"#,##0\")))))"
+      },
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": {
+      "textColor": "#01666b",
+      "bold": true,
+      "fontSize": 16
+    },
+    "2": {
+      "textColor": "#434343",
+      "bold": true,
+      "fontSize": 11
+    },
+    "3": {
+      "textColor": "#01666B",
+      "verticalAlign": "middle"
+    },
+    "4": {
+      "textColor": "#434343",
+      "verticalAlign": "middle"
+    },
+    "5": {
+      "textColor": "#868e96",
+      "fontSize": 9,
+      "verticalAlign": "middle"
+    },
+    "6": {
+      "textColor": "#868e96",
+      "italic": true,
+      "fontSize": 10,
+      "wrapping": "wrap"
+    }
+  },
+  "formats": {
+    "1": "#,##0",
+    "2": "0.0%"
+  },
+  "borders": {},
+  "revisionId": "278bced1-5437-4e6d-b776-ba0d78d92b92",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "in",
+          [
+            "out_invoice",
+            "out_refund"
+          ]
+        ]
+      ],
+      "id": "1",
+      "measures": [
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal"
+        }
+      ],
+      "model": "account.invoice.report",
+      "name": "KPI - Facturado",
+      "sortedColumn": null,
+      "formulaId": "1",
+      "columns": [],
+      "rows": []
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "in",
+          [
+            "out_invoice",
+            "out_refund"
+          ]
+        ],
+        [
+          "product_id",
+          "in",
+          [
+            11,
+            101
+          ]
+        ]
+      ],
+      "id": "2",
+      "measures": [
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal"
+        }
+      ],
+      "model": "account.invoice.report",
+      "name": "KPI - Facturado IOMA",
+      "sortedColumn": null,
+      "formulaId": "2",
+      "columns": [],
+      "rows": []
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "parent_state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_id.move_type",
+          "in",
+          [
+            "in_invoice",
+            "in_refund"
+          ]
+        ],
+        [
+          "display_type",
+          "=",
+          "product"
+        ]
+      ],
+      "id": "3",
+      "measures": [
+        {
+          "id": "balance",
+          "fieldName": "balance"
+        }
+      ],
+      "model": "account.move.line",
+      "name": "KPI - Facturas de proveedor",
+      "sortedColumn": null,
+      "formulaId": "3",
+      "columns": [],
+      "rows": []
+    },
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        "&",
+        [
+          "parent_state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_id.move_type",
+          "in",
+          [
+            "in_invoice",
+            "in_refund"
+          ]
+        ],
+        [
+          "display_type",
+          "=",
+          "product"
+        ],
+        [
+          "product_id",
+          "in",
+          [
+            11,
+            101
+          ]
+        ]
+      ],
+      "id": "4",
+      "measures": [
+        {
+          "id": "balance",
+          "fieldName": "balance"
+        }
+      ],
+      "model": "account.move.line",
+      "name": "KPI - Proveedores oxigeno",
+      "sortedColumn": null,
+      "formulaId": "4",
+      "columns": [],
+      "rows": []
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        [
+          "state",
+          "in",
+          [
+            "paid",
+            "in_process"
+          ]
+        ],
+        [
+          "payment_type",
+          "=",
+          "inbound"
+        ]
+      ],
+      "id": "5",
+      "measures": [
+        {
+          "id": "amount",
+          "fieldName": "amount"
+        }
+      ],
+      "model": "account.payment",
+      "name": "KPI - Cobrado",
+      "sortedColumn": null,
+      "formulaId": "5",
+      "columns": [],
+      "rows": []
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        [
+          "state",
+          "in",
+          [
+            "paid",
+            "in_process"
+          ]
+        ],
+        [
+          "payment_type",
+          "=",
+          "outbound"
+        ]
+      ],
+      "id": "6",
+      "measures": [
+        {
+          "id": "amount",
+          "fieldName": "amount"
+        }
+      ],
+      "model": "account.payment",
+      "name": "KPI - Pagado",
+      "sortedColumn": null,
+      "formulaId": "6",
+      "columns": [],
+      "rows": []
+    },
+    "7": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "=",
+          "out_invoice"
+        ],
+        [
+          "payment_state",
+          "in",
+          [
+            "not_paid",
+            "partial"
+          ]
+        ]
+      ],
+      "id": "7",
+      "measures": [
+        {
+          "id": "amount_residual",
+          "fieldName": "amount_residual"
+        },
+        {
+          "id": "__count",
+          "fieldName": "__count"
+        }
+      ],
+      "model": "account.move",
+      "name": "KPI - Pendiente de cobro",
+      "sortedColumn": null,
+      "formulaId": "7",
+      "columns": [],
+      "rows": []
+    },
+    "8": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "=",
+          "in_invoice"
+        ],
+        [
+          "payment_state",
+          "in",
+          [
+            "not_paid",
+            "partial"
+          ]
+        ]
+      ],
+      "id": "8",
+      "measures": [
+        {
+          "id": "amount_residual",
+          "fieldName": "amount_residual"
+        },
+        {
+          "id": "__count",
+          "fieldName": "__count"
+        }
+      ],
+      "model": "account.move",
+      "name": "KPI - Pendiente de pago",
+      "sortedColumn": null,
+      "formulaId": "8",
+      "columns": [],
+      "rows": []
+    },
+    "9": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        "&",
+        [
+          "parent_state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_id.move_type",
+          "in",
+          [
+            "out_invoice",
+            "out_refund"
+          ]
+        ],
+        [
+          "display_type",
+          "=",
+          "product"
+        ],
+        [
+          "account_id.account_type",
+          "in",
+          [
+            "income",
+            "income_other"
+          ]
+        ]
+      ],
+      "id": "9",
+      "measures": [
+        {
+          "id": "balance",
+          "fieldName": "balance",
+          "isHidden": true
+        },
+        {
+          "id": "Importe:sum",
+          "fieldName": "Importe",
+          "aggregator": "sum",
+          "userDefinedName": "Importe",
+          "computedBy": {
+            "sheetId": "79c4e0b5-23d3-4905-a663-11ebee4d70ae",
+            "formula": "=-balance"
+          }
+        }
+      ],
+      "model": "account.move.line",
+      "name": "Facturacion por cuenta",
+      "sortedColumn": {
+        "measure": "Importe:sum",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "9",
+      "columns": [],
+      "rows": [
+        {
+          "fieldName": "account_id"
+        }
+      ]
+    },
+    "10": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "parent_state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_id.move_type",
+          "in",
+          [
+            "in_invoice",
+            "in_refund"
+          ]
+        ],
+        [
+          "display_type",
+          "=",
+          "product"
+        ]
+      ],
+      "id": "10",
+      "measures": [
+        {
+          "id": "balance",
+          "fieldName": "balance",
+          "userDefinedName": "Importe"
+        }
+      ],
+      "model": "account.move.line",
+      "name": "Compras por cuenta",
+      "sortedColumn": {
+        "measure": "balance",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "10",
+      "columns": [],
+      "rows": [
+        {
+          "fieldName": "account_id"
+        }
+      ]
+    },
+    "11": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "in",
+          [
+            "out_invoice",
+            "out_refund"
+          ]
+        ],
+        [
+          "product_id",
+          "not in",
+          [
+            11,
+            101
+          ]
+        ]
+      ],
+      "id": "11",
+      "measures": [
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Importe"
+        }
+      ],
+      "model": "account.invoice.report",
+      "name": "Socios con mas facturacion",
+      "sortedColumn": {
+        "measure": "price_subtotal",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "11",
+      "columns": [],
+      "rows": [
+        {
+          "fieldName": "partner_id"
+        }
+      ]
+    },
+    "12": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        [
+          "parent_state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_id.move_type",
+          "in",
+          [
+            "in_invoice",
+            "in_refund"
+          ]
+        ],
+        [
+          "display_type",
+          "=",
+          "product"
+        ]
+      ],
+      "id": "12",
+      "measures": [
+        {
+          "id": "balance",
+          "fieldName": "balance",
+          "userDefinedName": "Importe"
+        }
+      ],
+      "model": "account.move.line",
+      "name": "Proveedores con mas facturacion",
+      "sortedColumn": {
+        "measure": "balance",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "12",
+      "columns": [],
+      "rows": [
+        {
+          "fieldName": "partner_id"
+        }
+      ]
+    },
+    "13": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "id": "13",
+      "formulaId": "13",
+      "model": "account.move",
+      "name": "Pendiente de cobro por vencimiento",
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "=",
+          "out_invoice"
+        ],
+        [
+          "payment_state",
+          "in",
+          [
+            "not_paid",
+            "partial"
+          ]
+        ]
+      ],
+      "measures": [
+        {
+          "id": "amount_residual",
+          "fieldName": "amount_residual"
+        }
+      ],
+      "columns": [],
+      "rows": [
+        {
+          "fieldName": "invoice_date_due",
+          "granularity": "month"
+        }
+      ],
+      "sortedColumn": null
+    }
+  },
+  "pivotNextId": 14,
+  "customTableStyles": {},
+  "globalFilters": [
+    {
+      "id": "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b",
+      "type": "date",
+      "label": "Periodo",
+      "defaultValue": "this_year"
+    }
+  ],
+  "lists": {
+    "1": {
+      "columns": [
+        "name",
+        "invoice_partner_display_name",
+        "amount_residual"
+      ],
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "=",
+          "out_invoice"
+        ],
+        [
+          "payment_state",
+          "in",
+          [
+            "not_paid",
+            "partial"
+          ]
+        ]
+      ],
+      "model": "account.move",
+      "context": {
+        "default_move_type": "out_invoice"
+      },
+      "orderBy": [
+        {
+          "name": "amount_residual",
+          "asc": false
+        }
+      ],
+      "id": "1",
+      "name": "Facturas sin cobrar",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      }
+    },
+    "2": {
+      "columns": [
+        "name",
+        "invoice_partner_display_name",
+        "amount_residual"
+      ],
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "=",
+          "posted"
+        ],
+        [
+          "move_type",
+          "=",
+          "in_invoice"
+        ],
+        [
+          "payment_state",
+          "in",
+          [
+            "not_paid",
+            "partial"
+          ]
+        ]
+      ],
+      "model": "account.move",
+      "context": {
+        "default_move_type": "in_invoice"
+      },
+      "orderBy": [
+        {
+          "name": "amount_residual",
+          "asc": false
+        }
+      ],
+      "id": "2",
+      "name": "Facturas de proveedor sin pagar",
+      "fieldMatching": {
+        "6b2e03e2-7e8e-40ad-bc94-297c9ca8818b": {
+          "chain": "invoice_date",
+          "type": "date",
+          "offset": 0
+        }
+      }
+    }
+  },
+  "listNextId": 3,
+  "chartOdooMenusReferences": {}
+}
