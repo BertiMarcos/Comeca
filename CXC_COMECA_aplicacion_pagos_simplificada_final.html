@@ -272,7 +272,8 @@
               <tr><td><strong>Pedidos aprobados</strong></td><td>Pedidos aprobados sin facturar (en producción o en inventario).</td><td><span class="badge badge-gray">Nueva · pedir a Warner</span></td></tr>
             </tbody></table></div>
             <p class="small-muted" style="margin:10px 0 0">Si la macro no trae «Limite de credito» o «Pedidos aprobados», la carga se procesa igual y la app avisa qué no puede calcular. Los clientes empleados (ECM…) se excluyen por defecto.</p>
-            <button class="btn btn-outline btn-small" style="margin-top:10px" onclick="cargaPedidosModelo()">⬇ Modelo de hoja «Pedidos aprobados»</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-primary btn-small" onclick="cargaModeloMacro()">⬇ Descargar modelo de la macro</button></div>
+            <p class="small-muted" style="margin:8px 0 0">El modelo trae las 5 hojas con la estructura que espera la app, filas de ejemplo e instrucciones. Sirve para armar la macro de una compañía nueva o revisar que no falte nada.</p>
           </div>
           <div class="card"><div class="card-header"><div><h3 class="card-title">2 · Subí la macro</h3><p class="card-subtitle">La app valida la estructura y los datos antes de procesar. Si hay errores, no se carga nada y te indica hoja, fila y columna.</p></div></div>
             <label class="carga-drop" id="cargaDrop" ondragover="event.preventDefault();this.classList.add(&#39;over&#39;)" ondragleave="this.classList.remove(&#39;over&#39;)" ondrop="cargaDrop(event)"><span style="font-size:30px">📄</span><strong>Arrastrá la macro acá</strong><span class="small-muted">o hacé clic para elegirla (.xlsm, .xlsx, .xls)</span><input type="file" id="cargaInput" accept=".xlsm,.xlsx,.xls,.xlsb" style="display:none" onchange="cargaPick(event)"></label>
@@ -591,7 +592,7 @@
     function cargaISO(d){ return d.getFullYear()+&#39;-&#39;+String(d.getMonth()+1).padStart(2,&#39;0&#39;)+&#39;-&#39;+String(d.getDate()).padStart(2,&#39;0&#39;); }
     function cargaDate(v){
       if(v===&#39;&#39;||v==null) return null;
-      if(v instanceof Date &amp;&amp; !isNaN(v)) return cargaISO(new Date(v.getTime()+12*36e5));
+      if(v instanceof Date &amp;&amp; !isNaN(v)){ var tt=v.getTime()-v.getTimezoneOffset()*6e4; var dd0=new Date(Math.floor((tt+36e5)/864e5)*864e5); return dd0.getUTCFullYear()+&#39;-&#39;+String(dd0.getUTCMonth()+1).padStart(2,&#39;0&#39;)+&#39;-&#39;+String(dd0.getUTCDate()).padStart(2,&#39;0&#39;); }
       if(typeof v===&#39;number&#39; &amp;&amp; v>20000 &amp;&amp; v<80000){ var d=new Date(Math.round((v-25569)*864e5)); return d.getUTCFullYear()+&#39;-&#39;+String(d.getUTCMonth()+1).padStart(2,&#39;0&#39;)+&#39;-&#39;+String(d.getUTCDate()).padStart(2,&#39;0&#39;); }
       var s=String(v).trim(), m;
       if((m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/))){ var dd=+m[1], mm=+m[2], yy=+m[3]; if(mm<1||mm>12||dd<1||dd>31) return &#39;X&#39;; return yy+&#39;-&#39;+String(mm).padStart(2,&#39;0&#39;)+&#39;-&#39;+String(dd).padStart(2,&#39;0&#39;); }
@@ -631,8 +632,8 @@
       var t=sb?cargaTable(wb,sb,[&#39;Código de cliente&#39;]):null;
       if(!t){ E(&#39;base&#39;,&#39;—&#39;,&#39;—&#39;,&#39;No se encontró la hoja «base» con la columna «Código de cliente» (exportación de antigüedad de saldos).&#39;,&#39;&#39;); return {file:fname,errors:errors,warns:warns,data:null,companias:co?[co]:[],formato:&#39;macro&#39;}; }
       var C={cod:cargaCol(t,[&#39;Código de cliente&#39;]),nom:cargaCol(t,[&#39;Nombre SN&#39;,&#39;Nombre del cliente&#39;]),tipo:cargaCol(t,[&#39;Tipo&#39;]),doc:cargaCol(t,[&#39;Nº documento&#39;,&#39;N documento&#39;,&#39;No documento&#39;,&#39;Numero de documento&#39;]),fdoc:cargaCol(t,[&#39;Fecha de documento&#39;,&#39;Fecha de contabilización&#39;]),fven:cargaCol(t,[&#39;Fecha de vencimiento&#39;]),ref:cargaCol(t,[&#39;Número de referencia del SN&#39;,&#39;Numero de referencia&#39;]),saldo:cargaCol(t,[&#39;Saldo&#39;]),fam:cargaCol(t,[&#39;Familia&#39;]),dias:cargaCol(t,[&#39;Días vencimiento&#39;,&#39;Dias vencimiento&#39;]),mon:cargaCol(t,[&#39;Moneda&#39;,&#39;tipo de Moneda&#39;])};
-      [[&#39;cod&#39;,&#39;Código de cliente&#39;],[&#39;doc&#39;,&#39;Nº documento&#39;],[&#39;fven&#39;,&#39;Fecha de vencimiento&#39;],[&#39;saldo&#39;,&#39;Saldo&#39;]].forEach(function(x){ if(C[x[0]]<0) E(sb,t.hi+1,x[1],&#39;Falta la columna en la hoja base.&#39;,&#39;&#39;); });
-      if(errors.length) return {file:fname,errors:errors,warns:warns,data:null,companias:co?[co]:[],formato:&#39;macro&#39;};
+      var faltan=0; [[&#39;cod&#39;,&#39;Código de cliente&#39;],[&#39;doc&#39;,&#39;Nº documento&#39;],[&#39;fven&#39;,&#39;Fecha de vencimiento&#39;],[&#39;saldo&#39;,&#39;Saldo&#39;]].forEach(function(x){ if(C[x[0]]<0){ faltan++; E(sb,t.hi+1,x[1],&#39;Falta la columna en la hoja base.&#39;,&#39;&#39;); } });
+      if(faltan) return {file:fname,errors:errors,warns:warns,data:null,companias:co?[co]:[],formato:&#39;macro&#39;};
       // fecha de corte: fecha en las filas de arriba del encabezado, o en el nombre del archivo
       var corte=null; for(var i=0;i<t.hi &amp;&amp; !corte;i++){ t.rows[i].forEach(function(v){ if(!corte &amp;&amp; v instanceof Date) corte=cargaDate(v); }); }
       if(!corte){ var m=String(fname).match(/(\d{2})[-_.]?(\d{2})[-_.]?(\d{4})/); if(m) corte=m[3]+&#39;-&#39;+m[2]+&#39;-&#39;+m[1]; }
@@ -679,9 +680,11 @@
       if(sp){ var pt=cargaTable(wb,sp,[&#39;Código cliente&#39;,&#39;Código de cliente&#39;,&#39;Cod SN&#39;]); if(pt){ var p0=cargaCol(pt,[&#39;Código cliente&#39;,&#39;Código de cliente&#39;,&#39;Cod SN&#39;]), pn=cargaCol(pt,[&#39;N° pedido&#39;,&#39;Nº pedido&#39;,&#39;Numero de pedido&#39;,&#39;Pedido&#39;]), pf=cargaCol(pt,[&#39;Fecha aprobación&#39;,&#39;Fecha de aprobación&#39;]), pm=cargaCol(pt,[&#39;Moneda&#39;]), pa=cargaCol(pt,[&#39;Monto&#39;,&#39;Saldo&#39;]), pe=cargaCol(pt,[&#39;Estado&#39;]);
         for(var r5=pt.hi+1;r5<pt.rows.length;r5++){ var y=pt.rows[r5]; var cd5=String(y[p0]||&#39;&#39;).trim(); if(!cd5) continue; var mt=cargaNum(y[pa]); if(mt==null||isNaN(mt)){ E(sp,r5+1,&#39;Monto&#39;,&#39;No es un número.&#39;,y[pa]); continue; } var es=/inventar/i.test(String(y[pe]||&#39;&#39;))?&#39;En inventario&#39;:&#39;Aprobado - en producción&#39;; if(!cli[cd5]) warns.push(&#39;Pedido de &#39;+cd5+&#39; (fila &#39;+(r5+1)+&#39;): el cliente no tiene saldo en la hoja base; se ignora.&#39;); else data.Pedidos.push({_fila:r5+1,compania:co,codigo_cliente:cd5,numero_pedido:String(y[pn]||&#39;&#39;),fecha_aprobacion:cargaDate(y[pf])||corte,moneda:monedaTxt(y[pm],co)||null,monto:mt,estado:es}); } } }
       else warns.push(&#39;La macro no trae la hoja «Pedidos aprobados»: el disponible se calcula sin pedidos.&#39;);
+      var exCods=Object.keys(cli).filter(function(cd){ return /EJEMPLO/i.test(cli[cd].nombre_cliente||&#39;&#39;); });
+      if(exCods.length){ exCods.forEach(function(cd){ delete cli[cd]; }); data.Facturas=data.Facturas.filter(function(f){ return exCods.indexOf(f.codigo_cliente)<0; }); data.Pedidos=data.Pedidos.filter(function(p){ return exCods.indexOf(p.codigo_cliente)<0; }); warns.push(&#39;Se ignoraron las filas de ejemplo del modelo (&#39;+exCods.length+&#39; cliente(s) «… EJEMPLO»).&#39;); }
       Object.keys(cli).forEach(function(cd){ var c=cli[cd]; if(!c.moneda_credito){ var ms=Object.keys(c.monedas).sort(function(a,b){return c.monedas[b]-c.monedas[a];}); c.moneda_credito=ms[0]||loc; } data.Clientes.push(c); });
       data.Pedidos.forEach(function(p){ if(!p.moneda) p.moneda=cli[p.codigo_cliente].moneda_credito; });
-      if(!data.Facturas.length &amp;&amp; !errors.length) E(sb,&#39;—&#39;,&#39;—&#39;,&#39;La hoja base no tiene documentos con saldo.&#39;,&#39;&#39;);
+      if(!data.Facturas.length &amp;&amp; !errors.some(function(e){return e.c!==&#39;Compañía&#39;;})) E(sb,&#39;—&#39;,&#39;—&#39;,&#39;La hoja base no tiene documentos con saldo (las filas de ejemplo no se cargan).&#39;,&#39;&#39;);
       return {file:fname,errors:errors,warns:warns,data:data,companias:co?[co]:[],formato:&#39;macro&#39;,corte:corte};
     }
 
@@ -729,6 +732,47 @@
     }
 
     /* ---------- UI ---------- */
+    function cargaModeloMacro(){
+      if(!_xlsxOk()) return;
+      var X=window.XLSX, wb=X.utils.book_new(), D=function(y,m,d){ return new Date(y,m-1,d); }, corte=D(2026,10,16);
+      var put=function(name,aoa,cols){ var ws=X.utils.aoa_to_sheet(aoa,{cellDates:true}); if(cols) ws[&#39;!cols&#39;]=cols.map(function(w){return {wch:w};}); X.utils.book_append_sheet(wb,ws,name); };
+      put(&#39;Instrucciones&#39;,[
+        [&#39;Modelo de la macro de gestión de cobro — CXC 360&#39;],
+        [&#39;Es la misma estructura de la macro que el negocio usa hoy. Sirve para armarla para una compañía nueva o para revisar que no falte nada.&#39;],
+        [],
+        [&#39;Hoja&#39;,&#39;Obligatoria&#39;,&#39;Qué contiene&#39;],
+        [&#39;base&#39;,&#39;Sí&#39;,&#39;Antigüedad de saldos: una fila por documento abierto. El encabezado va en la fila 8 y la fecha de corte en la fila 7 (también se toma del nombre del archivo, ej. «… 16-10-2026.xlsm»).&#39;],
+        [&#39;Base Clientes&#39;,&#39;Sí&#39;,&#39;Datos de contacto: código, nombre, contacto, teléfono y correo (puede ir «Nombre <correo>» o varios correos separados por ;).&#39;],
+        [&#39;tipo de moneda&#39;,&#39;Recomendada&#39;,&#39;Código de cliente, tipo (prefijo), descripción (local / exterior / relacionado) y moneda.&#39;],
+        [&#39;Limite de credito&#39;,&#39;Para disponible y sobregiro&#39;,&#39;Límite, cuenta contable, categoría y plazo de crédito por cliente.&#39;],
+        [&#39;Pedidos aprobados&#39;,&#39;Para disponible y sobregiro&#39;,&#39;Pedidos aprobados que todavía no se facturaron (en producción o en inventario).&#39;],
+        [],
+        [&#39;Códigos de cliente&#39;,&#39;&#39;,&#39;1.ª letra C cliente / E empleado · 2.ª L local / E exterior · 3.ª M tercero / R relacionado · 4.ª E dólares / L moneda local. Ej.: CLML = cliente local tercero en colones; CERE = cliente exterior relacionado en dólares. Los empleados (E…) se excluyen.&#39;],
+        [&#39;Tipo de documento&#39;,&#39;&#39;,&#39;RF factura · RC / PR pagos o abonos (saldo negativo) · AS asiento.&#39;],
+        [],
+        [&#39;Las filas de ejemplo (clientes «… EJEMPLO») se ignoran al subir el archivo. Reemplazalas con los datos reales.&#39;]
+      ],[18,26,120]);
+      var H=[&#39;#&#39;,&#39;Código de cliente&#39;,&#39;Nombre SN&#39;,&#39;Tipo&#39;,&#39;Nº documento&#39;,&#39;Fecha de documento&#39;,&#39;Fecha de vencimiento&#39;,&#39;Número de referencia del SN&#39;,&#39;Sin vencer&#39;,&#39;O1 - 30&#39;,&#39;31 - 60&#39;,&#39;61 - 90&#39;,&#39;91 - 120&#39;,&#39;121+&#39;,&#39;Saldo&#39;,&#39;Familia&#39;,&#39;Días vencimiento&#39;,&#39;Moneda&#39;];
+      var docs=[
+        [1,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RF&#39;,&#39;3009001&#39;,D(2026,9,1),D(2026,10,1),&#39;OC-1001&#39;,&#39;&#39;,2450000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,2450000,&#39;Cliente local_colones&#39;,15,&#39;Colones&#39;],
+        [2,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RF&#39;,&#39;3009045&#39;,D(2026,10,5),D(2026,11,4),&#39;OC-1022&#39;,1800000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,1800000,&#39;Cliente local_colones&#39;,-19,&#39;Colones&#39;],
+        [3,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RC&#39;,&#39;7700123&#39;,D(2026,10,10),D(2026,10,10),&#39;&#39;,&#39;&#39;,-300000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,-300000,&#39;Cliente local_colones&#39;,6,&#39;Colones&#39;],
+        [4,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;RF&#39;,&#39;3008870&#39;,D(2026,6,20),D(2026,8,19),&#39;PO-5501&#39;,&#39;&#39;,&#39;&#39;,12500,&#39;&#39;,&#39;&#39;,&#39;&#39;,12500,&#39;Cliente exterior_dólares&#39;,58,&#39;Dolares&#39;],
+        [5,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;RF&#39;,&#39;3009012&#39;,D(2026,9,15),D(2026,11,14),&#39;PO-5530&#39;,18900,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,18900,&#39;Cliente exterior_dólares&#39;,-29,&#39;Dolares&#39;]
+      ];
+      put(&#39;base&#39;,[[&#39;Tipo&#39;],[&#39;RF&#39;],[&#39;RC&#39;,&#39;Tpo de cambio&#39;],[&#39;AS&#39;,505],[&#39;PR&#39;],[],[&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;Totales →&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,null,&#39;Fecha de corte →&#39;,corte],H].concat(docs),[4,14,32,6,12,13,13,16,12,12,12,12,12,12,14,24,10,9]);
+      put(&#39;Base Clientes&#39;,[[&#39;Código del Cliente&#39;,&#39;Nombre Cliente&#39;,&#39;Cédula Jurídica&#39;,&#39;Contacto CxC&#39;,&#39;Telefono&#39;,&#39;Correo&#39;,&#39;Direccion&#39;,&#39;Ruta&#39;,&#39;Segmentación&#39;,&#39;Especificaciones&#39;,&#39;Forma Pago&#39;,&#39;Banco/Aplica&#39;,&#39;Detalle de pago en banco (Referencia)&#39;,&#39;Observaciones Gestión de Cobro&#39;],
+        [&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;3101000000&#39;,&#39;María Pérez&#39;,&#39;2222-0000&#39;,&#39;María Pérez <cxp@clientelocal-ejemplo.com>; tesoreria@clientelocal-ejemplo.com&#39;,&#39;San José&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;Transferencia&#39;,&#39;BCR&#39;,&#39;&#39;,&#39;&#39;],
+        [&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;EX-12345&#39;,&#39;John Smith&#39;,&#39;+1 305 000-0000&#39;,&#39;ap@clienteexterior-ejemplo.com&#39;,&#39;Miami, FL&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;Transferencia&#39;,&#39;BAC&#39;,&#39;&#39;,&#39;&#39;]],[14,30,14,18,14,48,16,8,12,14,14,12,22,26]);
+      put(&#39;tipo de moneda&#39;,[[&#39;Código de cliente&#39;,&#39;Tipo&#39;,&#39;Descripcion&#39;,&#39;Moneda&#39;],[&#39;CLML00999&#39;,&#39;CLML&#39;,&#39;Cliente local_colones&#39;,&#39;Colones&#39;],[&#39;CEME00999&#39;,&#39;CEME&#39;,&#39;Cliente exterior_dólares&#39;,&#39;Dolares&#39;]],[16,8,26,10]);
+      put(&#39;Limite de credito&#39;,[[&#39;Cod SN&#39;,&#39;Nombre SN&#39;,&#39;Cod Cuenta&#39;,&#39;Categoria&#39;,&#39;Grupo&#39;,&#39;Plazo de crédito&#39;,&#39;Moneda SN&#39;,&#39;Límite de crédito moneda SN&#39;,&#39;Límite de Crédito USD&#39;],
+        [&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;11201201000&#39;,&#39;Terceros Local&#39;,&#39;Clientes locales&#39;,30,&#39;CRC&#39;,6000000,11880],
+        [&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;11202201000&#39;,&#39;Terceros Exterior&#39;,&#39;Clientes exterior&#39;,60,&#39;USD&#39;,40000,40000]],[12,30,14,18,18,12,10,18,16]);
+      put(&#39;Pedidos aprobados&#39;,[[&#39;Código cliente&#39;,&#39;N° pedido&#39;,&#39;Fecha aprobación&#39;,&#39;Moneda&#39;,&#39;Monto&#39;,&#39;Estado&#39;,&#39;Fecha estimada facturación&#39;],
+        [&#39;CLML00999&#39;,&#39;PV-55120&#39;,D(2026,10,10),&#39;CRC&#39;,1500000,&#39;Aprobado - en producción&#39;,D(2026,11,5)],
+        [&#39;CEME00999&#39;,&#39;PV-55133&#39;,D(2026,10,12),&#39;USD&#39;,9000,&#39;En inventario&#39;,&#39;&#39;]],[16,14,16,9,14,24,22]);
+      X.writeFile(wb,&#39;Modelo macro gestión de cobro - CXC 360.xlsx&#39;);
+    }
     function cargaPedidosModelo(){
       if(!_xlsxOk()) return;
       var aoa=[[&#39;Código cliente&#39;,&#39;N° pedido&#39;,&#39;Fecha aprobación&#39;,&#39;Moneda&#39;,&#39;Monto&#39;,&#39;Estado&#39;,&#39;Fecha estimada facturación&#39;],[&#39;CLME00084&#39;,&#39;PV-55120&#39;,&#39;10/10/2026&#39;,&#39;USD&#39;,32000,&#39;Aprobado - en producción&#39;,&#39;05/11/2026&#39;],[&#39;CEME00075&#39;,&#39;PV-55133&#39;,&#39;12/10/2026&#39;,&#39;USD&#39;,9000,&#39;En inventario&#39;,&#39;&#39;]];
