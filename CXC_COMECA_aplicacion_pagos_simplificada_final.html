@@ -265,7 +265,7 @@
         <div class="grid grid-2">
           <div class="card"><div class="card-header"><div><h3 class="card-title">1 · Qué se sube</h3><p class="card-subtitle">La <strong>misma macro de gestión de cobro</strong> que el negocio usa hoy para cada compañía (SAP o no SAP). No hay que rearmar nada: la app lee estas hojas.</p></div></div>
             <div class="table-wrap"><table style="min-width:520px"><thead><tr><th>Hoja de la macro</th><th>Para qué la usa la app</th><th></th></tr></thead><tbody>
-              <tr><td><strong>base</strong></td><td>Documentos abiertos: cliente, N° documento, fechas, saldo, días vencidos y familia. Fecha de corte (encabezado).</td><td><span class="badge badge-yellow">Obligatoria</span></td></tr>
+              <tr><td><strong>Sap</strong></td><td>Antigüedad de saldos exportada del sistema: cliente, N° documento, fechas, saldo y familia. Si no está, se lee la hoja «base».</td><td><span class="badge badge-yellow">Obligatoria</span></td></tr>
               <tr><td><strong>Base Clientes</strong></td><td>Correo, contacto y teléfono para el envío del estado de cuenta.</td><td><span class="badge badge-yellow">Obligatoria</span></td></tr>
               <tr><td><strong>tipo de moneda</strong></td><td>Moneda y clasificación del cliente (local / exterior / relacionado).</td><td><span class="badge badge-blue">Recomendada</span></td></tr>
               <tr><td><strong>Limite de credito</strong></td><td>Límite, cuenta contable, categoría y plazo → disponible y sobregiro.</td><td><span class="badge badge-gray">Nueva · pedir a Warner</span></td></tr>
@@ -628,15 +628,17 @@
       var errors=[], warns=[], E=function(h,f,c,m,v){ errors.push({h:h,f:f,c:c,m:m,v:v==null?&#39;&#39;:String(v)}); };
       var data={Clientes:[],Facturas:[],Pedidos:[]};
       if(!co) E(&#39;—&#39;,&#39;—&#39;,&#39;Compañía&#39;,&#39;Elegí a qué compañía corresponde el archivo.&#39;,&#39;&#39;);
-      var sb=cargaFindSheet(wb,[&#39;base&#39;]);
+      var sSap=cargaFindSheet(wb,[&#39;Sap&#39;]), sBase=cargaFindSheet(wb,[&#39;base&#39;]); var sb=sSap||sBase;
+      if(sb &amp;&amp; !sSap) warns.push(&#39;La macro no trae la hoja «Sap»: se leyó la hoja «base».&#39;);
       var t=sb?cargaTable(wb,sb,[&#39;Código de cliente&#39;]):null;
-      if(!t){ E(&#39;base&#39;,&#39;—&#39;,&#39;—&#39;,&#39;No se encontró la hoja «base» con la columna «Código de cliente» (exportación de antigüedad de saldos).&#39;,&#39;&#39;); return {file:fname,errors:errors,warns:warns,data:null,companias:co?[co]:[],formato:&#39;macro&#39;}; }
-      var C={cod:cargaCol(t,[&#39;Código de cliente&#39;]),nom:cargaCol(t,[&#39;Nombre SN&#39;,&#39;Nombre del cliente&#39;]),tipo:cargaCol(t,[&#39;Tipo&#39;]),doc:cargaCol(t,[&#39;Nº documento&#39;,&#39;N documento&#39;,&#39;No documento&#39;,&#39;Numero de documento&#39;]),fdoc:cargaCol(t,[&#39;Fecha de documento&#39;,&#39;Fecha de contabilización&#39;]),fven:cargaCol(t,[&#39;Fecha de vencimiento&#39;]),ref:cargaCol(t,[&#39;Número de referencia del SN&#39;,&#39;Numero de referencia&#39;]),saldo:cargaCol(t,[&#39;Saldo&#39;]),fam:cargaCol(t,[&#39;Familia&#39;]),dias:cargaCol(t,[&#39;Días vencimiento&#39;,&#39;Dias vencimiento&#39;]),mon:cargaCol(t,[&#39;Moneda&#39;,&#39;tipo de Moneda&#39;])};
-      var faltan=0; [[&#39;cod&#39;,&#39;Código de cliente&#39;],[&#39;doc&#39;,&#39;Nº documento&#39;],[&#39;fven&#39;,&#39;Fecha de vencimiento&#39;],[&#39;saldo&#39;,&#39;Saldo&#39;]].forEach(function(x){ if(C[x[0]]<0){ faltan++; E(sb,t.hi+1,x[1],&#39;Falta la columna en la hoja base.&#39;,&#39;&#39;); } });
+      if(!t){ E(&#39;Sap&#39;,&#39;—&#39;,&#39;—&#39;,&#39;No se encontró la hoja «Sap» (antigüedad de saldos exportada del sistema) ni «base», con la columna «Código de cliente».&#39;,&#39;&#39;); return {file:fname,errors:errors,warns:warns,data:null,companias:co?[co]:[],formato:&#39;macro&#39;}; }
+      var C={cod:cargaCol(t,[&#39;Código de cliente&#39;]),nom:cargaCol(t,[&#39;Nombre SN&#39;,&#39;Nombre del cliente&#39;]),tipo:cargaCol(t,[&#39;Tipo&#39;]),doc:cargaCol(t,[&#39;Nº documento&#39;,&#39;N documento&#39;,&#39;No documento&#39;,&#39;Numero de documento&#39;]),fdoc:cargaCol(t,[&#39;Fecha de documento&#39;,&#39;Fecha de contabilización&#39;]),fven:cargaCol(t,[&#39;Fecha de vencimiento&#39;]),ref:cargaCol(t,[&#39;Número de referencia del SN&#39;,&#39;Numero de referencia&#39;]),saldo:cargaCol(t,[&#39;Saldo&#39;]),fam:cargaCol(t,[&#39;Familia&#39;]),dias:cargaCol(t,[&#39;Días vencimiento&#39;,&#39;Dias vencimiento&#39;,&#39;Días&#39;,&#39;Dias&#39;]),mon:cargaCol(t,[&#39;Moneda&#39;,&#39;tipo de Moneda&#39;])};
+      var faltan=0; [[&#39;cod&#39;,&#39;Código de cliente&#39;],[&#39;doc&#39;,&#39;Nº documento&#39;],[&#39;fven&#39;,&#39;Fecha de vencimiento&#39;],[&#39;saldo&#39;,&#39;Saldo&#39;]].forEach(function(x){ if(C[x[0]]<0){ faltan++; E(sb,t.hi+1,x[1],&#39;Falta la columna en la hoja &#39;+sb+&#39;.&#39;,&#39;&#39;); } });
       if(faltan) return {file:fname,errors:errors,warns:warns,data:null,companias:co?[co]:[],formato:&#39;macro&#39;};
       // fecha de corte: fecha en las filas de arriba del encabezado, o en el nombre del archivo
       var corte=null; for(var i=0;i<t.hi &amp;&amp; !corte;i++){ t.rows[i].forEach(function(v){ if(!corte &amp;&amp; v instanceof Date) corte=cargaDate(v); }); }
       if(!corte){ var m=String(fname).match(/(\d{2})[-_.]?(\d{2})[-_.]?(\d{4})/); if(m) corte=m[3]+&#39;-&#39;+m[2]+&#39;-&#39;+m[1]; }
+      if(!corte){ t.rows[t.hi].forEach(function(v){ if(!corte &amp;&amp; v instanceof Date) corte=cargaDate(v); }); }
       if(!corte){ corte=todayISO; warns.push(&#39;No se encontró la fecha de corte en la hoja base ni en el nombre del archivo; se usa la fecha de hoy.&#39;); }
       // moneda por cliente desde «tipo de moneda»
       var monCli={}, famCli={}; var st=cargaFindSheet(wb,[&#39;tipo de moneda&#39;]);
@@ -660,7 +662,7 @@
         if(!cli[cod]) cli[cod]={compania:co,codigo_cliente:cod,nombre_cliente:C.nom>=0?String(row2[C.nom]||&#39;&#39;).trim():cod,familia:fam,monedas:{}};
         cli[cod].monedas[mon]=(cli[cod].monedas[mon]||0)+1;
       }
-      var dk=Object.keys(dups); if(dk.length) warns.push(dk.length+&#39; documento(s) con varias líneas en la hoja base (p. ej. asientos AS): &#39;+dk.slice(0,5).join(&#39;, &#39;)+(dk.length>5?&#39;…&#39;:&#39;&#39;)+&#39;. Se cargan todas las líneas.&#39;);
+      var dk=Object.keys(dups); if(dk.length) warns.push(dk.length+&#39; documento(s) con varias líneas en la hoja de antigüedad (p. ej. asientos AS): &#39;+dk.slice(0,5).join(&#39;, &#39;)+(dk.length>5?&#39;…&#39;:&#39;&#39;)+&#39;. Se cargan todas las líneas.&#39;);
       if(emp) warns.push(&#39;Se excluyeron &#39;+emp+&#39; documento(s) de &#39;+Object.keys(empCods).length+&#39; empleado(s) (códigos ECM… / familia Empleados).&#39;);
       if(sinMon) warns.push(sinMon+&#39; documento(s) sin moneda identificable: se tomaron en &#39;+loc+&#39; (moneda local de la compañía).&#39;);
       // Base Clientes: correo, contacto, teléfono
@@ -678,13 +680,13 @@
       // Pedidos aprobados (hoja nueva, opcional)
       var sp=cargaFindSheet(wb,[&#39;Pedidos aprobados&#39;,&#39;Pedidos&#39;]);
       if(sp){ var pt=cargaTable(wb,sp,[&#39;Código cliente&#39;,&#39;Código de cliente&#39;,&#39;Cod SN&#39;]); if(pt){ var p0=cargaCol(pt,[&#39;Código cliente&#39;,&#39;Código de cliente&#39;,&#39;Cod SN&#39;]), pn=cargaCol(pt,[&#39;N° pedido&#39;,&#39;Nº pedido&#39;,&#39;Numero de pedido&#39;,&#39;Pedido&#39;]), pf=cargaCol(pt,[&#39;Fecha aprobación&#39;,&#39;Fecha de aprobación&#39;]), pm=cargaCol(pt,[&#39;Moneda&#39;]), pa=cargaCol(pt,[&#39;Monto&#39;,&#39;Saldo&#39;]), pe=cargaCol(pt,[&#39;Estado&#39;]);
-        for(var r5=pt.hi+1;r5<pt.rows.length;r5++){ var y=pt.rows[r5]; var cd5=String(y[p0]||&#39;&#39;).trim(); if(!cd5) continue; var mt=cargaNum(y[pa]); if(mt==null||isNaN(mt)){ E(sp,r5+1,&#39;Monto&#39;,&#39;No es un número.&#39;,y[pa]); continue; } var es=/inventar/i.test(String(y[pe]||&#39;&#39;))?&#39;En inventario&#39;:&#39;Aprobado - en producción&#39;; if(!cli[cd5]) warns.push(&#39;Pedido de &#39;+cd5+&#39; (fila &#39;+(r5+1)+&#39;): el cliente no tiene saldo en la hoja base; se ignora.&#39;); else data.Pedidos.push({_fila:r5+1,compania:co,codigo_cliente:cd5,numero_pedido:String(y[pn]||&#39;&#39;),fecha_aprobacion:cargaDate(y[pf])||corte,moneda:monedaTxt(y[pm],co)||null,monto:mt,estado:es}); } } }
+        for(var r5=pt.hi+1;r5<pt.rows.length;r5++){ var y=pt.rows[r5]; var cd5=String(y[p0]||&#39;&#39;).trim(); if(!cd5) continue; var mt=cargaNum(y[pa]); if(mt==null||isNaN(mt)){ E(sp,r5+1,&#39;Monto&#39;,&#39;No es un número.&#39;,y[pa]); continue; } var es=/inventar/i.test(String(y[pe]||&#39;&#39;))?&#39;En inventario&#39;:&#39;Aprobado - en producción&#39;; if(!cli[cd5]) warns.push(&#39;Pedido de &#39;+cd5+&#39; (fila &#39;+(r5+1)+&#39;): el cliente no tiene saldo en la hoja de antigüedad; se ignora.&#39;); else data.Pedidos.push({_fila:r5+1,compania:co,codigo_cliente:cd5,numero_pedido:String(y[pn]||&#39;&#39;),fecha_aprobacion:cargaDate(y[pf])||corte,moneda:monedaTxt(y[pm],co)||null,monto:mt,estado:es}); } } }
       else warns.push(&#39;La macro no trae la hoja «Pedidos aprobados»: el disponible se calcula sin pedidos.&#39;);
       var exCods=Object.keys(cli).filter(function(cd){ return /EJEMPLO/i.test(cli[cd].nombre_cliente||&#39;&#39;); });
       if(exCods.length){ exCods.forEach(function(cd){ delete cli[cd]; }); data.Facturas=data.Facturas.filter(function(f){ return exCods.indexOf(f.codigo_cliente)<0; }); data.Pedidos=data.Pedidos.filter(function(p){ return exCods.indexOf(p.codigo_cliente)<0; }); warns.push(&#39;Se ignoraron las filas de ejemplo del modelo (&#39;+exCods.length+&#39; cliente(s) «… EJEMPLO»).&#39;); }
       Object.keys(cli).forEach(function(cd){ var c=cli[cd]; if(!c.moneda_credito){ var ms=Object.keys(c.monedas).sort(function(a,b){return c.monedas[b]-c.monedas[a];}); c.moneda_credito=ms[0]||loc; } data.Clientes.push(c); });
       data.Pedidos.forEach(function(p){ if(!p.moneda) p.moneda=cli[p.codigo_cliente].moneda_credito; });
-      if(!data.Facturas.length &amp;&amp; !errors.some(function(e){return e.c!==&#39;Compañía&#39;;})) E(sb,&#39;—&#39;,&#39;—&#39;,&#39;La hoja base no tiene documentos con saldo (las filas de ejemplo no se cargan).&#39;,&#39;&#39;);
+      if(!data.Facturas.length &amp;&amp; !errors.some(function(e){return e.c!==&#39;Compañía&#39;;})) E(sb,&#39;—&#39;,&#39;—&#39;,&#39;La hoja de antigüedad no tiene documentos con saldo (las filas de ejemplo no se cargan).&#39;,&#39;&#39;);
       return {file:fname,errors:errors,warns:warns,data:data,companias:co?[co]:[],formato:&#39;macro&#39;,corte:corte};
     }
 
@@ -741,7 +743,7 @@
         [&#39;Es la misma estructura de la macro que el negocio usa hoy. Sirve para armarla para una compañía nueva o para revisar que no falte nada.&#39;],
         [],
         [&#39;Hoja&#39;,&#39;Obligatoria&#39;,&#39;Qué contiene&#39;],
-        [&#39;base&#39;,&#39;Sí&#39;,&#39;Antigüedad de saldos: una fila por documento abierto. El encabezado va en la fila 8 y la fecha de corte en la fila 7 (también se toma del nombre del archivo, ej. «… 16-10-2026.xlsm»).&#39;],
+        [&#39;Sap&#39;,&#39;Sí&#39;,&#39;Antigüedad de saldos exportada del sistema (SAP u otro), con las columnas de la macro: encabezado en la fila 1, una fila por documento (las filas de subtotal por cliente se ignoran). La fecha de corte se toma del nombre del archivo (ej. «… 16-10-2026.xlsm») o del encabezado. Los días vencidos los calcula la app.&#39;],
         [&#39;Base Clientes&#39;,&#39;Sí&#39;,&#39;Datos de contacto: código, nombre, contacto, teléfono y correo (puede ir «Nombre <correo>» o varios correos separados por ;).&#39;],
         [&#39;tipo de moneda&#39;,&#39;Recomendada&#39;,&#39;Código de cliente, tipo (prefijo), descripción (local / exterior / relacionado) y moneda.&#39;],
         [&#39;Limite de credito&#39;,&#39;Para disponible y sobregiro&#39;,&#39;Límite, cuenta contable, categoría y plazo de crédito por cliente.&#39;],
@@ -752,15 +754,16 @@
         [],
         [&#39;Las filas de ejemplo (clientes «… EJEMPLO») se ignoran al subir el archivo. Reemplazalas con los datos reales.&#39;]
       ],[18,26,120]);
-      var H=[&#39;#&#39;,&#39;Código de cliente&#39;,&#39;Nombre SN&#39;,&#39;Tipo&#39;,&#39;Nº documento&#39;,&#39;Fecha de documento&#39;,&#39;Fecha de vencimiento&#39;,&#39;Número de referencia del SN&#39;,&#39;Sin vencer&#39;,&#39;O1 - 30&#39;,&#39;31 - 60&#39;,&#39;61 - 90&#39;,&#39;91 - 120&#39;,&#39;121+&#39;,&#39;Saldo&#39;,&#39;Familia&#39;,&#39;Días vencimiento&#39;,&#39;Moneda&#39;];
+      var H=[&#39;#&#39;,&#39;Código de cliente&#39;,&#39;Nombre SN&#39;,&#39;Tipo&#39;,&#39;Nº documento&#39;,&#39;Fecha de documento&#39;,&#39;Fecha de vencimiento&#39;,&#39;Número de referencia del SN&#39;,&#39;Sin vencer&#39;,&#39;O1 - 30&#39;,&#39;31 - 60&#39;,&#39;61 - 90&#39;,&#39;91 - 120&#39;,&#39;121+&#39;,&#39;Saldo&#39;,&#39;Tipo&#39;,&#39;Familia&#39;,&#39;Moneda&#39;,&#39;Días&#39;,corte];
       var docs=[
-        [1,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RF&#39;,&#39;3009001&#39;,D(2026,9,1),D(2026,10,1),&#39;OC-1001&#39;,&#39;&#39;,2450000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,2450000,&#39;Cliente local_colones&#39;,15,&#39;Colones&#39;],
-        [2,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RF&#39;,&#39;3009045&#39;,D(2026,10,5),D(2026,11,4),&#39;OC-1022&#39;,1800000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,1800000,&#39;Cliente local_colones&#39;,-19,&#39;Colones&#39;],
-        [3,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RC&#39;,&#39;7700123&#39;,D(2026,10,10),D(2026,10,10),&#39;&#39;,&#39;&#39;,-300000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,-300000,&#39;Cliente local_colones&#39;,6,&#39;Colones&#39;],
-        [4,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;RF&#39;,&#39;3008870&#39;,D(2026,6,20),D(2026,8,19),&#39;PO-5501&#39;,&#39;&#39;,&#39;&#39;,12500,&#39;&#39;,&#39;&#39;,&#39;&#39;,12500,&#39;Cliente exterior_dólares&#39;,58,&#39;Dolares&#39;],
-        [5,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;RF&#39;,&#39;3009012&#39;,D(2026,9,15),D(2026,11,14),&#39;PO-5530&#39;,18900,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,18900,&#39;Cliente exterior_dólares&#39;,-29,&#39;Dolares&#39;]
+        [1,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RF&#39;,&#39;3009001&#39;,D(2026,9,1),D(2026,10,1),&#39;OC-1001&#39;,&#39;&#39;,2450000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,2450000,&#39;CLML&#39;,&#39;Cliente local_colones&#39;,&#39;Colones&#39;,&#39;&#39;],
+        [2,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RF&#39;,&#39;3009045&#39;,D(2026,10,5),D(2026,11,4),&#39;OC-1022&#39;,1800000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,1800000,&#39;CLML&#39;,&#39;Cliente local_colones&#39;,&#39;Colones&#39;,&#39;&#39;],
+        [3,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;RC&#39;,&#39;7700123&#39;,D(2026,10,10),D(2026,10,10),&#39;&#39;,&#39;&#39;,-300000,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,-300000,&#39;CLML&#39;,&#39;Cliente local_colones&#39;,&#39;Colones&#39;,&#39;&#39;],
+        [4,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;RF&#39;,&#39;3008870&#39;,D(2026,6,20),D(2026,8,19),&#39;PO-5501&#39;,&#39;&#39;,&#39;&#39;,12500,&#39;&#39;,&#39;&#39;,&#39;&#39;,12500,&#39;CEME&#39;,&#39;Cliente exterior_dólares&#39;,&#39;Dolares&#39;,&#39;&#39;],
+        [5,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;RF&#39;,&#39;3009012&#39;,D(2026,9,15),D(2026,11,14),&#39;PO-5530&#39;,18900,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,18900,&#39;CEME&#39;,&#39;Cliente exterior_dólares&#39;,&#39;Dolares&#39;,&#39;&#39;]
       ];
-      put(&#39;base&#39;,[[&#39;Tipo&#39;],[&#39;RF&#39;],[&#39;RC&#39;,&#39;Tpo de cambio&#39;],[&#39;AS&#39;,505],[&#39;PR&#39;],[],[&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;Totales →&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,null,&#39;Fecha de corte →&#39;,corte],H].concat(docs),[4,14,32,6,12,13,13,16,12,12,12,12,12,12,14,24,10,9]);
+      var sub=function(n,cod,nom,s){ return [n,cod,nom,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,s,cod.slice(0,4),&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;]; };
+      put(&#39;Sap&#39;,[H,sub(1,&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,3950000)].concat(docs.slice(0,3)).concat([sub(5,&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,31400)]).concat(docs.slice(3)),[4,14,32,6,12,13,13,16,12,12,12,12,12,12,14,7,24,9,7,12]);
       put(&#39;Base Clientes&#39;,[[&#39;Código del Cliente&#39;,&#39;Nombre Cliente&#39;,&#39;Cédula Jurídica&#39;,&#39;Contacto CxC&#39;,&#39;Telefono&#39;,&#39;Correo&#39;,&#39;Direccion&#39;,&#39;Ruta&#39;,&#39;Segmentación&#39;,&#39;Especificaciones&#39;,&#39;Forma Pago&#39;,&#39;Banco/Aplica&#39;,&#39;Detalle de pago en banco (Referencia)&#39;,&#39;Observaciones Gestión de Cobro&#39;],
         [&#39;CLML00999&#39;,&#39;CLIENTE LOCAL EJEMPLO S.A.&#39;,&#39;3101000000&#39;,&#39;María Pérez&#39;,&#39;2222-0000&#39;,&#39;María Pérez <cxp@clientelocal-ejemplo.com>; tesoreria@clientelocal-ejemplo.com&#39;,&#39;San José&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;Transferencia&#39;,&#39;BCR&#39;,&#39;&#39;,&#39;&#39;],
         [&#39;CEME00999&#39;,&#39;CLIENTE EXTERIOR EJEMPLO LTD.&#39;,&#39;EX-12345&#39;,&#39;John Smith&#39;,&#39;+1 305 000-0000&#39;,&#39;ap@clienteexterior-ejemplo.com&#39;,&#39;Miami, FL&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;Transferencia&#39;,&#39;BAC&#39;,&#39;&#39;,&#39;&#39;]],[14,30,14,18,14,48,16,8,12,14,14,12,22,26]);
@@ -788,7 +791,7 @@
       var r=new FileReader(); r.onload=function(e){
         try{ cargaWB=window.XLSX.read(new Uint8Array(e.target.result),{type:&#39;array&#39;,cellDates:true}); cargaFileName=file.name; }
         catch(err){ cargaWB=null; cargaPending={file:file.name,errors:[{h:&#39;—&#39;,f:&#39;—&#39;,c:&#39;—&#39;,m:&#39;No se pudo leer el archivo (dañado o protegido con contraseña).&#39;,v:&#39;&#39;}],warns:[],data:null}; document.getElementById(&#39;cargaCtx&#39;).innerHTML=&#39;&#39;; cargaRender(); return; }
-        var isMacro=!!cargaFindSheet(cargaWB,[&#39;base&#39;]) || !cargaFindSheet(cargaWB,[&#39;Clientes&#39;]);
+        var isMacro=!!(cargaFindSheet(cargaWB,[&#39;Sap&#39;])||cargaFindSheet(cargaWB,[&#39;base&#39;])) || !cargaFindSheet(cargaWB,[&#39;Clientes&#39;]);
         if(isMacro){
           var g=cargaGuessCompany(file.name); var opts=companyList().slice(); if(g &amp;&amp; opts.indexOf(g)<0) opts.push(g); opts.sort();
           document.getElementById(&#39;cargaCtx&#39;).innerHTML=&#39;<div class="grid grid-3" style="margin-top:14px;align-items:end"><div class="field"><label>Compañía del archivo</label><select id="cargaCo" onchange="cargaRevalidate()"><option value="">Seleccioná…</option>&#39;+opts.map(function(o){return &#39;<option&#39;+(o===g?&#39; selected&#39;:&#39;&#39;)+&#39;>&#39;+o+&#39;</option>&#39;;}).join(&#39;&#39;)+&#39;<option value="__new__">Otra compañía…</option></select></div><div class="field" id="cargaCoNewWrap" style="display:none"><label>Nombre de la compañía</label><input id="cargaCoNew" placeholder="Ej.: CARVINSA" onchange="cargaRevalidate()"></div><label style="display:flex;gap:8px;align-items:center;font-weight:700;font-size:13px"><input type="checkbox" id="cargaEmp" checked onchange="cargaRevalidate()"> Excluir empleados (códigos ECM…)</label></div>&#39;+(g?&#39;<p class="small-muted" style="margin:6px 0 0">Compañía detectada por el nombre del archivo: <strong>&#39;+g+&#39;</strong>. Cambiala si no corresponde.</p>&#39;:&#39;&#39;);
@@ -799,7 +802,7 @@
     }
     function cargaRevalidate(){
       if(!cargaWB) return;
-      if(cargaFindSheet(cargaWB,[&#39;base&#39;]) || !cargaFindSheet(cargaWB,[&#39;Clientes&#39;])){
+      if(cargaFindSheet(cargaWB,[&#39;Sap&#39;]) || cargaFindSheet(cargaWB,[&#39;base&#39;]) || !cargaFindSheet(cargaWB,[&#39;Clientes&#39;])){
         var sel=document.getElementById(&#39;cargaCo&#39;); var co=sel?sel.value:&#39;&#39;; var nw=document.getElementById(&#39;cargaCoNewWrap&#39;);
         if(nw) nw.style.display=(co===&#39;__new__&#39;)?&#39;&#39;:&#39;none&#39;;
         if(co===&#39;__new__&#39;) co=String((document.getElementById(&#39;cargaCoNew&#39;)||{}).value||&#39;&#39;).trim().toUpperCase();
