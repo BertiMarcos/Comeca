@@ -996,7 +996,7 @@
       const elig=state.payments.filter(p=>p.status==='Pendiente' && p.channel==='MIAW' && p.system==='SAP B1' && p.voucher);
       if(!elig.length){ toast('No hay pagos pendientes con ticket MIAW para aplicar.'); return; }
       const stamp=new Date().toLocaleString('es-CR');
-      elig.forEach(p=>{ p.status='Aplicado'; p.appliedAt=stamp; p.appliedDate=todayISO; p.motivo=''; p.observation='Aplicado por el robot (RPA) \u00b7 ticket MIAW.'; });
+      elig.forEach(p=>{ p.status='Aplicado'; p.appliedAt=stamp; p.appliedDate=todayISO; p.motivo=''; p.appliedBy='robot'; if(p.reprocess){ p.appliedViaException=true; p.reprocess=false; p.observation='Aplicado por el robot (RPA) tras reproceso \u00b7 ticket MIAW.'; } else p.observation='Aplicado por el robot (RPA) \u00b7 ticket MIAW.'; if(!state.bitacora) state.bitacora=[]; state.bitacora.unshift({id:p.id,when:new Date().toISOString().slice(0,16).replace('T',' '),status:'Aplicado',ticket:p.ticketMIAW||'',comment:'Corrida del robot',user:'RPA · Aplicación de Pagos (CxC)'}); });
       refreshAll();
       toast('Proceso ejecutado: el robot aplic\u00f3 '+elig.length+' pago(s) con ticket MIAW en SAP B1. Los casos sin ticket quedan para \u00abAcci\u00f3n\u00bb del negocio.');
     }
@@ -1035,13 +1035,14 @@
         ${readonly?'<div class="table-note" style="margin-top:2px;color:#166534;"><b>✔ Pago aplicado — registro bloqueado.</b> Se muestra en solo lectura para no aplicarlo dos veces.</div>':''}
         <form id="regForm" novalidate>
           <div class="reg-grid">
-            <div class="field"><label>Resultado *</label><select id="regStatus" ${dis}><option${st==='Aplicado'?' selected':''}>Aplicado</option><option${st==='Excepción'?' selected':''}>Excepción</option><option${st==='No corresponde a CxC'?' selected':''}>No corresponde a CxC</option></select></div>
+            <div class="field"><label>Resultado *</label><select id="regStatus" ${dis}><option${st==='Aplicado'?' selected':''}>Aplicado</option><option${st==='Excepción'?' selected':''}>Excepción</option><option${st==='No corresponde a CxC'?' selected':''}>No corresponde a CxC</option><option value="Reprocesar">Completar datos y reprocesar</option></select></div>
             <div class="field"><label>Sistema destino</label><input id="regSystem" value="${escv(p.system)}" ${dis}></div>
             <div class="field"><label>Factura(s) aplicada(s)</label><input id="regFactura" value="${escv(p.factura)}" placeholder="Ej. FE-000123" ${dis}></div>
             <div class="field"><label>Ticket MIAW</label><input id="regTicket" value="${escv(p.ticket)}" placeholder="Ej. MIAW-4471 (si aplica)" ${dis}></div>
             
             <div class="field"><label>Evidencia</label><input id="regEvidencia" value="${escv(p.voucher)}" placeholder="archivo / comprobante" ${dis}></div>
           </div>
+          <div class="table-note" style="margin:4px 0 8px"><b>Completar datos y reprocesar:</b> cargá el dato que faltaba (ticket MIAW, factura o evidencia). El pago vuelve a <b>Pendiente</b> y el robot lo aplica en la próxima corrida (cuenta como aplicado por automatización). Usá «Aplicado» solo si lo aplicaste vos en SAP.</div>
           <div class="field"><label>Comentario / motivo <span class="muted">(obligatorio si es Excepción — se notifica en MIAW)</span></label><input id="regComment" value="${escv(p.motivo)}" placeholder="Motivo de la excepción o nota de la registración" ${dis}></div>
           <div style="display:flex;gap:10px;margin-top:14px">${readonly?'':'<button class="btn btn-primary" type="submit">Guardar registro</button>'}<button class="btn btn-outline" type="button" onclick="closeModal()">${readonly?'Cerrar':'Cancelar'}</button></div>
         </form>
@@ -1064,12 +1065,16 @@
       const evid=document.getElementById('regEvidencia').value.trim();
       const comment=document.getElementById('regComment').value.trim();
       if(status==='Excepción' && !comment){ toast('Indique el motivo de la excepción (se notifica en MIAW).'); return; }
+      if(status==='Reprocesar' && !(ticket||factura||evid)){ toast('Para reprocesar, cargá al menos el dato que faltaba: ticket MIAW, factura o evidencia.'); return; }
       const now=new Date(); const when=now.toISOString().slice(0,16).replace('T',' ');
+      if(status==='Reprocesar'){ p.system=document.getElementById('regSystem').value||p.system; if(factura){p.factura=factura;p.invoices=factura;} if(ticket){p.ticket=ticket;p.ticketMIAW=ticket;} if(evid)p.voucher=evid; p.status='Pendiente'; p.motivo=''; p.reprocess=true; p.selected=false;
+        p.observation='Datos completados por el negocio · se reprocesa en la próxima corrida'+(comment?(' · '+comment):'');
+        state.bitacora.unshift({id:id,when:when,status:'Pendiente (reproceso)',factura:factura,ticket:ticket,comment:comment,user:'Analista CXC'}); refreshAll(); closeModal(); toast('Listo: el pago vuelve a Pendiente y el robot lo aplica en la próxima corrida.'); return; }
       p.status=status; p.appliedAt=when; p.system=document.getElementById('regSystem').value||p.system;
       p.factura=factura; p.ticket=ticket; if(evid)p.voucher=evid;
       if(status==='Aplicado'){ p.appliedDate=todayISO; p.motivo=''; p.appliedBy='manual'; if(_prev==='Excepción') p.appliedViaException=true; } else if(status==='No corresponde a CxC'){ p.motivo=comment; } else { p.motivo=comment; }
       p.observation=(status==='Aplicado')?('Aplicado'+(factura?(' · '+factura):'')):((status==='No corresponde a CxC')?('No corresponde a CxC — derivado a Contabilidad'+(comment?(' · '+comment):'')):('Excepción · '+comment+' · notificado en MIAW'));
-      state.bitacora.unshift({id:id,when:when,status:status,factura:factura,ticket:ticket,comment:comment,user:'RPA · Aplicación de Pagos (CxC)'});
+      state.bitacora.unshift({id:id,when:when,status:status,factura:factura,ticket:ticket,comment:comment,user:'Analista CXC'});
       refreshAll(); closeModal();
     }
 
