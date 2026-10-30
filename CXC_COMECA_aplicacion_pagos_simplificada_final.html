@@ -301,7 +301,7 @@
           <div id="agingFoot" class="aging-foot"></div>
         </div>
         <div class="grid grid-2" style="margin-top:18px">
-          <div class="card"><div class="card-header"><div><h3 class="card-title">Prioridad por cliente</h3><p class="card-subtitle">Clientes con mayor saldo pendiente y vencimiento.</p></div></div><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Responsable</th><th>Saldo pendiente</th><th>Facturas pendientes</th><th>Último estado enviado</th></tr></thead><tbody id="dashboardPriorityBody"></tbody></table></div></div>
+          <div class="card"><div class="card-header"><div><h3 class="card-title">Prioridad por cliente</h3><p class="card-subtitle">Clientes con las facturas más vencidas; saldo pendiente en la moneda de cada cliente.</p></div></div><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Responsable</th><th>Saldo pendiente</th><th>Facturas pendientes</th><th>Último estado enviado</th></tr></thead><tbody id="dashboardPriorityBody"></tbody></table></div></div>
           <div class="card"><div class="card-header"><div><h3 class="card-title">Gestión por responsable</h3><p class="card-subtitle">Carga de clientes, facturas y promesas por analista.</p></div></div><div id="analystChart" class="chart-list"></div></div>
         </div>
       </section>
@@ -1217,8 +1217,8 @@
       document.getElementById(&#39;dashBalance&#39;).textContent = mixedTotal(pending);
       document.getElementById(&#39;dashPendingInvoices&#39;).textContent = pending.length;
       document.getElementById(&#39;dashPromises&#39;).textContent = promises.filter(p=>p.status===&#39;Pendiente&#39; &amp;&amp; _ids[p.clientId]).length;
-      const rows = _cl.map(c=>({c,balance:clientBalance(c.id),pending:pendingInvoices(c.id).length})).sort((a,b)=>b.balance-a.balance).slice(0,8);
-      document.getElementById(&#39;dashboardPriorityBody&#39;).innerHTML = rows.map(r=>`<tr><td><strong>${r.c.name}</strong><br><span class="small-muted">${r.c.code}</span></td><td>${r.c.analyst}</td><td>${formatMoney(r.balance,&#39;USD&#39;)}</td><td>${r.pending}</td><td>${r.c.lastSent||&#39;Pendiente&#39;}</td></tr>`).join(&#39;&#39;);
+      const rows = _cl.map(c=>{ const pi=pendingInvoices(c.id); return {c,pi,pending:pi.length,maxDays:pi.reduce((m,i)=>Math.max(m,Number(i.days||0)),-99999)}; }).filter(r=>r.pending>0).sort((a,b)=>(b.maxDays-a.maxDays)||(b.pending-a.pending)).slice(0,8);
+      document.getElementById(&#39;dashboardPriorityBody&#39;).innerHTML = rows.map(r=>`<tr><td><strong>${r.c.name}</strong><br><span class="small-muted">${r.c.code}</span></td><td>${r.c.analyst}</td><td>${mixedTotal(r.pi)}<br><span class="small-muted">${r.maxDays>0?(&#39;Más vencida: &#39;+r.maxDays+&#39; d&#39;):&#39;Sin vencidas&#39;}</span></td><td>${r.pending}</td><td>${r.c.lastSent||&#39;Pendiente&#39;}</td></tr>`).join(&#39;&#39;);
       renderAnalystChart();
       renderAging();
     }
